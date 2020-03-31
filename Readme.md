@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Кречетников](https://up.htmlacademy.ru/ecmascript/11/user/291473).
-* Наставник: [Сергей Андреев].
+* Наставник: [Сергей Андреев](https://htmlacademy.ru/profile/id812127).
 
 ---
 
