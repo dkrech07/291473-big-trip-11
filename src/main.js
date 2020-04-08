@@ -5,6 +5,7 @@ import {createTripDayTemplate} from './components/trip-day.js';
 import {createTripEventTemplate} from './components/trip-event.js';
 import {createTripFormTemplate} from './components/trip-form.js';
 import {createTripInfoTemplate} from './components/trip-info.js';
+import {generateWayPoints} from './mock/way-point.js';
 
 const DEFAULT_RENDER_COUNT = 1;
 const TRIP_POINT_COUNT = 3;
@@ -35,3 +36,5 @@ const tripDaysContainer = mainContainer.querySelector(`.trip-days`);
 const tripEventList = tripDaysContainer.querySelector(`.trip-events__list`);
 
 renderComponent(tripEventList, createTripEventTemplate(), `beforeend`, TRIP_POINT_COUNT);
+
+console.log(generateWayPoints());
