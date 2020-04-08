@@ -3,7 +3,7 @@ const MAX_PRICE = 100;
 const MAX_OFFERS = 5;
 const MIN_DESCRIPTION = 1;
 const MAX_DESCRIPTION = 5;
-const MAX_PHOTOS = 10;
+const MAX_PHOTOS = 5;
 const MIN_WAY_POINTS = 15;
 const MAX_WAY_POINTS = 20;
 
@@ -85,7 +85,7 @@ const generateWayPoint = () => {
   return {
     pointType: getRandomArrayItem(pointTypes), // Тип точки маршрута. Один вариант из набора. Набор можно найти в техническом задании;
     destination: getRandomArrayItem(destinations), // Пункт назначения (город). Названия городов можно взять из вёрстки;
-    offer: generateOffers(MAX_OFFERS), // Дополнительные опции. От 0 до 5 штук;
+    offer: generateOffers(getRandom(MAX_OFFERS)), // Дополнительные опции. От 0 до 5 штук;
     destinationInfo: generateDestinationInfo(), // Информация о месте назначения;
   };
 };
