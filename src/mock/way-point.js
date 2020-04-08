@@ -98,4 +98,4 @@ const generateWayPoints = () => {
   return wayPointsList;
 };
 
-export {generateWayPoint, generateWayPoints};
+export {generateWayPoint, generateWayPoints, destinations, pointTypes};

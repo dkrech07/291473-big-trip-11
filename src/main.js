@@ -10,6 +10,10 @@ import {createDescriptionTemplate} from './components/offers.js';
 import {createPhotosTemplate} from './components/offers.js';
 import {createOfferTemplate} from './components/offers.js';
 import {generateWayPoints} from './mock/way-point.js';
+import {destinations} from './mock/way-point.js';
+import {createDestinationsTemplate} from './components/trip-form.js';
+import {createEventTypeTemplate} from './components/trip-form.js';
+import {pointTypes} from './mock/way-point.js';
 
 const wayPoints = generateWayPoints();
 
@@ -37,8 +41,19 @@ renderComponent(tripEvents, createTripFormTemplate(), `beforeend`);
 renderComponent(tripEvents, createTripDayTemplate(), `beforeend`);
 
 const eventHeader = document.querySelector(`.event__header`);
+const destinationsList = eventHeader.querySelector(`.event__input--destination + datalist`);
+const eventTypeList = eventHeader.querySelector(`.event__type-list .event__type-group:first-child legend`); // Доработать
+// console.log(eventTypeList);
 
 renderComponent(eventHeader, createOffersTemplate(wayPoints), `afterend`);
+
+for (const destination of destinations) {
+  renderComponent(destinationsList, createDestinationsTemplate(destination), `afterbegin`);
+}
+
+for (const pointType of pointTypes) {
+  renderComponent(eventTypeList, createEventTypeTemplate(pointType), `afterend`);
+}
 
 // const offersContainer = eventHeader.querySelector(`.event__available-offers`)
 // renderComponent(offersContainer, createOffersTemplate(wayPoints), `afterend`);
@@ -67,4 +82,4 @@ for (const offer of wayPoints[0].offer) {
   renderComponent(eventOffes, createOfferTemplate(offer), `afterbegin`);
 }
 
-// console.log(wayPoints[0].offer);
+// console.log(wayPoints);
