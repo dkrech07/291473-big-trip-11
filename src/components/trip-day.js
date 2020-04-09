@@ -1,20 +1,11 @@
+import {correctDateFormat} from '../mock/way-point.js';
+
 export const createTripDayTemplate = (tripDayInfo) => {
 
   const day = tripDayInfo.day;
   const monthNumber = tripDayInfo.month;
   const monthName = tripDayInfo.monthName;
   const year = tripDayInfo.year;
-
-  const correctDateFormat = (number) => {
-    const date = number.toString();
-
-    if (date.length < 2) {
-      const newDate = `0` + date;
-      return newDate;
-    }
-
-    return date;
-  };
 
   return (
     `<li class="trip-days__item  day">

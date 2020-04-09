@@ -10,6 +10,8 @@ const YEAR_COUNT_MIN = 19;
 const YEAR_COUNT_MAX = 21;
 const MIN_WAY_POINTS = 1;
 const MAX_WAY_POINTS = 5;
+const MINUTES_COUNT = 60;
+const HOURS_COUNT = 24;
 
 const tripTypes = [
   `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
@@ -55,6 +57,17 @@ const getUniqueList = (list) => {
   });
 
   return uniqueOffersList;
+};
+
+const correctDateFormat = (number) => {
+  const date = number.toString();
+
+  if (date.length < 2) {
+    const newDate = `0` + date;
+    return newDate;
+  }
+
+  return date;
 };
 
 const generateOfferKeys = () => {
@@ -114,6 +127,10 @@ const generateTripPoint = () => {
     destination: getRandomArrayItem(destinations),
     offer: generateOffers(generateOfferKeys()),
     destinationInfo: generateDestinationInfo(),
+    hoursDeparture: getRandom(HOURS_COUNT),
+    minutesDeparture: getRandom(MINUTES_COUNT),
+    hoursArrival: getRandom(HOURS_COUNT),
+    minutesArrival: getRandom(MINUTES_COUNT),
   };
 };
 
@@ -137,4 +154,4 @@ const generateRandomDay = () => {
   };
 };
 
-export {generateRandomDay, destinations, tripTypes, stopTypes, generateTripPoints};
+export {generateRandomDay, destinations, tripTypes, stopTypes, correctDateFormat};

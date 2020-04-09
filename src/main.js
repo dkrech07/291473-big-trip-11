@@ -2,7 +2,6 @@ import {generateRandomDay} from './mock/way-point.js';
 import {destinations} from './mock/way-point.js';
 import {tripTypes} from './mock/way-point.js';
 import {stopTypes} from './mock/way-point.js';
-import {generateTripPoints} from './mock/way-point.js';
 
 import {createTripInfoTemplate} from './components/trip-info.js';
 import {createMenuTemplate} from './components/menu.js';
@@ -95,7 +94,7 @@ const renderTripDay = (daysCount) => {
   const tripEventsList = tripDaysContainer.querySelectorAll(`.trip-events__list`);
 
   for (const day of tripEventsList) {
-    for (const point of generateTripPoints()) {
+    for (const point of generateRandomDay().wayPoints) {
       renderComponent(day, createTripEventTemplate(point), `beforeend`);
     }
   }
@@ -103,5 +102,5 @@ const renderTripDay = (daysCount) => {
 
 renderTripDay(TRIP_DAYS_COUNT);
 
-const offer = generateRandomDay();
-console.log(offer);
+// const offer = generateRandomDay();
+// console.log(offer);
