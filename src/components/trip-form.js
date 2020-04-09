@@ -5,10 +5,11 @@ export const createDestinationsTemplate = (destination) => {
 };
 
 export const createEventTypeTemplate = (pointType) => {
+  const poitTitle = pointType.toLowerCase();
   return (
     `<div class="event__type-item">
-      <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-      <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">${pointType}</label>
+      <input id="event-type-${poitTitle}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${poitTitle}">
+      <label class="event__type-label  event__type-label--${poitTitle}" for="event-type-${poitTitle}-1">${pointType}</label>
     </div>`
   );
 };
@@ -33,20 +34,6 @@ export const createTripFormTemplate = () => {
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
 
-              <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-              </div>
             </fieldset>
           </div>
         </div>

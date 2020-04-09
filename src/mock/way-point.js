@@ -3,12 +3,20 @@ const MAX_PRICE = 100;
 const MAX_OFFERS = 5;
 const MIN_DESCRIPTION = 1;
 const MAX_DESCRIPTION = 5;
-const MAX_PHOTOS = 5;
-const MIN_WAY_POINTS = 15;
-const MAX_WAY_POINTS = 20;
+const MAX_PHOTOS = 10;
+const DAY_COUNT = 30;
+const MONTH_COUNT = 12;
+const YEAR_COUNT_MIN = 2019;
+const YEAR_COUNT_MAX = 2021;
+const MIN_WAY_POINTS = 1;
+const MAX_WAY_POINTS = 5;
 
-const pointTypes = [
-  `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`
+const tripTypes = [
+  `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
+];
+
+const stopTypes = [
+  `Check-in`, `Sightseeing`, `Restaurant`
 ];
 
 const destinations = [
@@ -23,7 +31,9 @@ const offers = {
   train: `Travel by train`,
 };
 
-const destinatioText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
+const destinationText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
+
+const montsList = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
 
 const getRandom = (number) => {
   return Math.floor(Math.random() * number);
@@ -39,63 +49,92 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-const generateOffer = () => {
-  const getRandomOffer = getRandomArrayItem(Object.keys(offers));
+const getUniqueList = (list) => {
+  let uniqueOffersList = list.filter((item, pos) => {
+    return list.indexOf(item) === pos;
+  });
 
+  return uniqueOffersList;
+};
+
+const generateOfferKeys = () => {
+  let offersKeys = [];
+
+  for (let i = 0; i <= getRandom(MAX_OFFERS + 1); i++) {
+    offersKeys.push(getRandomArrayItem(Object.keys(offers)));
+  }
+
+  return getUniqueList(offersKeys);
+};
+
+const generateOffer = (offerKey) => {
   return {
-    offerType: getRandomOffer,
-    offerTitle: offers[getRandomOffer],
+    offerType: offerKey,
+    offerTitle: offers[offerKey],
     offerPrice: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
   };
 };
 
-const generateOffers = (count) => {
-  return new Array(count)
-    .fill(``)
-    .map(generateOffer);
+const generateOffers = (offerKeys) => {
+  const offersList = [];
+  for (const offerKey of offerKeys) {
+    offersList.push(generateOffer(offerKey));
+  }
+  return offersList;
 };
 
-const generateDestinationDescription = () => {
-  const destinationArray = destinatioText.split(`. `);
-  destinationArray.sort(() => {
+const generateDescription = () => {
+  const destinationsList = destinationText.split(`. `);
+  destinationsList.sort(() => {
     return 0.5 - Math.random();
   });
-  destinationArray.length = getRandomIntegerNumber(MIN_DESCRIPTION, MAX_DESCRIPTION);
+  destinationsList.length = getRandomIntegerNumber(MIN_DESCRIPTION, MAX_DESCRIPTION);
 
-  return destinationArray;
+  return destinationsList.join(`. `);
 };
 
 const generatePhotos = () => {
   const photosList = [];
-  for (let i = 0; i < getRandom(MAX_PHOTOS); i++) {
-    photosList.push(`http://picsum.photos/248/152?r=${Math.random()}`);
+  for (let i = 0; i < getRandom(MAX_PHOTOS + 1); i++) {
+    photosList.push(`http://picsum.photos/248/152?r=${getRandom(MAX_PHOTOS) + 1}`);
   }
-  return photosList;
+  return getUniqueList(photosList);
 };
 
 const generateDestinationInfo = () => {
   return {
-    destinationDescription: generateDestinationDescription(),
+    destinationDescription: generateDescription(),
     destinationPhotos: generatePhotos(),
   };
 };
 
-// Cтруктура данных, которая опишет точку маршрута
-const generateWayPoint = () => {
+const generateTripPoint = () => {
   return {
-    pointType: getRandomArrayItem(pointTypes), // Тип точки маршрута. Один вариант из набора. Набор можно найти в техническом задании;
-    destination: getRandomArrayItem(destinations), // Пункт назначения (город). Названия городов можно взять из вёрстки;
-    offer: generateOffers(getRandom(MAX_OFFERS)), // Дополнительные опции. От 0 до 5 штук;
-    destinationInfo: generateDestinationInfo(), // Информация о месте назначения;
+    pointType: getRandomArrayItem(tripTypes.concat(stopTypes)),
+    destination: getRandomArrayItem(destinations),
+    offer: generateOffers(generateOfferKeys()),
+    destinationInfo: generateDestinationInfo(),
   };
 };
 
-const generateWayPoints = () => {
+const generateTripPoints = () => {
   const wayPointsList = [];
   for (let i = 0; i < getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS); i++) {
-    wayPointsList.push(generateWayPoint());
+    wayPointsList.push(generateTripPoint());
   }
+
   return wayPointsList;
 };
 
-export {generateWayPoint, generateWayPoints, destinations, pointTypes};
+const generateRandomDay = () => {
+  const monthNumber = getRandom(MONTH_COUNT);
+  return {
+    date: getRandom(DAY_COUNT),
+    month: monthNumber,
+    monthName: montsList[monthNumber - 1],
+    year: getRandomIntegerNumber(YEAR_COUNT_MIN, YEAR_COUNT_MAX),
+    wayPoints: generateTripPoints(),
+  };
+};
+
+export {generateRandomDay, destinations, tripTypes, stopTypes, generateTripPoints};

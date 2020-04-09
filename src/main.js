@@ -1,24 +1,29 @@
-import {createFiltersTemplate} from './components/filters.js';
-import {createMenuTemplate} from './components/menu.js';
-import {createSortTemplate} from './components/sorting.js';
-import {createTripDayTemplate} from './components/trip-day.js';
-import {createTripEventTemplate} from './components/trip-event.js';
-import {createTripFormTemplate} from './components/trip-form.js';
-import {createTripInfoTemplate} from './components/trip-info.js';
-import {createOffersTemplate} from './components/offers.js';
-import {createDescriptionTemplate} from './components/offers.js';
-import {createPhotosTemplate} from './components/offers.js';
-import {createOfferTemplate} from './components/offers.js';
-import {generateWayPoints} from './mock/way-point.js';
+import {generateRandomDay} from './mock/way-point.js';
 import {destinations} from './mock/way-point.js';
+import {tripTypes} from './mock/way-point.js';
+import {stopTypes} from './mock/way-point.js';
+import {generateTripPoints} from './mock/way-point.js';
+
+import {createTripInfoTemplate} from './components/trip-info.js';
+import {createMenuTemplate} from './components/menu.js';
+import {createFiltersTemplate} from './components/filters.js';
+import {createSortTemplate} from './components/sorting.js';
+
+import {createTripFormTemplate} from './components/trip-form.js';
 import {createDestinationsTemplate} from './components/trip-form.js';
 import {createEventTypeTemplate} from './components/trip-form.js';
-import {pointTypes} from './mock/way-point.js';
 
-const wayPoints = generateWayPoints();
+import {createOffersTemplate} from './components/offers.js';
+import {createOfferTemplate} from './components/offers.js';
+import {createDescriptionTemplate} from './components/offers.js';
+import {createPhotosTemplate} from './components/offers.js';
 
-// const DEFAULT_RENDER_COUNT = 1;
-// const TRIP_POINT_COUNT = 3;
+import {createTripDaysTemplate} from './components/trip-day.js';
+import {createTripDayTemplate} from './components/trip-day.js';
+
+import {createTripEventTemplate} from './components/trip-event.js';
+
+const TRIP_DAYS_COUNT = 5;
 
 const renderComponent = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -28,58 +33,72 @@ const headerContainer = document.querySelector(`.page-header`);
 const tripMenu = headerContainer.querySelector(`.trip-main`);
 const tripSwitch = tripMenu.querySelector(`.trip-main__trip-controls h2:first-child`);
 const tripFilter = tripMenu.querySelector(`.trip-main__trip-controls h2:last-child`);
-
 renderComponent(tripMenu, createTripInfoTemplate(), `afterbegin`);
 renderComponent(tripSwitch, createMenuTemplate(), `afterend`);
 renderComponent(tripFilter, createFiltersTemplate(), `afterend`);
 
 const mainContainer = document.querySelector(`.page-body__page-main`);
 const tripEvents = mainContainer.querySelector(`.trip-events`);
-
 renderComponent(tripEvents, createSortTemplate(), `beforeend`);
 renderComponent(tripEvents, createTripFormTemplate(), `beforeend`);
-renderComponent(tripEvents, createTripDayTemplate(), `beforeend`);
 
-const eventHeader = document.querySelector(`.event__header`);
+const eventHeader = mainContainer.querySelector(`.event__header`);
 const destinationsList = eventHeader.querySelector(`.event__input--destination + datalist`);
-const eventTypeList = eventHeader.querySelector(`.event__type-list .event__type-group:first-child legend`); // Доработать
-// console.log(eventTypeList);
-
-renderComponent(eventHeader, createOffersTemplate(wayPoints), `afterend`);
+const eventTripList = eventHeader.querySelector(`.event__type-list .event__type-group:first-child legend`);
+const eventStopList = eventHeader.querySelector(`.event__type-list .event__type-group:last-child legend`);
 
 for (const destination of destinations) {
   renderComponent(destinationsList, createDestinationsTemplate(destination), `afterbegin`);
 }
 
-for (const pointType of pointTypes) {
-  renderComponent(eventTypeList, createEventTypeTemplate(pointType), `afterend`);
+for (const tripType of tripTypes) {
+  renderComponent(eventTripList, createEventTypeTemplate(tripType), `afterend`);
 }
 
-// const offersContainer = eventHeader.querySelector(`.event__available-offers`)
-// renderComponent(offersContainer, createOffersTemplate(wayPoints), `afterend`);
-
-const tripDaysContainer = mainContainer.querySelector(`.trip-days`);
-const tripEventList = tripDaysContainer.querySelector(`.trip-events__list`);
-
-for (const point of wayPoints) {
-  renderComponent(tripEventList, createTripEventTemplate(point), `beforeend`);
+for (const stopType of stopTypes) {
+  renderComponent(eventStopList, createEventTypeTemplate(stopType), `afterend`);
 }
 
-const eventDetails = document.querySelector(`.event__details`);
+renderComponent(eventHeader, createOffersTemplate(), `afterend`);
+const eventDetails = tripEvents.querySelector(`.event__details`);
 const eventOffes = eventDetails.querySelector(`.event__available-offers`);
-const eventDescription = eventDetails.querySelector(`.event__section--destination`);
+const eventDescription = eventDetails.querySelector(`.event__section-title--destination`);
 const eventPhotos = eventDetails.querySelector(`.event__photos-tape`);
 
-for (const point of wayPoints[0].destinationInfo.destinationDescription) {
-  renderComponent(eventDescription, createDescriptionTemplate(point), `afterbegin`);
-}
+const renderOfferInfo = (numberTripPoint) => {
+  const tripPointInfo = generateRandomDay().wayPoints[numberTripPoint];
+  const destinationInfo = tripPointInfo.destinationInfo;
+  const offerInfo = tripPointInfo.offer;
 
-for (const photo of wayPoints[0].destinationInfo.destinationPhotos) {
-  renderComponent(eventPhotos, createPhotosTemplate(photo), `afterbegin`);
-}
+  for (const offer of offerInfo) {
+    renderComponent(eventOffes, createOfferTemplate(offer), `afterbegin`);
+  }
 
-for (const offer of wayPoints[0].offer) {
-  renderComponent(eventOffes, createOfferTemplate(offer), `afterbegin`);
-}
+  const descriptionText = destinationInfo.destinationDescription;
+  renderComponent(eventDescription, createDescriptionTemplate(descriptionText), `afterend`);
 
-// console.log(wayPoints);
+  for (const photo of destinationInfo.destinationPhotos) {
+    renderComponent(eventPhotos, createPhotosTemplate(photo), `afterbegin`);
+  }
+};
+
+renderOfferInfo(0);
+
+renderComponent(tripEvents, createTripDaysTemplate(), `beforeend`);
+const tripDaysContainer = mainContainer.querySelector(`.trip-days`);
+
+const renderTripDay = (daysCount) => {
+  for (let i = 0; i < daysCount; i++) {
+    renderComponent(tripDaysContainer, createTripDayTemplate(), `beforeend`);
+  }
+
+  const tripEventsList = tripDaysContainer.querySelectorAll(`.trip-events__list`);
+
+  for (const day of tripEventsList) {
+    for (const point of generateTripPoints()) {
+      renderComponent(day, createTripEventTemplate(point), `beforeend`);
+    }
+  }
+};
+
+renderTripDay(TRIP_DAYS_COUNT);
