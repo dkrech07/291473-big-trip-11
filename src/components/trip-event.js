@@ -2,12 +2,13 @@ export const createTripEventTemplate = (point) => {
 
   const pointType = point.pointType;
   const pointDestination = point.destination;
+  const pointImage = point.pointType.toLowerCase();
 
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${pointImage}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${pointType} to ${pointDestination}</h3>
 

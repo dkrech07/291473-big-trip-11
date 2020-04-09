@@ -89,7 +89,7 @@ const tripDaysContainer = mainContainer.querySelector(`.trip-days`);
 
 const renderTripDay = (daysCount) => {
   for (let i = 0; i < daysCount; i++) {
-    renderComponent(tripDaysContainer, createTripDayTemplate(), `beforeend`);
+    renderComponent(tripDaysContainer, createTripDayTemplate(generateRandomDay()), `beforeend`);
   }
 
   const tripEventsList = tripDaysContainer.querySelectorAll(`.trip-events__list`);
@@ -102,3 +102,6 @@ const renderTripDay = (daysCount) => {
 };
 
 renderTripDay(TRIP_DAYS_COUNT);
+
+const offer = generateRandomDay();
+console.log(offer);

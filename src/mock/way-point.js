@@ -6,8 +6,8 @@ const MAX_DESCRIPTION = 5;
 const MAX_PHOTOS = 10;
 const DAY_COUNT = 30;
 const MONTH_COUNT = 12;
-const YEAR_COUNT_MIN = 2019;
-const YEAR_COUNT_MAX = 2021;
+const YEAR_COUNT_MIN = 19;
+const YEAR_COUNT_MAX = 21;
 const MIN_WAY_POINTS = 1;
 const MAX_WAY_POINTS = 5;
 
@@ -127,9 +127,9 @@ const generateTripPoints = () => {
 };
 
 const generateRandomDay = () => {
-  const monthNumber = getRandom(MONTH_COUNT);
+  const monthNumber = getRandom(MONTH_COUNT) + 1;
   return {
-    date: getRandom(DAY_COUNT),
+    day: getRandom(DAY_COUNT) + 1,
     month: monthNumber,
     monthName: montsList[monthNumber - 1],
     year: getRandomIntegerNumber(YEAR_COUNT_MIN, YEAR_COUNT_MAX),
