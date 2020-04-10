@@ -28,10 +28,15 @@ const destinations = [
 
 const offers = {
   luggage: `Add luggage`,
-  comfort: `Switch to comfort class`,
+  comfort: `Switch to comfort`,
   meal: `Add meal`,
   seats: `Choose seats`,
   train: `Travel by train`,
+  uber: `Order Uber`,
+  car: `Rent car`,
+  breakfast: `Add breakfast `,
+  tickets: `Book tickets`,
+  city: `Lunch in city`
 };
 
 const destinationText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
@@ -63,7 +68,7 @@ const getUniqueList = (list) => {
 const generateOfferKeys = () => {
   let offersKeys = [];
 
-  for (let i = 0; i <= getRandom(MAX_OFFERS + 1); i++) {
+  for (let i = 0; i <= getRandom(MAX_OFFERS) + 1; i++) {
     offersKeys.push(getRandomArrayItem(Object.keys(offers)));
   }
 
