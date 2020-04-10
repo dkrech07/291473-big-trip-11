@@ -1,4 +1,4 @@
-import {correctDateFormat} from '../mock/way-point.js';
+import {correctDateFormat} from '../utils.js';
 
 export const createTripDayTemplate = (tripDayInfo) => {
 

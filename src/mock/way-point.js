@@ -60,17 +60,6 @@ const getUniqueList = (list) => {
   return uniqueOffersList;
 };
 
-const correctDateFormat = (number) => {
-  const date = number.toString();
-
-  if (date.length < 2) {
-    const newDate = `0` + date;
-    return newDate;
-  }
-
-  return date;
-};
-
 const generateOfferKeys = () => {
   let offersKeys = [];
 
@@ -132,6 +121,7 @@ const generateTripPoint = () => {
     minutesDeparture: getRandom(MINUTES_COUNT),
     hoursArrival: getRandom(HOURS_COUNT),
     minutesArrival: getRandom(MINUTES_COUNT),
+    price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
   };
 };
 
@@ -163,4 +153,4 @@ const generateRandomDays = () => {
   return randomDays;
 };
 
-export {generateRandomDays, destinations, tripTypes, stopTypes, correctDateFormat};
+export {generateRandomDays, destinations, tripTypes, stopTypes};

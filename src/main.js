@@ -96,11 +96,14 @@ const renderTripDay = () => {
   for (let i = 0; i < randomDaysList.length; i++) {
     let wayPointList = randomDaysList[i].wayPoints;
     let currentTripDay = tripEventsList[i];
+    let currentDay = randomDaysList[i];
     for (let j = 0; j < wayPointList.length; j++) {
       let wayPoint = wayPointList[j];
-      renderComponent(currentTripDay, createTripEventTemplate(wayPoint), `beforeend`);
+      renderComponent(currentTripDay, createTripEventTemplate(wayPoint, currentDay), `beforeend`);
     }
   }
 };
 
 renderTripDay();
+
+console.log(randomDaysList);
