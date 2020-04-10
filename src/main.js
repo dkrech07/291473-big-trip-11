@@ -1,4 +1,4 @@
-import {generateRandomDay} from './mock/way-point.js';
+import {generateRandomDays} from './mock/way-point.js';
 import {destinations} from './mock/way-point.js';
 import {tripTypes} from './mock/way-point.js';
 import {stopTypes} from './mock/way-point.js';
@@ -22,7 +22,7 @@ import {createTripDayTemplate} from './components/trip-day.js';
 
 import {createTripEventTemplate} from './components/trip-event.js';
 
-const TRIP_DAYS_COUNT = 5;
+const randomDaysList = generateRandomDays();
 
 const renderComponent = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -64,8 +64,8 @@ const eventOffes = eventDetails.querySelector(`.event__available-offers`);
 const eventDescription = eventDetails.querySelector(`.event__section-title--destination`);
 const eventPhotos = eventDetails.querySelector(`.event__photos-tape`);
 
-const renderOfferInfo = (numberTripPoint) => {
-  const tripPointInfo = generateRandomDay().wayPoints[numberTripPoint];
+const renderOfferInfo = (numberDay, numberTripPoint) => {
+  const tripPointInfo = randomDaysList[numberDay].wayPoints[numberTripPoint];
   const destinationInfo = tripPointInfo.destinationInfo;
   const offerInfo = tripPointInfo.offer;
 
@@ -81,26 +81,26 @@ const renderOfferInfo = (numberTripPoint) => {
   }
 };
 
-renderOfferInfo(0);
+renderOfferInfo(0, 0);
 
 renderComponent(tripEvents, createTripDaysTemplate(), `beforeend`);
 const tripDaysContainer = mainContainer.querySelector(`.trip-days`);
 
-const renderTripDay = (daysCount) => {
-  for (let i = 0; i < daysCount; i++) {
-    renderComponent(tripDaysContainer, createTripDayTemplate(generateRandomDay()), `beforeend`);
+const renderTripDay = () => {
+  for (let i = 0; i < randomDaysList.length; i++) {
+    renderComponent(tripDaysContainer, createTripDayTemplate(randomDaysList[i]), `beforeend`);
   }
 
   const tripEventsList = tripDaysContainer.querySelectorAll(`.trip-events__list`);
 
-  for (const day of tripEventsList) {
-    for (const point of generateRandomDay().wayPoints) {
-      renderComponent(day, createTripEventTemplate(point), `beforeend`);
+  for (let i = 0; i < randomDaysList.length; i++) {
+    let wayPointList = randomDaysList[i].wayPoints;
+    let currentTripDay = tripEventsList[i];
+    for (let j = 0; j < wayPointList.length; j++) {
+      let wayPoint = wayPointList[j];
+      renderComponent(currentTripDay, createTripEventTemplate(wayPoint), `beforeend`);
     }
   }
 };
 
-renderTripDay(TRIP_DAYS_COUNT);
-
-// const offer = generateRandomDay();
-// console.log(offer);
+renderTripDay();

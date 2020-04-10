@@ -12,6 +12,7 @@ const MIN_WAY_POINTS = 1;
 const MAX_WAY_POINTS = 5;
 const MINUTES_COUNT = 60;
 const HOURS_COUNT = 24;
+const TRIP_DAYS_COUNT = 5;
 
 const tripTypes = [
   `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
@@ -154,4 +155,12 @@ const generateRandomDay = () => {
   };
 };
 
-export {generateRandomDay, destinations, tripTypes, stopTypes, correctDateFormat};
+const generateRandomDays = () => {
+  const randomDays = [];
+  for (let i = 0; i < TRIP_DAYS_COUNT; i++) {
+    randomDays.push(generateRandomDay());
+  }
+  return randomDays;
+};
+
+export {generateRandomDays, destinations, tripTypes, stopTypes, correctDateFormat};
