@@ -48,19 +48,46 @@ const generateTripInfo = () => {
   };
 
   const firstPoint = sortList[0].wayPoints[0].destination;
-  const secondPoint = sortList[2].wayPoints[0].destination;
-  const lastPoint = sortList[randomDaysList.length - 1].wayPoints[0].destination;
-
   const firstDate = sortList[0].date;
-  const secondDate = sortList[2].date;
-  const lastDate = sortList[randomDaysList.length - 1].date;
 
-  if (sortList.length > 2) {
+  if (sortList.length === 1) {
+    const tripInfo = `${firstPoint}`;
+    const tripDate = `${getDay(firstDate)}`;
+
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+  }
+
+  if (sortList.length === 2) {
+    const lastPoint = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
+    const lastDate = sortList[sortList.length - 1].date;
+
+    const tripInfo = `${firstPoint} — ${lastPoint}`;
+    const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
+
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+  }
+
+  if (sortList.length === 3) {
+    const secondPoint = sortList[1].wayPoints[0].destination;
+    const lastPoint = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
+    const lastDate = sortList[sortList.length - 1].date;
+
+    const tripInfo = `${firstPoint} — ${secondPoint} — ${lastPoint}`;
+    const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
+
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+  }
+
+  if (sortList.length > 3) {
+    const lastPoint = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
+    const lastDate = sortList[sortList.length - 1].date;
+
     const tripInfo = `${firstPoint} ... ${lastPoint}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
     renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
   }
+
 };
 
 generateTripInfo();
