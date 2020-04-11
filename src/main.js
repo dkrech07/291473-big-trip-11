@@ -33,7 +33,38 @@ const headerContainer = document.querySelector(`.page-header`);
 const tripMenu = headerContainer.querySelector(`.trip-main`);
 const tripSwitch = tripMenu.querySelector(`.trip-main__trip-controls h2:first-child`);
 const tripFilter = tripMenu.querySelector(`.trip-main__trip-controls h2:last-child`);
-renderComponent(tripMenu, createTripInfoTemplate(), `afterbegin`);
+
+const generateTripInfo = () => {
+  const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
+
+  const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+
+  const getDay = (day) => {
+    const dayNumber = day.getDate();
+    const monthNumber = day.getMonth();
+    const monthName = MONTHS_LIST[monthNumber];
+
+    return `${monthName} ${dayNumber}`;
+  };
+
+  const firstPoint = sortList[0].wayPoints[0].destination;
+  const secondPoint = sortList[2].wayPoints[0].destination;
+  const lastPoint = sortList[randomDaysList.length - 1].wayPoints[0].destination;
+
+  const firstDate = sortList[0].date;
+  const secondDate = sortList[2].date;
+  const lastDate = sortList[randomDaysList.length - 1].date;
+
+  if (sortList.length > 2) {
+    const tripInfo = `${firstPoint} ... ${lastPoint}`;
+    const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
+
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+  }
+};
+
+generateTripInfo();
+
 renderComponent(tripSwitch, createMenuTemplate(), `afterend`);
 renderComponent(tripFilter, createFiltersTemplate(), `afterend`);
 
@@ -88,16 +119,18 @@ renderComponent(tripEvents, createTripDaysTemplate(), `beforeend`);
 const tripDaysContainer = mainContainer.querySelector(`.trip-days`);
 
 const renderTripDay = () => {
-  for (let i = 0; i < randomDaysList.length; i++) {
-    renderComponent(tripDaysContainer, createTripDayTemplate(randomDaysList[i]), `beforeend`);
+  const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+
+  for (let i = 0; i < daysList.length; i++) {
+    renderComponent(tripDaysContainer, createTripDayTemplate(daysList[i]), `beforeend`);
   }
 
   const tripEventsList = tripDaysContainer.querySelectorAll(`.trip-events__list`);
 
-  for (let i = 0; i < randomDaysList.length; i++) {
-    let wayPoint = randomDaysList[i].wayPoints;
+  for (let i = 0; i < daysList.length; i++) {
+    let wayPoint = daysList[i].wayPoints;
     let currentTripDay = tripEventsList[i];
-    let currentDay = randomDaysList[i];
+    let currentDay = daysList[i];
 
     for (let j = 0; j < wayPoint.length; j++) {
       let currentPoint = wayPoint[j];
@@ -107,8 +140,8 @@ const renderTripDay = () => {
 
   const daysElements = document.querySelectorAll(`.trip-events__list`);
 
-  for (let i = 0; i < randomDaysList.length; i++) {
-    const currentDay = randomDaysList[i];
+  for (let i = 0; i < daysList.length; i++) {
+    const currentDay = daysList[i];
     const currentOffersList = daysElements[i].querySelectorAll(`.event__selected-offers`);
 
     for (let j = 0; j < currentDay.wayPoints.length; j++) {
@@ -123,8 +156,7 @@ const renderTripDay = () => {
   }
 };
 
-randomDaysList.sort((a, b) => a.date > b.date ? 1 : -1);
 
 renderTripDay();
 
-console.log(randomDaysList);
+// console.log(randomDaysList);
