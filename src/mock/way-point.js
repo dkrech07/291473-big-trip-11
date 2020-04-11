@@ -4,15 +4,13 @@ const MAX_OFFERS = 5;
 const MIN_DESCRIPTION = 1;
 const MAX_DESCRIPTION = 5;
 const MAX_PHOTOS = 10;
-const DAY_COUNT = 30;
-const MONTH_COUNT = 12;
-const YEAR_COUNT_MIN = 19;
-const YEAR_COUNT_MAX = 21;
 const MIN_WAY_POINTS = 1;
 const MAX_WAY_POINTS = 5;
 const MINUTES_COUNT = 60;
 const HOURS_COUNT = 24;
 const TRIP_DAYS_COUNT = 5;
+const DAY_MILLISECONDS_FIRST = 1554986613000;
+const DAY_MILLISECONDS_SECOND = 1649681013000;
 
 const tripTypes = [
   `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
@@ -139,13 +137,19 @@ const generateTripPoints = () => {
   return wayPointsList;
 };
 
+const generateRandomDate = () => {
+  return new Date(getRandomIntegerNumber(DAY_MILLISECONDS_FIRST, DAY_MILLISECONDS_SECOND));
+};
+
 const generateRandomDay = () => {
-  const monthNumber = getRandom(MONTH_COUNT) + 1;
+  const newDate = generateRandomDate();
+  const monthNumber = newDate.getMonth();
   return {
-    day: getRandom(DAY_COUNT) + 1,
-    month: monthNumber,
-    monthName: montsList[monthNumber - 1],
-    year: getRandomIntegerNumber(YEAR_COUNT_MIN, YEAR_COUNT_MAX),
+    date: newDate,
+    day: newDate.getDate(),
+    month: monthNumber + 1,
+    monthName: montsList[monthNumber],
+    year: (newDate.getFullYear() + ``).slice(2),
     wayPoints: generateTripPoints(),
   };
 };

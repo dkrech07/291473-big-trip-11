@@ -3,11 +3,12 @@ const MINUTES_COUNT = 60;
 const DAY_MILLISECONDS_COUNT = 86400000;
 const HOUR_MILLISECONDS_COUNT = 3600000;
 const MIN_MILLISECONDS_COUNT = 60000;
+const DATE_LENGTH = 2;
 
 export const correctDateFormat = (number) => {
   const date = number.toString();
 
-  if (date.length < 2) {
+  if (date.length < DATE_LENGTH) {
     const newDate = `0` + date;
     return newDate;
   }

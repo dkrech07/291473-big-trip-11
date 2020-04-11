@@ -102,12 +102,6 @@ const renderTripDay = () => {
     for (let j = 0; j < wayPoint.length; j++) {
       let currentPoint = wayPoint[j];
       renderComponent(currentTripDay, createTripEventTemplate(currentPoint, currentDay), `beforeend`);
-
-      // const eventContainers = tripDaysContainer.querySelector(`.event__selected-offers`);
-      // console.log(eventContainers);
-      // for (let k = 0; k < eventContainers.length; k++) {
-      //   renderComponent(eventContainers[k], generateOfferTemplate(wayPoint.offer[k]), `beforeend`);
-      // }
     }
   }
 
@@ -127,15 +121,10 @@ const renderTripDay = () => {
       }
     }
   }
-
-
-  // for (let i = 0; k < randomDaysList.wayPoint.offer.length; k++) {
-  //   const currentEventOffers = currentTripDay.querySelector(`.event__selected-offers`);
-  //   renderComponent(currentEventOffers, generateOfferTemplate(wayPoint.offer[k]), `beforeend`);
-  // }
-  // console.log(randomDaysList[0].wayPoints[0].offer[0].offerTitle);
 };
+
+randomDaysList.sort((a, b) => a.date > b.date ? 1 : -1);
 
 renderTripDay();
 
-// console.log(randomDaysList);
+console.log(randomDaysList);
