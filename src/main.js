@@ -34,8 +34,29 @@ const tripMenu = headerContainer.querySelector(`.trip-main`);
 const tripSwitch = tripMenu.querySelector(`.trip-main__trip-controls h2:first-child`);
 const tripFilter = tripMenu.querySelector(`.trip-main__trip-controls h2:last-child`);
 
+const getPrice = () => {
+  let tripPrices = 0;
+  let offersPrices = 0;
+  for (const day of randomDaysList) {
+    const currentDay = day;
+    for (const wayPoint of currentDay.wayPoints) {
+      const wayPointPrice = wayPoint.price;
+      const wayPointOffer = wayPoint.offer;
+      tripPrices += wayPointPrice;
+      for (const offer of wayPointOffer) {
+        const offerPrice = offer.offerPrice;
+        offersPrices += offerPrice;
+
+      }
+    }
+  }
+  return tripPrices + offersPrices;
+};
+
 const generateTripInfo = () => {
   const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
+
+  const tripCost = getPrice();
 
   const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
@@ -54,7 +75,7 @@ const generateTripInfo = () => {
     const tripInfo = `${firstPoint}`;
     const tripDate = `${getDay(firstDate)}`;
 
-    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
 
   if (sortList.length === 2) {
@@ -64,7 +85,7 @@ const generateTripInfo = () => {
     const tripInfo = `${firstPoint} — ${lastPoint}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
-    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
 
   if (sortList.length === 3) {
@@ -75,7 +96,7 @@ const generateTripInfo = () => {
     const tripInfo = `${firstPoint} — ${secondPoint} — ${lastPoint}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
-    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
 
   if (sortList.length > 3) {
@@ -85,9 +106,8 @@ const generateTripInfo = () => {
     const tripInfo = `${firstPoint} ... ${lastPoint}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
-    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate), `afterbegin`);
+    renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
-
 };
 
 generateTripInfo();
@@ -185,5 +205,3 @@ const renderTripDay = () => {
 
 
 renderTripDay();
-
-// console.log(randomDaysList);
