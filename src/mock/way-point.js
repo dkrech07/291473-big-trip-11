@@ -94,7 +94,7 @@ const generateDescription = () => {
   });
   destinationsList.length = getRandomIntegerNumber(MIN_DESCRIPTION, MAX_DESCRIPTION);
 
-  return destinationsList.join(`. `);
+  return destinationsList.join(``);
 };
 
 const generatePhotos = () => {

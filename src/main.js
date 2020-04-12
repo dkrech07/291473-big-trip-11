@@ -23,6 +23,8 @@ import {createTripDayTemplate} from './components/trip-day.js';
 import {createTripEventTemplate} from './components/trip-event.js';
 import {generateOfferTemplate} from './components/trip-event.js';
 
+import {MONTHS_LIST} from './utils.js';
+
 const randomDaysList = generateRandomDays();
 
 const renderComponent = (container, template, place) => {
@@ -54,7 +56,6 @@ const getPrice = () => {
 };
 
 const generateTripInfo = () => {
-  const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
 
   const tripCost = getPrice();
 
@@ -202,6 +203,5 @@ const renderTripDay = () => {
     }
   }
 };
-
 
 renderTripDay();

@@ -1,6 +1,5 @@
 import {correctDateFormat} from '../utils.js';
-
-const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
+import {MONTHS_LIST} from '../utils.js';
 
 export const createTripDayTemplate = (tripDayInfo) => {
 

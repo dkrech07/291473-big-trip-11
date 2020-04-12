@@ -5,6 +5,8 @@ const HOUR_MILLISECONDS_COUNT = 3600000;
 const MIN_MILLISECONDS_COUNT = 60000;
 const DATE_LENGTH = 2;
 
+export const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
+
 export const correctDateFormat = (number) => {
   const date = number.toString();
 
