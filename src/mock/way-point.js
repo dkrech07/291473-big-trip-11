@@ -1,4 +1,6 @@
 import {DAY_MILLISECONDS_COUNT} from '../utils.js';
+import {MINUTES_COUNT} from '../utils.js';
+import {HOURS_COUNT} from '../utils.js';
 
 const MIN_PRICE = 5;
 const MAX_PRICE = 100;
@@ -8,8 +10,6 @@ const MAX_DESCRIPTION = 5;
 const MAX_PHOTOS = 10;
 const MIN_WAY_POINTS = 1;
 const MAX_WAY_POINTS = 5;
-const MINUTES_COUNT = 60;
-const HOURS_COUNT = 24;
 const TRIP_DAYS_COUNT = 3;
 const YEAR_DAYS_COUNT = 365;
 const MILLISECONDS_COUNT = YEAR_DAYS_COUNT * DAY_MILLISECONDS_COUNT;

@@ -84,4 +84,4 @@ const getDay = (day) => {
   return `${monthName} ${dayNumber}`;
 };
 
-export {MONTHS_LIST, DAY_MILLISECONDS_COUNT, correctDateFormat, calculateTripTime, getDayInfo, getPrice, getDay};
+export {MINUTES_COUNT, HOURS_COUNT, MONTHS_LIST, DAY_MILLISECONDS_COUNT, correctDateFormat, calculateTripTime, getDayInfo, getPrice, getDay};
