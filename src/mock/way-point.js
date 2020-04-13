@@ -73,9 +73,9 @@ const generateOfferKeys = () => {
 
 const generateOffer = (offerKey) => {
   return {
-    offerType: offerKey,
-    offerTitle: offers[offerKey],
-    offerPrice: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+    type: offerKey,
+    title: offers[offerKey],
+    price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
   };
 };
 
@@ -94,7 +94,7 @@ const generateDescription = () => {
   });
   destinationsList.length = getRandomIntegerNumber(MIN_DESCRIPTION, MAX_DESCRIPTION);
 
-  return destinationsList.join(``);
+  return destinationsList.join(` `);
 };
 
 const generatePhotos = () => {
@@ -114,9 +114,9 @@ const generateDestinationInfo = () => {
 
 const generateTripPoint = () => {
   return {
-    pointType: getRandomArrayItem(tripTypes.concat(stopTypes)),
+    type: getRandomArrayItem(tripTypes.concat(stopTypes)),
     destination: getRandomArrayItem(destinations),
-    offer: generateOffers(generateOfferKeys()),
+    offers: generateOffers(generateOfferKeys()),
     destinationInfo: generateDestinationInfo(),
     hoursDeparture: getRandom(HOURS_COUNT),
     minutesDeparture: getRandom(MINUTES_COUNT),

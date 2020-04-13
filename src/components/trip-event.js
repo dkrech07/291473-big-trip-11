@@ -2,8 +2,7 @@ import {correctDateFormat} from '../utils.js';
 import {calculateTripTime} from '../utils.js';
 
 export const generateOfferTemplate = (offer) => {
-  const title = offer.offerTitle;
-  const price = offer.offerPrice;
+  const {title, price} = offer;
 
   return (
     `<li class="event__offer">
@@ -15,9 +14,9 @@ export const generateOfferTemplate = (offer) => {
 };
 
 export const createTripEventTemplate = (point, currentDay) => {
-  const pointType = point.pointType;
+  const pointType = point.type;
   const pointDestination = point.destination;
-  const pointImage = point.pointType.toLowerCase();
+  const pointImage = point.type.toLowerCase();
   const hoursDeparture = point.hoursDeparture;
   const minutesDeparture = point.minutesDeparture;
   const hoursArrival = point.hoursArrival;

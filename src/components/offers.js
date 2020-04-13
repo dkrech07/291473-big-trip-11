@@ -1,20 +1,21 @@
 export const createOfferTemplate = (offer) => {
+  const {type, title, price} = offer;
 
   return (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.offerType}-1" type="checkbox" name="event-offer-${offer.offerType}" checked>
-      <label class="event__offer-label" for="event-offer-${offer.offerType}-1">
-        <span class="event__offer-title">${offer.offerTitle}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}" checked>
+      <label class="event__offer-label" for="event-offer-${type}-1">
+        <span class="event__offer-title">${title}</span>
         &plus;
-        &euro;&nbsp;<span class="event__offer-price">${offer.offerPrice}</span>
+        &euro;&nbsp;<span class="event__offer-price">${price}</span>
       </label>
     </div>`
   );
 };
 
-export const createDescriptionTemplate = (text) => {
+export const createDescriptionTemplate = (description) => {
   return (
-    `<p class="event__destination-description">${text}</p>`
+    `<p class="event__destination-description">${description}</p>`
   );
 };
 

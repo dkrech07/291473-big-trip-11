@@ -43,12 +43,11 @@ const getPrice = () => {
     const currentDay = day;
     for (const wayPoint of currentDay.wayPoints) {
       const wayPointPrice = wayPoint.price;
-      const wayPointOffer = wayPoint.offer;
+      const wayPointOffer = wayPoint.offers;
       tripPrices += wayPointPrice;
       for (const offer of wayPointOffer) {
-        const offerPrice = offer.offerPrice;
+        const offerPrice = offer.price;
         offersPrices += offerPrice;
-
       }
     }
   }
@@ -146,15 +145,14 @@ const eventPhotos = eventDetails.querySelector(`.event__photos-tape`);
 
 const renderOfferInfo = (numberDay, numberTripPoint) => {
   const tripPointInfo = randomDaysList[numberDay].wayPoints[numberTripPoint];
-  const destinationInfo = tripPointInfo.destinationInfo;
-  const offerInfo = tripPointInfo.offer;
+  const {offers, destinationInfo} = tripPointInfo;
 
-  for (const offer of offerInfo) {
+  for (const offer of offers) {
     renderComponent(eventOffes, createOfferTemplate(offer), `afterbegin`);
   }
 
-  const descriptionText = destinationInfo.destinationDescription;
-  renderComponent(eventDescription, createDescriptionTemplate(descriptionText), `afterend`);
+  const description = destinationInfo.destinationDescription;
+  renderComponent(eventDescription, createDescriptionTemplate(description), `afterend`);
 
   for (const photo of destinationInfo.destinationPhotos) {
     renderComponent(eventPhotos, createPhotosTemplate(photo), `afterbegin`);
@@ -196,8 +194,8 @@ const renderTripDay = () => {
       const currentWayPoint = currentDay.wayPoints[j];
       const curentOfferElements = currentOffersList[j];
 
-      for (let k = 0; k < currentWayPoint.offer.length; k++) {
-        const currentOffer = currentWayPoint.offer[k];
+      for (let k = 0; k < currentWayPoint.offers.length; k++) {
+        const currentOffer = currentWayPoint.offers[k];
         renderComponent(curentOfferElements, generateOfferTemplate(currentOffer), `beforeend`);
       }
     }
@@ -205,3 +203,5 @@ const renderTripDay = () => {
 };
 
 renderTripDay();
+
+console.log(randomDaysList);
