@@ -1,19 +1,15 @@
 import {correctDateFormat} from '../utils.js';
-import {MONTHS_LIST} from '../utils.js';
+import {getDayInfo} from '../utils.js';
 
 export const createTripDayTemplate = (tripDayInfo) => {
 
-  const day = tripDayInfo.date.getDate();
-  const monthNumber = tripDayInfo.date.getMonth();
-  const monthName = MONTHS_LIST[monthNumber];
-  const year = tripDayInfo.date.getFullYear();
-  const minYear = year.toString().slice(2);
+  const {day, month, monthName, year, minYear} = getDayInfo(tripDayInfo);
 
   return (
     `<li class="trip-days__item  day">
         <div class="day__info">
           <span class="day__counter">${day}</span>
-          <time class="day__date" datetime="${year}-${correctDateFormat(monthNumber + 1)}-${correctDateFormat(day)}">${monthName} ${minYear}</time>
+          <time class="day__date" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}">${monthName} ${minYear}</time>
         </div>
 
         <ul class="trip-events__list"></ul>

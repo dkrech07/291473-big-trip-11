@@ -174,13 +174,13 @@ const renderTripDay = () => {
   const tripEventsList = tripDaysContainer.querySelectorAll(`.trip-events__list`);
 
   for (let i = 0; i < daysList.length; i++) {
-    let wayPoint = daysList[i].wayPoints;
-    let currentTripDay = tripEventsList[i];
-    let currentDay = daysList[i];
+    const wayPoint = daysList[i].wayPoints;
+    const currentTripDay = tripEventsList[i];
+    const currentDate = daysList[i];
 
     for (let j = 0; j < wayPoint.length; j++) {
-      let currentPoint = wayPoint[j];
-      renderComponent(currentTripDay, createTripEventTemplate(currentPoint, currentDay), `beforeend`);
+      const currentPoint = wayPoint[j];
+      renderComponent(currentTripDay, createTripEventTemplate(currentPoint, currentDate), `beforeend`);
     }
   }
 
@@ -204,4 +204,4 @@ const renderTripDay = () => {
 
 renderTripDay();
 
-console.log(randomDaysList);
+// console.log(randomDaysList);

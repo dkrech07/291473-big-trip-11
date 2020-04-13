@@ -5,9 +5,9 @@ const HOUR_MILLISECONDS_COUNT = 3600000;
 const MIN_MILLISECONDS_COUNT = 60000;
 const DATE_LENGTH = 2;
 
-export const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
+const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
 
-export const correctDateFormat = (number) => {
+const correctDateFormat = (number) => {
   const date = number.toString();
 
   if (date.length < DATE_LENGTH) {
@@ -18,7 +18,7 @@ export const correctDateFormat = (number) => {
   return date;
 };
 
-export let calculateTripTime = (departure, arrival) => {
+let calculateTripTime = (departure, arrival) => {
   let firstDate = departure.toString();
   let secondDate = arrival.toString();
 
@@ -41,3 +41,21 @@ export let calculateTripTime = (departure, arrival) => {
 
   return `${correctDateFormat(hours)}H ${correctDateFormat(minuts)}М`;
 };
+
+const getDayInfo = (currentDate) => {
+  const day = currentDate.date.getDate();
+  const month = currentDate.date.getMonth() + 1;
+  const monthName = MONTHS_LIST[currentDate.date.getMonth()];
+  const year = currentDate.date.getFullYear();
+  const minYear = year.toString().slice(2);
+
+  return {
+    day,
+    month,
+    monthName,
+    year,
+    minYear,
+  };
+};
+
+export {MONTHS_LIST, correctDateFormat, calculateTripTime, getDayInfo};

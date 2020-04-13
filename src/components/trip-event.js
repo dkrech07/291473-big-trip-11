@@ -1,5 +1,6 @@
 import {correctDateFormat} from '../utils.js';
 import {calculateTripTime} from '../utils.js';
+import {getDayInfo} from '../utils.js';
 
 export const generateOfferTemplate = (offer) => {
   const {title, price} = offer;
@@ -13,20 +14,11 @@ export const generateOfferTemplate = (offer) => {
   );
 };
 
-export const createTripEventTemplate = (point, currentDay) => {
-  const pointType = point.type;
-  const pointDestination = point.destination;
+export const createTripEventTemplate = (point, currentDate) => {
+  const {type, destination, hoursArrival, minutesArrival, hoursDeparture, minutesDeparture, price} = point;
+  const {day, month, year} = getDayInfo(currentDate);
+
   const pointImage = point.type.toLowerCase();
-  const hoursDeparture = point.hoursDeparture;
-  const minutesDeparture = point.minutesDeparture;
-  const hoursArrival = point.hoursArrival;
-  const minutesArrival = point.minutesArrival;
-  const tripPrice = point.price;
-
-  const year = currentDay.year;
-  const month = currentDay.month;
-  const day = currentDay.day;
-
   const generateRandomTime = (start, finish) => {
     return `${correctDateFormat(start)}:${correctDateFormat(finish)}`;
   };
@@ -41,19 +33,19 @@ export const createTripEventTemplate = (point, currentDay) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${pointImage}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${pointType} to ${pointDestination}</h3>
+        <h3 class="event__title">${type} to ${destination}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="20${year}-${month}-${year}T${day}">${departure}</time>
+            <time class="event__start-time" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}T${departure}">${departure}</time>
             &mdash;
-            <time class="event__end-time" datetime="20${year}-${month}-${day}T${arrival}">${arrival}</time>
+            <time class="event__end-time" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}T${arrival}">${arrival}</time>
           </p>
           <p class="event__duration">${tripTime}</p>
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${tripPrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
