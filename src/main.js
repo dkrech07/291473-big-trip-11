@@ -1,7 +1,7 @@
 import {generateRandomDays} from './mock/way-point.js';
-import {destinations} from './mock/way-point.js';
-import {tripTypes} from './mock/way-point.js';
-import {stopTypes} from './mock/way-point.js';
+import {DESTINATIONS} from './mock/way-point.js';
+import {TRIP_TYPES} from './mock/way-point.js';
+import {STOP_TYPES} from './mock/way-point.js';
 
 import {createTripInfoTemplate} from './components/trip-info.js';
 import {createMenuTemplate} from './components/menu.js';
@@ -23,7 +23,8 @@ import {createTripDayTemplate} from './components/trip-day.js';
 import {createTripEventTemplate} from './components/trip-event.js';
 import {generateOfferTemplate} from './components/trip-event.js';
 
-import {MONTHS_LIST} from './utils.js';
+import {getPrice} from './utils.js';
+import {getDay} from './utils.js';
 
 const randomDaysList = generateRandomDays();
 
@@ -36,74 +37,48 @@ const tripMenu = headerContainer.querySelector(`.trip-main`);
 const tripSwitch = tripMenu.querySelector(`.trip-main__trip-controls h2:first-child`);
 const tripFilter = tripMenu.querySelector(`.trip-main__trip-controls h2:last-child`);
 
-const getPrice = () => {
-  let tripPrices = 0;
-  let offersPrices = 0;
-  for (const day of randomDaysList) {
-    const currentDay = day;
-    for (const wayPoint of currentDay.wayPoints) {
-      const wayPointPrice = wayPoint.price;
-      const wayPointOffer = wayPoint.offers;
-      tripPrices += wayPointPrice;
-      for (const offer of wayPointOffer) {
-        const offerPrice = offer.price;
-        offersPrices += offerPrice;
-      }
-    }
-  }
-  return tripPrices + offersPrices;
-};
-
 const generateTripInfo = () => {
 
-  const tripCost = getPrice();
+  const tripCost = getPrice(randomDaysList);
 
   const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
-  const getDay = (day) => {
-    const dayNumber = day.getDate();
-    const monthNumber = day.getMonth();
-    const monthName = MONTHS_LIST[monthNumber];
-
-    return `${monthName} ${dayNumber}`;
-  };
-
-  const firstPoint = sortList[0].wayPoints[0].destination;
+  const firstPointDestination = sortList[0].wayPoints[0].destination;
   const firstDate = sortList[0].date;
 
   if (sortList.length === 1) {
-    const tripInfo = `${firstPoint}`;
+    const tripInfo = `${firstPointDestination}`;
     const tripDate = `${getDay(firstDate)}`;
 
     renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
 
   if (sortList.length === 2) {
-    const lastPoint = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
+    const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
     const lastDate = sortList[sortList.length - 1].date;
 
-    const tripInfo = `${firstPoint} — ${lastPoint}`;
+    const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
     renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
 
   if (sortList.length === 3) {
-    const secondPoint = sortList[1].wayPoints[0].destination;
-    const lastPoint = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
+    const secondPointDestination = sortList[1].wayPoints[0].destination;
+    const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
     const lastDate = sortList[sortList.length - 1].date;
 
-    const tripInfo = `${firstPoint} — ${secondPoint} — ${lastPoint}`;
+    const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
     renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
   }
 
   if (sortList.length > 3) {
-    const lastPoint = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
+    const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
     const lastDate = sortList[sortList.length - 1].date;
 
-    const tripInfo = `${firstPoint} ... ${lastPoint}`;
+    const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
     renderComponent(tripMenu, createTripInfoTemplate(tripInfo, tripDate, tripCost), `afterbegin`);
@@ -125,15 +100,15 @@ const destinationsList = eventHeader.querySelector(`.event__input--destination +
 const eventTripList = eventHeader.querySelector(`.event__type-list .event__type-group:first-child legend`);
 const eventStopList = eventHeader.querySelector(`.event__type-list .event__type-group:last-child legend`);
 
-for (const destination of destinations) {
+for (const destination of DESTINATIONS) {
   renderComponent(destinationsList, createDestinationsTemplate(destination), `afterbegin`);
 }
 
-for (const tripType of tripTypes) {
+for (const tripType of TRIP_TYPES) {
   renderComponent(eventTripList, createEventTypeTemplate(tripType), `afterend`);
 }
 
-for (const stopType of stopTypes) {
+for (const stopType of STOP_TYPES) {
   renderComponent(eventStopList, createEventTypeTemplate(stopType), `afterend`);
 }
 
@@ -203,5 +178,3 @@ const renderTripDay = () => {
 };
 
 renderTripDay();
-
-// console.log(randomDaysList);

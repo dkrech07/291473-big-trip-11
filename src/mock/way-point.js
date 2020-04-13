@@ -1,3 +1,5 @@
+import {DAY_MILLISECONDS_COUNT} from '../utils.js';
+
 const MIN_PRICE = 5;
 const MAX_PRICE = 100;
 const MAX_OFFERS = 5;
@@ -9,22 +11,28 @@ const MAX_WAY_POINTS = 5;
 const MINUTES_COUNT = 60;
 const HOURS_COUNT = 24;
 const TRIP_DAYS_COUNT = 3;
-const DAY_MILLISECONDS_FIRST = 1554986613000;
-const DAY_MILLISECONDS_SECOND = 1649681013000;
+const YEAR_DAYS_COUNT = 365;
+const MILLISECONDS_COUNT = YEAR_DAYS_COUNT * DAY_MILLISECONDS_COUNT;
+const START_YEAR_COUNT = 1970;
+const LAST_YEAR_COUNT = 2019;
+const NEXT_YEAR_COUNT = 2022;
+const START_YEAR_MILLISECONDS_COUNT = START_YEAR_COUNT * MILLISECONDS_COUNT;
+const LAST_YEAR_MILLISECONDS_COUNT = LAST_YEAR_COUNT * MILLISECONDS_COUNT - START_YEAR_MILLISECONDS_COUNT;
+const NEXT_YEAR_MILLISECONDS_COUNT = NEXT_YEAR_COUNT * MILLISECONDS_COUNT - START_YEAR_MILLISECONDS_COUNT;
 
-const tripTypes = [
+const TRIP_TYPES = [
   `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
 ];
 
-const stopTypes = [
+const STOP_TYPES = [
   `Check-in`, `Sightseeing`, `Restaurant`
 ];
 
-const destinations = [
+const DESTINATIONS = [
   `Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`
 ];
 
-const offers = {
+const OFFERS = {
   luggage: `Add luggage`,
   comfort: `Switch to comfort`,
   meal: `Add meal`,
@@ -37,7 +45,7 @@ const offers = {
   city: `Lunch in city`
 };
 
-const destinationText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
+const DESTINATION_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
 
 const getRandom = (number) => {
   return Math.floor(Math.random() * number);
@@ -65,7 +73,7 @@ const generateOfferKeys = () => {
   let offersKeys = [];
 
   for (let i = 0; i <= getRandom(MAX_OFFERS) + 1; i++) {
-    offersKeys.push(getRandomArrayItem(Object.keys(offers)));
+    offersKeys.push(getRandomArrayItem(Object.keys(OFFERS)));
   }
 
   return getUniqueList(offersKeys);
@@ -74,7 +82,7 @@ const generateOfferKeys = () => {
 const generateOffer = (offerKey) => {
   return {
     type: offerKey,
-    title: offers[offerKey],
+    title: OFFERS[offerKey],
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
   };
 };
@@ -88,7 +96,7 @@ const generateOffers = (offerKeys) => {
 };
 
 const generateDescription = () => {
-  const destinationsList = destinationText.split(`. `);
+  const destinationsList = DESTINATION_TEXT.split(`. `);
   destinationsList.sort(() => {
     return 0.5 - Math.random();
   });
@@ -114,8 +122,8 @@ const generateDestinationInfo = () => {
 
 const generateTripPoint = () => {
   return {
-    type: getRandomArrayItem(tripTypes.concat(stopTypes)),
-    destination: getRandomArrayItem(destinations),
+    type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
+    destination: getRandomArrayItem(DESTINATIONS),
     offers: generateOffers(generateOfferKeys()),
     destinationInfo: generateDestinationInfo(),
     hoursDeparture: getRandom(HOURS_COUNT),
@@ -136,7 +144,7 @@ const generateTripPoints = () => {
 };
 
 const generateRandomDate = () => {
-  return new Date(getRandomIntegerNumber(DAY_MILLISECONDS_FIRST, DAY_MILLISECONDS_SECOND));
+  return new Date(getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT));
 };
 
 const generateRandomDay = () => {
@@ -156,4 +164,4 @@ const generateRandomDays = () => {
   return randomDays;
 };
 
-export {generateRandomDays, destinations, tripTypes, stopTypes};
+export {generateRandomDays, DESTINATIONS, TRIP_TYPES, STOP_TYPES};

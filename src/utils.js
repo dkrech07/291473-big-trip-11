@@ -1,8 +1,8 @@
-const HOURS_COUNT = 24;
 const MINUTES_COUNT = 60;
-const DAY_MILLISECONDS_COUNT = 86400000;
-const HOUR_MILLISECONDS_COUNT = 3600000;
-const MIN_MILLISECONDS_COUNT = 60000;
+const HOURS_COUNT = 24;
+const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
+const HOUR_MILLISECONDS_COUNT = MINUTES_COUNT * MIN_MILLISECONDS_COUNT;
+const DAY_MILLISECONDS_COUNT = MINUTES_COUNT * HOURS_COUNT * MIN_MILLISECONDS_COUNT;
 const DATE_LENGTH = 2;
 
 const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
@@ -18,12 +18,12 @@ const correctDateFormat = (number) => {
   return date;
 };
 
-let calculateTripTime = (departure, arrival) => {
-  let firstDate = departure.toString();
-  let secondDate = arrival.toString();
+const calculateTripTime = (departure, arrival) => {
+  const firstDate = departure.toString();
+  const secondDate = arrival.toString();
 
-  let getDate = (string) => new Date(0, 0, 0, string.split(`:`)[0], string.split(`:`)[1]);
-  let different = (getDate(secondDate) - getDate(firstDate));
+  const getDate = (string) => new Date(0, 0, 0, string.split(`:`)[0], string.split(`:`)[1]);
+  const different = (getDate(secondDate) - getDate(firstDate));
   let differentRes; let hours; let minuts;
   if (different > 0) {
     differentRes = different;
@@ -58,4 +58,30 @@ const getDayInfo = (currentDate) => {
   };
 };
 
-export {MONTHS_LIST, correctDateFormat, calculateTripTime, getDayInfo};
+const getPrice = (daysList) => {
+  let tripPrices = 0;
+  let offersPrices = 0;
+  for (const day of daysList) {
+    const currentDay = day;
+    for (const wayPoint of currentDay.wayPoints) {
+      const wayPointPrice = wayPoint.price;
+      const wayPointOffer = wayPoint.offers;
+      tripPrices += wayPointPrice;
+      for (const offer of wayPointOffer) {
+        const offerPrice = offer.price;
+        offersPrices += offerPrice;
+      }
+    }
+  }
+  return tripPrices + offersPrices;
+};
+
+const getDay = (day) => {
+  const dayNumber = day.getDate();
+  const monthNumber = day.getMonth();
+  const monthName = MONTHS_LIST[monthNumber];
+
+  return `${monthName} ${dayNumber}`;
+};
+
+export {MONTHS_LIST, DAY_MILLISECONDS_COUNT, correctDateFormat, calculateTripTime, getDayInfo, getPrice, getDay};
