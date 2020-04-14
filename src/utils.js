@@ -84,4 +84,22 @@ const getDay = (day) => {
   return `${monthName} ${dayNumber}`;
 };
 
-export {MINUTES_COUNT, HOURS_COUNT, MONTHS_LIST, DAY_MILLISECONDS_COUNT, correctDateFormat, calculateTripTime, getDayInfo, getPrice, getDay};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export {
+  MINUTES_COUNT,
+  HOURS_COUNT,
+  MONTHS_LIST,
+  DAY_MILLISECONDS_COUNT,
+  correctDateFormat,
+  calculateTripTime,
+  getDayInfo,
+  getPrice,
+  getDay,
+  createElement
+};

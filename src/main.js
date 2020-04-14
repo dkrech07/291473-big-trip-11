@@ -6,10 +6,10 @@ import {STOP_TYPES} from './mock/way-point.js';
 import {createTripInfoTemplate} from './components/trip-info.js';
 import {createMenuTemplate} from './components/menu.js';
 import {createFiltersTemplate} from './components/filters.js';
-import {createSortTemplate} from './components/sorting.js';
+import {createSortingTemplate} from './components/sorting.js';
 
-import {createTripFormTemplate} from './components/trip-form.js';
-import {createDestinationsTemplate} from './components/trip-form.js';
+import {createFormTemplate} from './components/trip-form.js';
+import {createDestinationTemplate} from './components/trip-form.js';
 import {createEventTypeTemplate} from './components/trip-form.js';
 
 import {createOffersTemplate} from './components/offers.js';
@@ -20,8 +20,8 @@ import {createPhotosTemplate} from './components/offers.js';
 import {createTripDaysTemplate} from './components/trip-day.js';
 import {createTripDayTemplate} from './components/trip-day.js';
 
-import {createTripEventTemplate} from './components/trip-event.js';
-import {generateOfferTemplate} from './components/trip-event.js';
+import {createEventTemplate} from './components/trip-event.js';
+import {createEventOfferTemplate} from './components/trip-event.js';
 
 import {getPrice} from './utils.js';
 import {getDay} from './utils.js';
@@ -92,8 +92,8 @@ renderComponent(tripFilterElement, createFiltersTemplate(), `afterend`);
 
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
-renderComponent(tripEventsElement, createSortTemplate(), `beforeend`);
-renderComponent(tripEventsElement, createTripFormTemplate(), `beforeend`);
+renderComponent(tripEventsElement, createSortingTemplate(), `beforeend`);
+renderComponent(tripEventsElement, createFormTemplate(), `beforeend`);
 
 const eventHeadertElement = mainElement.querySelector(`.event__header`);
 const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
@@ -101,7 +101,7 @@ const eventTripListElement = eventHeadertElement.querySelector(`.event__type-lis
 const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
 
 for (const destination of DESTINATIONS) {
-  renderComponent(destinationsListElement, createDestinationsTemplate(destination), `afterbegin`);
+  renderComponent(destinationsListElement, createDestinationTemplate(destination), `afterbegin`);
 }
 
 for (const tripType of TRIP_TYPES) {
@@ -155,7 +155,7 @@ const renderTripDay = () => {
 
     for (let j = 0; j < wayPoint.length; j++) {
       const currentPoint = wayPoint[j];
-      renderComponent(currentTripDay, createTripEventTemplate(currentPoint, currentDate), `beforeend`);
+      renderComponent(currentTripDay, createEventTemplate(currentPoint, currentDate), `beforeend`);
     }
   }
 
@@ -171,7 +171,7 @@ const renderTripDay = () => {
 
       for (let k = 0; k < currentWayPoint.offers.length; k++) {
         const currentOffer = currentWayPoint.offers[k];
-        renderComponent(curentOfferElements, generateOfferTemplate(currentOffer), `beforeend`);
+        renderComponent(curentOfferElements, createEventOfferTemplate(currentOffer), `beforeend`);
       }
     }
   }

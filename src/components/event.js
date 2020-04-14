@@ -1,20 +1,9 @@
+import {createElement} from '../utils.js';
 import {correctDateFormat} from '../utils.js';
 import {calculateTripTime} from '../utils.js';
 import {getDayInfo} from '../utils.js';
 
-export const generateOfferTemplate = (offer) => {
-  const {title, price} = offer;
-
-  return (
-    `<li class="event__offer">
-      <span class="event__offer-title">${title}</span>
-      &plus;
-      &euro;&nbsp;<span class="event__offer-price">${price}</span>
-     </li>`
-  );
-};
-
-export const createTripEventTemplate = (point, currentDate) => {
+export const createEventTemplate = (point, currentDate) => {
   const {type, destination, hoursArrival, minutesArrival, hoursDeparture, minutesDeparture, price} = point;
   const {day, month, year} = getDayInfo(currentDate);
 
@@ -60,3 +49,25 @@ export const createTripEventTemplate = (point, currentDate) => {
     </li>`
   );
 };
+
+export default class Event {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

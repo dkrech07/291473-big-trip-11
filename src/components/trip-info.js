@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 export const createTripInfoTemplate = (tripInfo, tripDate, tripCost) => {
 
   return (
@@ -14,3 +16,25 @@ export const createTripInfoTemplate = (tripInfo, tripDate, tripCost) => {
     </section>`
   );
 };
+
+export default class TripInfo {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

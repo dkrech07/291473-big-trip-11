@@ -1,21 +1,18 @@
 import {createElement} from '../utils.js';
 
-export const createMenuTemplate = () => {
+export const createPhotosTemplate = (photoUrl) => {
   return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn" href="#">Table</a>
-      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Stats</a>
-    </nav>`
+    `<img class="event__photo" src="${photoUrl}" alt="Event photo">`
   );
 };
 
-export default class Menu {
+export default class Photos {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    return createPhotosTemplate();
   }
 
   getElement() {

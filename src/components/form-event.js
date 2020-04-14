@@ -1,0 +1,33 @@
+import {createElement} from '../utils.js';
+
+export const createEventTypeTemplate = (pointType) => {
+  const poitTitle = pointType.toLowerCase();
+  return (
+    `<div class="event__type-item">
+      <input id="event-type-${poitTitle}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${poitTitle}">
+      <label class="event__type-label  event__type-label--${poitTitle}" for="event-type-${poitTitle}-1">${pointType}</label>
+    </div>`
+  );
+};
+
+export default class FormEvent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTypeTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
