@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createMenuTemplate = () => {
+const createMenuTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
       <a class="trip-tabs__btn" href="#">Table</a>

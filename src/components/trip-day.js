@@ -2,7 +2,7 @@ import {createElement} from '../utils.js';
 import {correctDateFormat} from '../utils.js';
 import {getDayInfo} from '../utils.js';
 
-export const createTripDayTemplate = (tripDayInfo) => {
+const createTripDayTemplate = (tripDayInfo) => {
 
   const {day, month, monthName, year, minYear} = getDayInfo(tripDayInfo);
 

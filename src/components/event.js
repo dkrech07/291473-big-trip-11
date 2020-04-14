@@ -3,7 +3,7 @@ import {correctDateFormat} from '../utils.js';
 import {calculateTripTime} from '../utils.js';
 import {getDayInfo} from '../utils.js';
 
-export const createEventTemplate = (point, currentDate) => {
+const createEventTemplate = (point, currentDate) => {
   const {type, destination, hoursArrival, minutesArrival, hoursDeparture, minutesDeparture, price} = point;
   const {day, month, year} = getDayInfo(currentDate);
 

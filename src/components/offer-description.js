@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createDescriptionTemplate = (description) => {
+const createDescriptionTemplate = (description) => {
   return (
     `<p class="event__destination-description">${description}</p>`
   );

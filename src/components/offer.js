@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createOfferTemplate = (offer) => {
+const createOfferTemplate = (offer) => {
   const {type, title, price} = offer;
 
   return (

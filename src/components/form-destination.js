@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createDestinationTemplate = (destination) => {
+const createDestinationTemplate = (destination) => {
   return (
     `<option value="${destination}"></option>`
   );

@@ -10,7 +10,7 @@ const MAX_DESCRIPTION = 5;
 const MAX_PHOTOS = 10;
 const MIN_WAY_POINTS = 1;
 const MAX_WAY_POINTS = 5;
-const TRIP_DAYS_COUNT = 3;
+const TRIP_DAYS_COUNT = 5;
 const YEAR_DAYS_COUNT = 365;
 const MILLISECONDS_COUNT = YEAR_DAYS_COUNT * DAY_MILLISECONDS_COUNT;
 const START_YEAR_COUNT = 1970;
@@ -164,4 +164,9 @@ const generateRandomDays = () => {
   return randomDays;
 };
 
-export {generateRandomDays, DESTINATIONS, TRIP_TYPES, STOP_TYPES};
+export {
+  DESTINATIONS,
+  TRIP_TYPES,
+  STOP_TYPES,
+  generateRandomDays
+};

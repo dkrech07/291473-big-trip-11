@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createFiltersTemplate = () => {
+const createFiltersTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">

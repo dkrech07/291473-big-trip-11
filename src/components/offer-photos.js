@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createPhotosTemplate = (photoUrl) => {
+const createPhotosTemplate = (photoUrl) => {
   return (
     `<img class="event__photo" src="${photoUrl}" alt="Event photo">`
   );

@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export const createEventTypeTemplate = (pointType) => {
+const createEventTypeTemplate = (pointType) => {
   const poitTitle = pointType.toLowerCase();
   return (
     `<div class="event__type-item">
