@@ -93,7 +93,7 @@
 // const mainElement = document.querySelector(`.page-body__page-main`);
 // const tripEventsElement = mainElement.querySelector(`.trip-events`);
 // renderComponent(tripEventsElement, createSortTemplate(), `beforeend`);
-renderComponent(tripEventsElement, createFormTemplate(), `beforeend`);
+// renderComponent(tripEventsElement, createFormTemplate(), `beforeend`);
 
 const eventHeadertElement = mainElement.querySelector(`.event__header`);
 const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);

@@ -50,9 +50,8 @@ const createEventTemplate = (point) => {
 };
 
 export default class Event {
-  constructor(point, currentDate) {
+  constructor(point) {
     this._point = point;
-    this._currentDate = currentDate;
     this._element = null;
   }
 

@@ -6,11 +6,11 @@ import TripDaysComponent from './components/trip-days.js';
 import TripDayComponent from './components/trip-day.js';
 import EventComponent from './components/event.js';
 import EventOfferComponent from './components/event-offer.js';
+import FormComponent from './components/form.js';
 
 
 import FormDestinationComponent from './components/form-destination.js';
 import FormEventComponent from './components/form-event.js';
-import FormComponent from './components/form.js';
 import OffersComponent from './components/offers.js';
 import OfferComponent from './components/offer.js';
 import PhotosComponent from './components/offer-photos.js';
@@ -89,7 +89,8 @@ const renderTripDay = () => {
   const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
   for (let i = 0; i < daysList.length; i++) {
-    render(tripDaysElement, new TripDayComponent(daysList[i]).getElement(), RENDER_POSITION.BEFOREEND);
+    const tripDayComponent = new TripDayComponent(daysList[i]);
+    render(tripDaysElement, tripDayComponent.getElement(), RENDER_POSITION.BEFOREEND);
   }
 
   const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
@@ -100,7 +101,34 @@ const renderTripDay = () => {
 
     for (let j = 0; j < wayPoint.length; j++) {
       const currentPoint = wayPoint[j];
-      render(currentTripDay, new EventComponent(currentPoint).getElement(), RENDER_POSITION.BEFOREEND);
+
+      const eventComponent = new EventComponent(currentPoint);
+      const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+
+      const formComponent = new FormComponent();
+      const editForm = formComponent.getElement().querySelector(`form`);
+
+      const replaceEventToForm = () => {
+        currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
+      };
+
+      const replaceFormToEvent = () => {
+        currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
+      };
+
+      const eventButtonClickHandler = () => {
+        replaceEventToForm();
+      };
+
+      const editFormClickHandler = (evt) => {
+        evt.preventDefault();
+        replaceFormToEvent();
+      };
+
+      eventButton.addEventListener(`click`, eventButtonClickHandler);
+      editForm.addEventListener(`submit`, editFormClickHandler);
+
+      render(currentTripDay, eventComponent.getElement(), RENDER_POSITION.BEFOREEND);
     }
   }
 
