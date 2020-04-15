@@ -1,7 +1,4 @@
-import {createElement} from '../utils.js';
-import {correctDateFormat} from '../utils.js';
-import {calculateTripTime} from '../utils.js';
-import {getDayInfo} from '../utils.js';
+import {createElement, correctDateFormat, calculateTripTime, getDayInfo} from '../utils.js';
 
 const createEventTemplate = (point, currentDate) => {
   const {type, destination, hoursArrival, minutesArrival, hoursDeparture, minutesDeparture, price} = point;
@@ -51,12 +48,14 @@ const createEventTemplate = (point, currentDate) => {
 };
 
 export default class Event {
-  constructor() {
+  constructor(point, currentDate) {
+    this._point = point;
+    this._currentDate = currentDate;
     this._element = null;
   }
 
   getTemplate() {
-    return createEventTemplate();
+    return createEventTemplate(this._point, this._currentDate);
   }
 
   getElement() {

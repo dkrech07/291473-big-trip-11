@@ -13,12 +13,13 @@ const createEventOfferTemplate = (offer) => {
 };
 
 export default class EventOffer {
-  constructor() {
+  constructor(offer) {
+    this._offer = offer;
     this._element = null;
   }
 
   getTemplate() {
-    return createEventOfferTemplate();
+    return createEventOfferTemplate(this._offer);
   }
 
   getElement() {

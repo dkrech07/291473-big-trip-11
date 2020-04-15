@@ -2,6 +2,7 @@ import {createElement} from '../utils.js';
 
 const createEventTypeTemplate = (pointType) => {
   const poitTitle = pointType.toLowerCase();
+
   return (
     `<div class="event__type-item">
       <input id="event-type-${poitTitle}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${poitTitle}">

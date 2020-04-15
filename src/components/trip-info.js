@@ -1,7 +1,6 @@
 import {createElement} from '../utils.js';
 
 const createTripInfoTemplate = (tripInfo, tripDate, tripCost) => {
-
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">

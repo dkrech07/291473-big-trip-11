@@ -1,7 +1,6 @@
 import {createElement} from '../utils.js';
 
 const createOffersTemplate = () => {
-
   return (
     `<section class="event__details">
       <section class="event__section  event__section--offers">
