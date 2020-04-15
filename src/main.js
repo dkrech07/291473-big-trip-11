@@ -7,17 +7,17 @@ import TripDayComponent from './components/trip-day.js';
 import EventComponent from './components/event.js';
 import EventOfferComponent from './components/event-offer.js';
 import FormComponent from './components/form.js';
-
-
 import FormDestinationComponent from './components/form-destination.js';
-import FormEventComponent from './components/form-event.js';
+import FormTripTypeComponent from './components/form-trip-type.js';
+
+import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
+
 import OffersComponent from './components/offers.js';
 import OfferComponent from './components/offer.js';
 import PhotosComponent from './components/offer-photos.js';
 import DescriptionComponent from './components/offer-description.js';
 
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
-import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 
 const randomDaysList = generateRandomDays();
 
@@ -77,6 +77,41 @@ const renderTripInfo = () => {
 
 renderTripInfo();
 
+const renderFormParameters = (parameter) => {
+  const eventHeadertElement = mainElement.querySelector(`.event__header`);
+  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
+  const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
+  const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
+
+  if (parameter) {
+    for (const destination of DESTINATIONS) {
+      render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
+    }
+
+    for (const tripType of TRIP_TYPES) {
+      render(eventTripListElement, new FormTripTypeComponent(tripType).getElement(), RENDER_POSITION.AFTEREND);
+    }
+
+    for (const stopType of STOP_TYPES) {
+      render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
+    }
+  }
+
+  if (!parameter) {
+    const optionsElements = destinationsListElement.querySelectorAll(`option`);
+    const eventTypesListElement = eventHeadertElement.querySelector(`.event__type-list`);
+    const eventTypeElements = eventTypesListElement.querySelectorAll(`.event__type-item`);
+
+    for (const option of optionsElements) {
+      option.remove();
+    }
+
+    for (const eventType of eventTypeElements) {
+      eventType.remove();
+    }
+  }
+};
+
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
@@ -118,15 +153,18 @@ const renderTripDay = () => {
 
       const eventButtonClickHandler = () => {
         replaceEventToForm();
+        editForm.addEventListener(`submit`, editFormClickHandler);
+        renderFormParameters(true);
       };
 
       const editFormClickHandler = (evt) => {
         evt.preventDefault();
+        renderFormParameters(false);
+        editForm.removeEventListener(`submit`, editFormClickHandler);
         replaceFormToEvent();
       };
 
       eventButton.addEventListener(`click`, eventButtonClickHandler);
-      editForm.addEventListener(`submit`, editFormClickHandler);
 
       render(currentTripDay, eventComponent.getElement(), RENDER_POSITION.BEFOREEND);
     }

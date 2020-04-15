@@ -7,12 +7,13 @@ const createDestinationTemplate = (destination) => {
 };
 
 export default class FormDestination {
-  constructor() {
+  constructor(destination) {
+    this._destination = destination;
     this._element = null;
   }
 
   getTemplate() {
-    return createDestinationTemplate();
+    return createDestinationTemplate(this._destination);
   }
 
   getElement() {

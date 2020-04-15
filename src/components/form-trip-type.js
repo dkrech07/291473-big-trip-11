@@ -11,13 +11,14 @@ const createEventTypeTemplate = (pointType) => {
   );
 };
 
-export default class FormEvent {
-  constructor() {
+export default class FormTripTypeComponent {
+  constructor(tripType) {
+    this._tripType = tripType;
     this._element = null;
   }
 
   getTemplate() {
-    return createEventTypeTemplate();
+    return createEventTypeTemplate(this._tripType);
   }
 
   getElement() {
