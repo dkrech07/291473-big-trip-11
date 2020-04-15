@@ -6,7 +6,7 @@
 // import {createTripInfoTemplate} from './components/trip-info.js';
 // import {createMenuTemplate} from './components/menu.js';
 // import {createFiltersTemplate} from './components/filters.js';
-// import {createSortingTemplate} from './components/sorting.js';
+// import {createSortTemplate} from './components/sorting.js';
 //
 // import {createFormTemplate} from './components/trip-form.js';
 // import {createDestinationTemplate} from './components/trip-form.js';
@@ -90,9 +90,9 @@
 // renderComponent(tripSwitchElement, createMenuTemplate(), `afterend`);
 // renderComponent(tripFilterElement, createFiltersTemplate(), `afterend`);
 
-const mainElement = document.querySelector(`.page-body__page-main`);
-const tripEventsElement = mainElement.querySelector(`.trip-events`);
-renderComponent(tripEventsElement, createSortingTemplate(), `beforeend`);
+// const mainElement = document.querySelector(`.page-body__page-main`);
+// const tripEventsElement = mainElement.querySelector(`.trip-events`);
+// renderComponent(tripEventsElement, createSortTemplate(), `beforeend`);
 renderComponent(tripEventsElement, createFormTemplate(), `beforeend`);
 
 const eventHeadertElement = mainElement.querySelector(`.event__header`);
@@ -136,45 +136,45 @@ const renderOfferInfo = (numberDay, numberTripPoint) => {
 
 renderOfferInfo(0, 0);
 
-renderComponent(tripEventsElement, createTripDaysTemplate(), `beforeend`);
-const tripDaysElement = mainElement.querySelector(`.trip-days`);
+// renderComponent(tripEventsElement, createTripDaysTemplate(), `beforeend`);
+// const tripDaysElement = mainElement.querySelector(`.trip-days`);
 
-const renderTripDay = () => {
-  const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+// const renderTripDay = () => {
+//   const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+//
+//   for (let i = 0; i < daysList.length; i++) {
+//     renderComponent(tripDaysElement, createTripDayTemplate(daysList[i]), `beforeend`);
+//   }
+//
+//   const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
+//
+//   for (let i = 0; i < daysList.length; i++) {
+//     const wayPoint = daysList[i].wayPoints;
+//     const currentTripDay = tripEventsListElements[i];
+//     const currentDate = daysList[i];
+//
+//     for (let j = 0; j < wayPoint.length; j++) {
+//       const currentPoint = wayPoint[j];
+//       renderComponent(currentTripDay, createEventTemplate(currentPoint, currentDate), `beforeend`);
+//     }
+//   }
+//
+//   const daysElements = document.querySelectorAll(`.trip-events__list`);
+//
+//   for (let i = 0; i < daysList.length; i++) {
+//     const currentDay = daysList[i];
+//     const currentOffersListElements = daysElements[i].querySelectorAll(`.event__selected-offers`);
+//
+//     for (let j = 0; j < currentDay.wayPoints.length; j++) {
+//       const currentWayPoint = currentDay.wayPoints[j];
+//       const curentOfferElements = currentOffersListElements[j];
+//
+//       for (let k = 0; k < currentWayPoint.offers.length; k++) {
+//         const currentOffer = currentWayPoint.offers[k];
+//         renderComponent(curentOfferElements, createEventOfferTemplate(currentOffer), `beforeend`);
+//       }
+//     }
+//   }
+// };
 
-  for (let i = 0; i < daysList.length; i++) {
-    renderComponent(tripDaysElement, createTripDayTemplate(daysList[i]), `beforeend`);
-  }
-
-  const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
-
-  for (let i = 0; i < daysList.length; i++) {
-    const wayPoint = daysList[i].wayPoints;
-    const currentTripDay = tripEventsListElements[i];
-    const currentDate = daysList[i];
-
-    for (let j = 0; j < wayPoint.length; j++) {
-      const currentPoint = wayPoint[j];
-      renderComponent(currentTripDay, createEventTemplate(currentPoint, currentDate), `beforeend`);
-    }
-  }
-
-  const daysElements = document.querySelectorAll(`.trip-events__list`);
-
-  for (let i = 0; i < daysList.length; i++) {
-    const currentDay = daysList[i];
-    const currentOffersListElements = daysElements[i].querySelectorAll(`.event__selected-offers`);
-
-    for (let j = 0; j < currentDay.wayPoints.length; j++) {
-      const currentWayPoint = currentDay.wayPoints[j];
-      const curentOfferElements = currentOffersListElements[j];
-
-      for (let k = 0; k < currentWayPoint.offers.length; k++) {
-        const currentOffer = currentWayPoint.offers[k];
-        renderComponent(curentOfferElements, createEventOfferTemplate(currentOffer), `beforeend`);
-      }
-    }
-  }
-};
-
-renderTripDay();
+// renderTripDay();

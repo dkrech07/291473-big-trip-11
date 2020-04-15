@@ -19,12 +19,13 @@ const createTripDayTemplate = (tripDayInfo) => {
 };
 
 export default class TripDay {
-  constructor() {
+  constructor(tripDayInfo) {
+    this._tripDayInfo = tripDayInfo;
     this._element = null;
   }
 
   getTemplate() {
-    return createTripDayTemplate();
+    return createTripDayTemplate(this._tripDayInfo);
   }
 
   getElement() {

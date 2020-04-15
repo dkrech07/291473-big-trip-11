@@ -1,6 +1,10 @@
 import TripInfoComponent from './components/trip-info.js';
 import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
+import SortComponent from './components/sort.js';
+import TripDaysComponent from './components/trip-days.js';
+import TripDayComponent from './components/trip-day.js';
+
 
 import EventOfferComponent from './components/event-offer.js';
 import EventComponent from './components/event.js';
@@ -11,9 +15,6 @@ import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
 import OfferComponent from './components/offer.js';
 import OffersComponent from './components/offers.js';
-import SortingComponent from './components/sorting.js';
-import TripDayComponent from './components/trip-day.js';
-import TripDaysComponent from './components/trip-days.js';
 
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
@@ -75,6 +76,54 @@ const renderTripInfo = () => {
 };
 
 renderTripInfo();
+
+const mainElement = document.querySelector(`.page-body__page-main`);
+const tripEventsElement = mainElement.querySelector(`.trip-events`);
+
+render(tripEventsElement, new SortComponent().getElement(), RENDER_POSITION.BEFOREEND);
+
+render(tripEventsElement, new TripDaysComponent().getElement(), RENDER_POSITION.BEFOREEND);
+const tripDaysElement = mainElement.querySelector(`.trip-days`);
+
+const renderTripDay = () => {
+  const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+
+  for (let i = 0; i < daysList.length; i++) {
+    render(tripDaysElement, new TripDayComponent(daysList[i]).getElement(), RENDER_POSITION.BEFOREEND);
+  }
+
+  // const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
+
+  // for (let i = 0; i < daysList.length; i++) {
+  //   const wayPoint = daysList[i].wayPoints;
+  //   const currentTripDay = tripEventsListElements[i];
+  //   const currentDate = daysList[i];
+  //
+  //   for (let j = 0; j < wayPoint.length; j++) {
+  //     const currentPoint = wayPoint[j];
+  //     renderComponent(currentTripDay, createEventTemplate(currentPoint, currentDate), `beforeend`);
+  //   }
+  // }
+
+  // const daysElements = document.querySelectorAll(`.trip-events__list`);
+
+  // for (let i = 0; i < daysList.length; i++) {
+  //   const currentDay = daysList[i];
+  //   const currentOffersListElements = daysElements[i].querySelectorAll(`.event__selected-offers`);
+  //
+  //   for (let j = 0; j < currentDay.wayPoints.length; j++) {
+  //     const currentWayPoint = currentDay.wayPoints[j];
+  //     const curentOfferElements = currentOffersListElements[j];
+  //
+  //     for (let k = 0; k < currentWayPoint.offers.length; k++) {
+  //       const currentOffer = currentWayPoint.offers[k];
+  //       renderComponent(curentOfferElements, createEventOfferTemplate(currentOffer), `beforeend`);
+  //     }
+  //   }
+  // }
+};
+
+renderTripDay();
 
 // const taskEditComponent = new TaskEditComponent(task);
 // render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
