@@ -16,12 +16,13 @@ const createOfferTemplate = (offer) => {
 };
 
 export default class Offer {
-  constructor() {
+  constructor(offer) {
+    this._offer = offer;
     this._element = null;
   }
 
   getTemplate() {
-    return createOfferTemplate();
+    return createOfferTemplate(this._offer);
   }
 
   getElement() {

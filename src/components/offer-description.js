@@ -7,12 +7,13 @@ const createDescriptionTemplate = (description) => {
 };
 
 export default class Description {
-  constructor() {
+  constructor(description) {
+    this._description = description;
     this._element = null;
   }
 
   getTemplate() {
-    return createDescriptionTemplate();
+    return createDescriptionTemplate(this._description);
   }
 
   getElement() {

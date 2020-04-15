@@ -7,12 +7,13 @@ const createPhotosTemplate = (photoUrl) => {
 };
 
 export default class Photos {
-  constructor() {
+  constructor(photoUrl) {
+    this._photoUrl = photoUrl;
     this._element = null;
   }
 
   getTemplate() {
-    return createPhotosTemplate();
+    return createPhotosTemplate(this._photoUrl);
   }
 
   getElement() {

@@ -95,28 +95,28 @@
 // renderComponent(tripEventsElement, createSortTemplate(), `beforeend`);
 // renderComponent(tripEventsElement, createFormTemplate(), `beforeend`);
 
-// const eventHeadertElement = mainElement.querySelector(`.event__header`);
-// const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
-// const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
-// const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
-//
-// for (const destination of DESTINATIONS) {
-//   renderComponent(destinationsListElement, createDestinationTemplate(destination), `afterbegin`);
-// }
-//
-// for (const tripType of TRIP_TYPES) {
-//   renderComponent(eventTripListElement, createEventTypeTemplate(tripType), `afterend`);
-// }
-//
-// for (const stopType of STOP_TYPES) {
-//   renderComponent(eventStopListElement, createEventTypeTemplate(stopType), `afterend`);
-// }
+const eventHeadertElement = mainElement.querySelector(`.event__header`);
+const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
+const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
+const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
+
+for (const destination of DESTINATIONS) {
+  renderComponent(destinationsListElement, createDestinationTemplate(destination), `afterbegin`);
+}
+
+for (const tripType of TRIP_TYPES) {
+  renderComponent(eventTripListElement, createEventTypeTemplate(tripType), `afterend`);
+}
+
+for (const stopType of STOP_TYPES) {
+  renderComponent(eventStopListElement, createEventTypeTemplate(stopType), `afterend`);
+}
 
 renderComponent(eventHeadertElement, createOffersTemplate(), `afterend`);
-const eventDetailsElement = tripEventsElement.querySelector(`.event__details`);
-const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
-const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
-const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
+// const eventDetailsElement = tripEventsElement.querySelector(`.event__details`);
+// const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
+// const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
+// const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
 
 const renderOfferInfo = (numberDay, numberTripPoint) => {
   const tripPointInfo = randomDaysList[numberDay].wayPoints[numberTripPoint];

@@ -9,14 +9,12 @@ import EventOfferComponent from './components/event-offer.js';
 import FormComponent from './components/form.js';
 import FormDestinationComponent from './components/form-destination.js';
 import FormTripTypeComponent from './components/form-trip-type.js';
-
-import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
-
 import OffersComponent from './components/offers.js';
 import OfferComponent from './components/offer.js';
-import PhotosComponent from './components/offer-photos.js';
 import DescriptionComponent from './components/offer-description.js';
+import PhotosComponent from './components/offer-photos.js';
 
+import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
 
 const randomDaysList = generateRandomDays();
@@ -77,39 +75,69 @@ const renderTripInfo = () => {
 
 renderTripInfo();
 
-const renderFormParameters = (parameter) => {
+const renderOfferInfo = (currentPoint) => {
+
+const {type, destination, offers, destinationInfo, price, departure, arrival} = currentPoint;
+
+  const eventDetailsElement = tripEventsElement.querySelector(`.event__details`);
+  const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
+  const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
+  const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
+
+  for (const offer of offers) {
+    render(eventOffesElement, new OfferComponent(offer).getElement(), RENDER_POSITION.AFTERBEGIN);
+  }
+
+  const description = destinationInfo.destinationDescription;
+  render(eventDescriptionElement, new DescriptionComponent(description).getElement(), RENDER_POSITION.AFTEREND);
+
+  for (const photo of destinationInfo.destinationPhotos) {
+    render(eventPhotosElement, new PhotosComponent(photo).getElement(), RENDER_POSITION.AFTERBEGIN);
+  }
+};
+
+const renderFormParameters = (currentPoint) => {
   const eventHeadertElement = mainElement.querySelector(`.event__header`);
   const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
   const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
   const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
 
-  if (parameter) {
-    for (const destination of DESTINATIONS) {
-      render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
-    }
+  render(eventHeadertElement, new OffersComponent().getElement(), RENDER_POSITION.AFTEREND);
 
-    for (const tripType of TRIP_TYPES) {
-      render(eventTripListElement, new FormTripTypeComponent(tripType).getElement(), RENDER_POSITION.AFTEREND);
-    }
+  renderOfferInfo(currentPoint);
+  console.log(currentPoint);
 
-    for (const stopType of STOP_TYPES) {
-      render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
-    }
+  for (const destination of DESTINATIONS) {
+    render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
   }
 
-  if (!parameter) {
-    const optionsElements = destinationsListElement.querySelectorAll(`option`);
-    const eventTypesListElement = eventHeadertElement.querySelector(`.event__type-list`);
-    const eventTypeElements = eventTypesListElement.querySelectorAll(`.event__type-item`);
-
-    for (const option of optionsElements) {
-      option.remove();
-    }
-
-    for (const eventType of eventTypeElements) {
-      eventType.remove();
-    }
+  for (const tripType of TRIP_TYPES) {
+    render(eventTripListElement, new FormTripTypeComponent(tripType).getElement(), RENDER_POSITION.AFTEREND);
   }
+
+  for (const stopType of STOP_TYPES) {
+    render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
+  }
+};
+
+const removeFormParameters = () => {
+  const eventHeadertElement = mainElement.querySelector(`.event__header`);
+  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
+  const optionsElements = destinationsListElement.querySelectorAll(`option`);
+  const eventTypesListElement = eventHeadertElement.querySelector(`.event__type-list`);
+  const eventTypeElements = eventTypesListElement.querySelectorAll(`.event__type-item`);
+  const form = document.querySelector(`.event--edit`);
+  const shownOffer = form.querySelector(`.event__details`);
+
+  for (const option of optionsElements) {
+    option.remove();
+  }
+
+  for (const eventType of eventTypeElements) {
+    eventType.remove();
+  }
+
+  shownOffer.remove();
 };
 
 const mainElement = document.querySelector(`.page-body__page-main`);
@@ -145,6 +173,7 @@ const renderTripDay = () => {
 
       const replaceEventToForm = () => {
         currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
+        renderFormParameters(currentPoint);
       };
 
       const replaceFormToEvent = () => {
@@ -154,12 +183,11 @@ const renderTripDay = () => {
       const eventButtonClickHandler = () => {
         replaceEventToForm();
         editForm.addEventListener(`submit`, editFormClickHandler);
-        renderFormParameters(true);
       };
 
       const editFormClickHandler = (evt) => {
         evt.preventDefault();
-        renderFormParameters(false);
+        removeFormParameters();
         editForm.removeEventListener(`submit`, editFormClickHandler);
         replaceFormToEvent();
       };
