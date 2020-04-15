@@ -1,6 +1,4 @@
 import {DAY_MILLISECONDS_COUNT} from '../utils.js';
-import {MINUTES_COUNT} from '../utils.js';
-import {HOURS_COUNT} from '../utils.js';
 
 const MIN_PRICE = 5;
 const MAX_PRICE = 100;
@@ -120,39 +118,36 @@ const generateDestinationInfo = () => {
   };
 };
 
-const generateTripPoint = () => {
+const generateTripPoint = (dateCount) => {
+  const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
   return {
     type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
     destination: getRandomArrayItem(DESTINATIONS),
     offers: generateOffers(generateOfferKeys()),
     destinationInfo: generateDestinationInfo(),
-    hoursDeparture: getRandom(HOURS_COUNT),
-    minutesDeparture: getRandom(MINUTES_COUNT),
-    hoursArrival: getRandom(HOURS_COUNT),
-    minutesArrival: getRandom(MINUTES_COUNT),
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+    departure: new Date(randomEventCount),
+    arrival: new Date(randomEventCount + getRandom(DAY_MILLISECONDS_COUNT * 3)),
   };
 };
 
-const generateTripPoints = () => {
+const generateTripPoints = (dateCount) => {
   const wayPointsList = [];
   for (let i = 0; i < getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS); i++) {
-    wayPointsList.push(generateTripPoint());
+    wayPointsList.push(generateTripPoint(dateCount));
   }
 
   return wayPointsList;
 };
 
-const generateRandomDate = () => {
-  return new Date(getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT));
-};
-
 const generateRandomDay = () => {
-  const newDate = generateRandomDate();
+  const dateCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+
+  const newDate = new Date(dateCount);
 
   return {
     date: newDate,
-    wayPoints: generateTripPoints(),
+    wayPoints: generateTripPoints(dateCount),
   };
 };
 

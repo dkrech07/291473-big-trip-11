@@ -1,17 +1,19 @@
 import {createElement, correctDateFormat, calculateTripTime, getDayInfo} from '../utils.js';
 
-const createEventTemplate = (point, currentDate) => {
-  const {type, destination, hoursArrival, minutesArrival, hoursDeparture, minutesDeparture, price} = point;
-  const {day, month, year} = getDayInfo(currentDate);
+const createEventTemplate = (point) => {
+  const {type, destination, departure, arrival, price} = point;
+
+  const tripTime = calculateTripTime(departure, arrival);
+  const [dayDeparture, monthDeparture, yearDeparture] = getDayInfo(departure);
+  const [dayArrival, monthArrival, yearArrival] = getDayInfo(arrival);
 
   const pointImage = point.type.toLowerCase();
-  const generateRandomTime = (start, finish) => {
-    return `${correctDateFormat(start)}:${correctDateFormat(finish)}`;
-  };
 
-  const departure = generateRandomTime(hoursDeparture, minutesDeparture);
-  const arrival = generateRandomTime(hoursArrival, minutesArrival);
-  const tripTime = calculateTripTime(departure, arrival);
+  const getTimeInfo = (date) => {
+    return `${date.getHours()}:${date.getMinutes()}`;
+  };
+  const timeDeparture = getTimeInfo(departure);
+  const timeArrival = getTimeInfo(arrival);
 
   return (
     `<li class="trip-events__item">
@@ -23,9 +25,9 @@ const createEventTemplate = (point, currentDate) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}T${departure}">${departure}</time>
+            <time class="event__start-time" datetime="${yearDeparture}-${correctDateFormat(monthDeparture)}-${correctDateFormat(dayDeparture)}T${timeDeparture}">${timeDeparture}</time>
             &mdash;
-            <time class="event__end-time" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}T${arrival}">${arrival}</time>
+            <time class="event__end-time" datetime="${yearArrival}-${correctDateFormat(monthArrival)}-${correctDateFormat(dayArrival)}T${timeArrival}">${timeArrival}</time>
           </p>
           <p class="event__duration">${tripTime}</p>
         </div>

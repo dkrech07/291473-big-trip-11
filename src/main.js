@@ -97,11 +97,10 @@ const renderTripDay = () => {
   for (let i = 0; i < daysList.length; i++) {
     const wayPoint = daysList[i].wayPoints;
     const currentTripDay = tripEventsListElements[i];
-    const currentDate = daysList[i];
 
     for (let j = 0; j < wayPoint.length; j++) {
       const currentPoint = wayPoint[j];
-      render(currentTripDay, new EventComponent(currentPoint, currentDate).getElement(), RENDER_POSITION.BEFOREEND);
+      render(currentTripDay, new EventComponent(currentPoint).getElement(), RENDER_POSITION.BEFOREEND);
     }
   }
 
@@ -125,7 +124,5 @@ const renderTripDay = () => {
 
 renderTripDay();
 
-// const taskEditComponent = new TaskEditComponent(task);
-// render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
 
-console.log(randomDaysList);
+// console.log(randomDaysList);

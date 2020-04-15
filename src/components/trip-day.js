@@ -3,7 +3,7 @@ import {correctDateFormat} from '../utils.js';
 import {getDayInfo} from '../utils.js';
 
 const createTripDayTemplate = (tripDayInfo) => {
-  const {day, month, monthName, year, minYear} = getDayInfo(tripDayInfo);
+  const [day, month, year, monthName, minYear] = getDayInfo(tripDayInfo.date);
 
   return (
     `<li class="trip-days__item  day">
