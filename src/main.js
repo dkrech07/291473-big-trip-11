@@ -10,7 +10,9 @@ import FormComponent from './components/form.js';
 import OffersComponent from './components/offers.js';
 import FormDestinationComponent from './components/form-destination.js';
 import FormTripTypeComponent from './components/form-trip-type.js';
-
+import OfferComponent from './components/offer.js';
+import DescriptionComponent from './components/offer-description.js';
+import PhotosComponent from './components/offer-photos.js';
 
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
@@ -104,17 +106,21 @@ const renderTripDay = () => {
 
 renderTripDay();
 
-// Наполнение данными формы редактирования точки маршрута --------------------------------------------------------
-const renderFormParameters = (currentMainElement) => {
+// Наполнение данными шапки формы редактирования точки маршрута --------------------------------------------------------
+const renderFormParameters = (currentMainElement, currentPoint) => {
   const eventHeadertElement = currentMainElement.querySelector(`.event__header`);
   const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
   const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
   const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
+  // const formTripTypeElement = currentMainElement.querySelector();
+  //
+  // const {type, destination, offers, destinationInfo, price, departure, arrival} = currentPoint;
+  // const currentPointType = type;
 
   render(eventHeadertElement, new OffersComponent().getElement(), RENDER_POSITION.AFTEREND);
 
-  for (const destination of DESTINATIONS) {
-    render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
+  for (const destinationElement of DESTINATIONS) {
+    render(destinationsListElement, new FormDestinationComponent(destinationElement).getElement(), RENDER_POSITION.AFTERBEGIN);
   }
 
   for (const tripType of TRIP_TYPES) {
@@ -124,19 +130,43 @@ const renderFormParameters = (currentMainElement) => {
   for (const stopType of STOP_TYPES) {
     render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
   }
+
+};
+
+// Отрисовка данных о точке маршрута в форму редактирования --------------------------------------------------------
+const renderOfferInfo = (currenTripElement, currentPoint) => {
+  const {offers, destinationInfo} = currentPoint;
+
+  const eventDetailsElement = currenTripElement.querySelector(`.event__details`);
+  const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
+  const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
+  const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
+
+  for (const offer of offers) {
+    render(eventOffesElement, new OfferComponent(offer).getElement(), RENDER_POSITION.AFTERBEGIN);
+  }
+
+  const description = destinationInfo.destinationDescription;
+  render(eventDescriptionElement, new DescriptionComponent(description).getElement(), RENDER_POSITION.AFTEREND);
+
+  for (const photo of destinationInfo.destinationPhotos) {
+    render(eventPhotosElement, new PhotosComponent(photo).getElement(), RENDER_POSITION.AFTERBEGIN);
+  }
 };
 
 // Отрисовка формы редактирования точки маршрута --------------------------------------------------------
 const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
 
-  const formComponent = new FormComponent();
+  const formComponent = new FormComponent(currentPoint);
   const editForm = formComponent.getElement().querySelector(`form`);
 
   const eventButtonClickHandler = () => {
     currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
     editForm.addEventListener(`submit`, editFormClickHandler);
-    renderFormParameters(formComponent.getElement());
+
+    renderFormParameters(formComponent.getElement(), currentPoint);
+    renderOfferInfo(formComponent.getElement(), currentPoint);
   };
 
   const editFormClickHandler = (evt) => {

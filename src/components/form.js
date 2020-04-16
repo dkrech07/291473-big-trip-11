@@ -1,6 +1,8 @@
 import {createElement} from '../utils.js';
 
-const createFormTemplate = () => {
+const createFormTemplate = (currentPoint) => {
+  const currentTripType = currentPoint.type.toLowerCase();
+
   return (
     `<li class="trip-events__item">
       <form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -8,7 +10,7 @@ const createFormTemplate = () => {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/bus.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${currentTripType}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -64,12 +66,13 @@ const createFormTemplate = () => {
 };
 
 export default class Form {
-  constructor() {
+  constructor(currentTripType) {
+    this._currentTripType = currentTripType;
     this._element = null;
   }
 
   getTemplate() {
-    return createFormTemplate();
+    return createFormTemplate(this._currentTripType);
   }
 
   getElement() {

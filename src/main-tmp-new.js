@@ -1,9 +1,6 @@
 
 
 
-import OfferComponent from './components/offer.js';
-import DescriptionComponent from './components/offer-description.js';
-import PhotosComponent from './components/offer-photos.js';
 
 
 
@@ -11,26 +8,8 @@ import PhotosComponent from './components/offer-photos.js';
 
 
 
-const renderOfferInfo = (currentPoint) => {
 
-const {type, destination, offers, destinationInfo, price, departure, arrival} = currentPoint;
 
-  const eventDetailsElement = tripEventsElement.querySelector(`.event__details`);
-  const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
-  const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
-  const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
-
-  for (const offer of offers) {
-    render(eventOffesElement, new OfferComponent(offer).getElement(), RENDER_POSITION.AFTERBEGIN);
-  }
-
-  const description = destinationInfo.destinationDescription;
-  render(eventDescriptionElement, new DescriptionComponent(description).getElement(), RENDER_POSITION.AFTEREND);
-
-  for (const photo of destinationInfo.destinationPhotos) {
-    render(eventPhotosElement, new PhotosComponent(photo).getElement(), RENDER_POSITION.AFTERBEGIN);
-  }
-};
 
 
 
