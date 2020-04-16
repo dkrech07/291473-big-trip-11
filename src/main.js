@@ -23,6 +23,8 @@ const randomDaysList = generateRandomDays();
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const mainElement = document.querySelector(`.page-body__page-main`);
+const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
@@ -82,30 +84,20 @@ const renderTripInfo = () => {
   }
 };
 
-renderTripInfo();
-
 // Отрисовка меню сортировки. Отрисовка "контейнера" для вывода дней путешествия
 const renderTripMainContent = () => {
-  const tripEventsElement = mainElement.querySelector(`.trip-events`);
-
   render(tripEventsElement, new SortComponent().getElement(), RENDER_POSITION.BEFOREEND);
   render(tripEventsElement, new TripDaysComponent().getElement(), RENDER_POSITION.BEFOREEND);
 };
 
-renderTripMainContent();
-
 // Отрисовка дней путешествия
-const tripDaysElement = mainElement.querySelector(`.trip-days`);
-const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
-
 const renderTripDay = () => {
+  const tripDaysElement = mainElement.querySelector(`.trip-days`);
   for (let i = 0; i < daysList.length; i++) {
     const tripDayComponent = new TripDayComponent(daysList[i]);
     render(tripDaysElement, tripDayComponent.getElement(), RENDER_POSITION.BEFOREEND);
   }
 };
-
-renderTripDay();
 
 // Наполнение данными шапки формы редактирования точки маршрута
 const renderFormParameters = (currentMainElement) => {
@@ -187,6 +179,7 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
 
 // Отрисовка точек маршрута в днях путешествия
 const renderTripEvent = () => {
+  const tripDaysElement = mainElement.querySelector(`.trip-days`);
   const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
 
   for (let i = 0; i < daysList.length; i++) {
@@ -203,8 +196,6 @@ const renderTripEvent = () => {
     }
   }
 };
-
-renderTripEvent();
 
 // Отрисовка дополнительных предложений в точках маршрута
 const renderTripOffers = () => {
@@ -226,18 +217,21 @@ const renderTripOffers = () => {
   }
 };
 
-renderTripOffers();
-
 // Проверка наличия точек маршрута. Вывод сообщения о необходимости добавить точку маршрута.
 const checkTripPoint = (days) => {
   const isAllwayPointsMissing = days.every((day) => day.wayPoints.length === 0);
   const isAllDaysMissing = days.every((day) => day.length === 0);
 
-  if (isAllwayPointsMissing === true || isAllDaysMissing === true) {
-    render(mainElement, new NoPointsComponent().getElement(), RENDER_POSITION.BEFOREEND);
+  if (isAllwayPointsMissing || isAllDaysMissing) {
+    render(tripEventsElement, new NoPointsComponent().getElement(), RENDER_POSITION.BEFOREEND);
     return;
   }
 
+  renderTripInfo();
+  renderTripMainContent();
+  renderTripDay();
+  renderTripEvent();
+  renderTripOffers();
 };
 
 checkTripPoint(randomDaysList);
