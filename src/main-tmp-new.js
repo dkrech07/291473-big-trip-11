@@ -1,9 +1,6 @@
 
 
-import FormComponent from './components/form.js';
-import FormDestinationComponent from './components/form-destination.js';
-import FormTripTypeComponent from './components/form-trip-type.js';
-import OffersComponent from './components/offers.js';
+
 import OfferComponent from './components/offer.js';
 import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
@@ -35,29 +32,7 @@ const {type, destination, offers, destinationInfo, price, departure, arrival} = 
   }
 };
 
-const renderFormParameters = (currentPoint) => {
-  const eventHeadertElement = mainElement.querySelector(`.event__header`);
-  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
-  const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
-  const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
 
-  render(eventHeadertElement, new OffersComponent().getElement(), RENDER_POSITION.AFTEREND);
-
-  renderOfferInfo(currentPoint);
-  console.log(currentPoint);
-
-  for (const destination of DESTINATIONS) {
-    render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
-  }
-
-  for (const tripType of TRIP_TYPES) {
-    render(eventTripListElement, new FormTripTypeComponent(tripType).getElement(), RENDER_POSITION.AFTEREND);
-  }
-
-  for (const stopType of STOP_TYPES) {
-    render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
-  }
-};
 
 const removeFormParameters = () => {
   const eventHeadertElement = mainElement.querySelector(`.event__header`);

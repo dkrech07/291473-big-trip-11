@@ -6,6 +6,10 @@ import TripDaysComponent from './components/trip-days.js';
 import TripDayComponent from './components/trip-day.js';
 import EventComponent from './components/event.js';
 import EventOfferComponent from './components/event-offer.js';
+import FormComponent from './components/form.js';
+import OffersComponent from './components/offers.js';
+import FormDestinationComponent from './components/form-destination.js';
+import FormTripTypeComponent from './components/form-trip-type.js';
 
 
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
@@ -100,6 +104,54 @@ const renderTripDay = () => {
 
 renderTripDay();
 
+// Наполнение данными формы редактирования точки маршрута --------------------------------------------------------
+const renderFormParameters = (currentMainElement) => {
+  const eventHeadertElement = currentMainElement.querySelector(`.event__header`);
+  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
+  const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
+  const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
+
+  render(eventHeadertElement, new OffersComponent().getElement(), RENDER_POSITION.AFTEREND);
+
+  for (const destination of DESTINATIONS) {
+    render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
+  }
+
+  for (const tripType of TRIP_TYPES) {
+    render(eventTripListElement, new FormTripTypeComponent(tripType).getElement(), RENDER_POSITION.AFTEREND);
+  }
+
+  for (const stopType of STOP_TYPES) {
+    render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
+  }
+};
+
+// Отрисовка формы редактирования точки маршрута --------------------------------------------------------
+const renderForm = (eventComponent, currentTripDay, currentPoint) => {
+  const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+
+  const formComponent = new FormComponent();
+  const editForm = formComponent.getElement().querySelector(`form`);
+
+  const eventButtonClickHandler = () => {
+    currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
+    editForm.addEventListener(`submit`, editFormClickHandler);
+    renderFormParameters(formComponent.getElement());
+  };
+
+  const editFormClickHandler = (evt) => {
+    evt.preventDefault();
+    editForm.removeEventListener(`submit`, editFormClickHandler);
+    currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
+  };
+
+  eventButton.addEventListener(`click`, eventButtonClickHandler);
+  // console.log(eventComponent._element);
+  // console.log(currentPoint);
+  // console.log(editForm);
+  // console.log(currentTripDay);
+};
+
 // Отрисовка точек маршрута в днях путешествия --------------------------------------------------------
 const renderTripEvent = () => {
   const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
@@ -113,6 +165,8 @@ const renderTripEvent = () => {
 
       const eventComponent = new EventComponent(currentPoint);
       render(currentTripDay, eventComponent.getElement(), RENDER_POSITION.BEFOREEND);
+
+      renderForm(eventComponent, currentTripDay, currentPoint);
     }
   }
 };
@@ -141,37 +195,21 @@ const renderTripOffers = () => {
 
 renderTripOffers();
 
+
 // const renderTripDay = () => {
 
+// renderFormParameters(currentPoint);
+//
+    // removeFormParameters();
+      //
 
+      //
 
-      // const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
       //
-      // const formComponent = new FormComponent();
-      // const editForm = formComponent.getElement().querySelector(`form`);
+
       //
-      // const replaceEventToForm = () => {
-      //   currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
-      //   renderFormParameters(currentPoint);
-      // };
+
       //
-      // const replaceFormToEvent = () => {
-      //   currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
-      // };
-      //
-      // const eventButtonClickHandler = () => {
-      //   replaceEventToForm();
-      //   editForm.addEventListener(`submit`, editFormClickHandler);
-      // };
-      //
-      // const editFormClickHandler = (evt) => {
-      //   evt.preventDefault();
-      //   removeFormParameters();
-      //   editForm.removeEventListener(`submit`, editFormClickHandler);
-      //   replaceFormToEvent();
-      // };
-      //
-      // eventButton.addEventListener(`click`, eventButtonClickHandler);
 
 
   //
