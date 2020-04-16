@@ -12,6 +12,7 @@ const createEventTemplate = (point) => {
   const getTimeInfo = (date) => {
     return `${correctDateFormat(date.getHours())}:${correctDateFormat(date.getMinutes())}`;
   };
+
   const timeDeparture = getTimeInfo(departure);
   const timeArrival = getTimeInfo(arrival);
 
