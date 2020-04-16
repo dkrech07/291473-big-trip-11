@@ -1,5 +1,6 @@
-export const createTripInfoTemplate = (tripInfo, tripDate, tripCost) => {
+import {createElement} from '../utils.js';
 
+const createTripInfoTemplate = (tripInfo, tripDate, tripCost) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -14,3 +15,28 @@ export const createTripInfoTemplate = (tripInfo, tripDate, tripCost) => {
     </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(tripInfo, tripDate, tripCost) {
+    this._tripInfo = tripInfo;
+    this._tripDate = tripDate;
+    this._tripCost = tripCost;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._tripInfo, this._tripDate, this._tripCost);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

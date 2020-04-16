@@ -1,9 +1,9 @@
+import {createElement} from '../utils.js';
 import {correctDateFormat} from '../utils.js';
 import {getDayInfo} from '../utils.js';
 
-export const createTripDayTemplate = (tripDayInfo) => {
-
-  const {day, month, monthName, year, minYear} = getDayInfo(tripDayInfo);
+const createTripDayTemplate = (tripDayInfo) => {
+  const [day, month, year, monthName, minYear] = getDayInfo(tripDayInfo.date);
 
   return (
     `<li class="trip-days__item  day">
@@ -17,10 +17,25 @@ export const createTripDayTemplate = (tripDayInfo) => {
   );
 };
 
-export const createTripDaysTemplate = () => {
-  return (
-    `<ul class="trip-days">
+export default class TripDay {
+  constructor(tripDayInfo) {
+    this._tripDayInfo = tripDayInfo;
+    this._element = null;
+  }
 
-    </ul>`
-  );
-};
+  getTemplate() {
+    return createTripDayTemplate(this._tripDayInfo);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,21 +1,19 @@
 import {createElement} from '../utils.js';
 
-const createMenuTemplate = () => {
+const createDescriptionTemplate = (description) => {
   return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn" href="#">Table</a>
-      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Stats</a>
-    </nav>`
+    `<p class="event__destination-description">${description}</p>`
   );
 };
 
-export default class Menu {
-  constructor() {
+export default class Description {
+  constructor(description) {
+    this._description = description;
     this._element = null;
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    return createDescriptionTemplate(this._description);
   }
 
   getElement() {

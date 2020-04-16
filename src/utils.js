@@ -19,43 +19,40 @@ const correctDateFormat = (number) => {
 };
 
 const calculateTripTime = (departure, arrival) => {
-  const firstDate = departure.toString();
-  const secondDate = arrival.toString();
+  let remain = arrival - departure;
 
-  const getDate = (string) => new Date(0, 0, 0, string.split(`:`)[0], string.split(`:`)[1]);
-  const different = (getDate(secondDate) - getDate(firstDate));
-  let differentRes; let hours; let minuts;
-  if (different > 0) {
-    differentRes = different;
-    hours = Math.floor((differentRes % DAY_MILLISECONDS_COUNT) / HOUR_MILLISECONDS_COUNT);
-    minuts = Math.round(((differentRes % DAY_MILLISECONDS_COUNT) % HOUR_MILLISECONDS_COUNT) / MIN_MILLISECONDS_COUNT);
+  const days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
+  remain = remain % (HOUR_MILLISECONDS_COUNT * HOURS_COUNT);
+
+  const hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
+  remain = remain % (HOUR_MILLISECONDS_COUNT);
+
+  const minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
+  remain = remain % (MIN_MILLISECONDS_COUNT);
+
+  if (days <= 0 && hours <= 0) {
+    return `${correctDateFormat(minutes)}М`;
+  } else if (days <= 0) {
+    return `${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
   } else {
-    differentRes = Math.abs((getDate(firstDate) - getDate(secondDate)));
-    hours = Math.floor(HOURS_COUNT - (differentRes % DAY_MILLISECONDS_COUNT) / HOUR_MILLISECONDS_COUNT);
-    minuts = Math.round(MINUTES_COUNT - ((differentRes % DAY_MILLISECONDS_COUNT) % HOUR_MILLISECONDS_COUNT) / MIN_MILLISECONDS_COUNT);
+    return `${correctDateFormat(days)}D ${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
   }
-
-  if (hours <= 0) {
-    return `${correctDateFormat(minuts)}М`;
-  }
-
-  return `${correctDateFormat(hours)}H ${correctDateFormat(minuts)}М`;
 };
 
 const getDayInfo = (currentDate) => {
-  const day = currentDate.date.getDate();
-  const month = currentDate.date.getMonth() + 1;
-  const monthName = MONTHS_LIST[currentDate.date.getMonth()];
-  const year = currentDate.date.getFullYear();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1;
+  const monthName = MONTHS_LIST[currentDate.getMonth()];
+  const year = currentDate.getFullYear();
   const minYear = year.toString().slice(2);
 
-  return {
+  return [
     day,
     month,
-    monthName,
     year,
+    monthName,
     minYear,
-  };
+  ];
 };
 
 const getPrice = (daysList) => {
@@ -84,4 +81,44 @@ const getDay = (day) => {
   return `${monthName} ${dayNumber}`;
 };
 
-export {MINUTES_COUNT, HOURS_COUNT, MONTHS_LIST, DAY_MILLISECONDS_COUNT, correctDateFormat, calculateTripTime, getDayInfo, getPrice, getDay};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const RENDER_POSITION = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+};
+
+const render = (container, element, place) => {
+  switch (place) {
+    case RENDER_POSITION.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RENDER_POSITION.BEFOREEND:
+      container.append(element);
+      break;
+    case RENDER_POSITION.AFTEREND:
+      container.after(element);
+      break;
+  }
+};
+
+export {
+  MINUTES_COUNT,
+  HOURS_COUNT,
+  MONTHS_LIST,
+  DAY_MILLISECONDS_COUNT,
+  RENDER_POSITION,
+  correctDateFormat,
+  calculateTripTime,
+  getDayInfo,
+  getPrice,
+  getDay,
+  createElement,
+  render
+};
