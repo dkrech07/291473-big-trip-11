@@ -21,13 +21,13 @@ const correctDateFormat = (number) => {
 const calculateTripTime = (departure, arrival) => {
   let remain = arrival - departure;
 
-  let days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
+  const days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
   remain = remain % (HOUR_MILLISECONDS_COUNT * HOURS_COUNT);
 
-  let hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
+  const hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
   remain = remain % (HOUR_MILLISECONDS_COUNT);
 
-  let minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
+  const minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
   remain = remain % (MIN_MILLISECONDS_COUNT);
 
   if (days <= 0 && hours <= 0) {

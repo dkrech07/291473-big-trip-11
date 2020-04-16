@@ -15,17 +15,7 @@ const createFormTemplate = (currentPoint) => {
   const timeDeparture = getTripTimeInfo(departure);
   const timeArrival = getTripTimeInfo(arrival);
 
-  const getOffersPrices = () => {
-    let offersCost = 0;
-    for (let i = 0; i < offers.length; i++) {
-      offersCost += offers[i].price;
-    }
-    return offersCost;
-  };
-
-  const getTripPrice = () => {
-    return getOffersPrices() + price;
-  };
+  const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
 
   return (
     `<li class="trip-events__item">
@@ -78,7 +68,7 @@ const createFormTemplate = (currentPoint) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice()}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

@@ -2,9 +2,7 @@ import {createElement} from '../utils.js';
 
 const createTripDaysTemplate = () => {
   return (
-    `<ul class="trip-days">
-
-    </ul>`
+    `<ul class="trip-days"></ul>`
   );
 };
 

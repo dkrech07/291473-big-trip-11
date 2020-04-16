@@ -125,7 +125,6 @@ const renderFormParameters = (currentMainElement) => {
   for (const stopType of STOP_TYPES) {
     render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
   }
-
 };
 
 // Отрисовка данных о точке маршрута в форму редактирования
