@@ -1,4 +1,5 @@
 import TripInfoComponent from './components/trip-info.js';
+import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
 import SortComponent from './components/sort.js';
@@ -37,9 +38,15 @@ const renderTripMenuOptions = () => {
 
 renderTripMenuOptions();
 
+// Отрисовка общей цены поездок (для всех точек маршрута)
+const renderTripCost = () => {
+  const tripCost = getPrice(randomDaysList);
+  render(tripMenuElement, new TripCostComponent(tripCost).getElement(), RENDER_POSITION.AFTERBEGIN);
+};
+
 // Отрисовка Начальной и конечной точки маршрута / начальной и конечной даты. Отрисовка общей цены.
 const renderTripInfo = () => {
-  const tripCost = getPrice(randomDaysList);
+  const tirpInfoElement = tripMenuElement.querySelector(`.trip-main__trip-info`);
   const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
   const firstPointDestination = sortList[0].wayPoints[0].destination;
@@ -49,7 +56,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination}`;
     const tripDate = `${getDay(firstDate)}`;
 
-    render(tripMenuElement, new TripInfoComponent(tripInfo, tripDate, tripCost).getElement(), RENDER_POSITION.AFTERBEGIN);
+    render(tirpInfoElement, new TripInfoComponent(tripInfo, tripDate).getElement(), RENDER_POSITION.AFTERBEGIN);
   }
 
   if (sortList.length === 2) {
@@ -59,7 +66,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
-    render(tripMenuElement, new TripInfoComponent(tripInfo, tripDate, tripCost).getElement(), RENDER_POSITION.AFTERBEGIN);
+    render(tirpInfoElement, new TripInfoComponent(tripInfo, tripDate).getElement(), RENDER_POSITION.AFTERBEGIN);
   }
 
   if (sortList.length === 3) {
@@ -70,7 +77,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
-    render(tripMenuElement, new TripInfoComponent(tripInfo, tripDate, tripCost).getElement(), RENDER_POSITION.AFTERBEGIN);
+    render(tirpInfoElement, new TripInfoComponent(tripInfo, tripDate).getElement(), RENDER_POSITION.AFTERBEGIN);
   }
 
   if (sortList.length > 3) {
@@ -80,7 +87,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
     const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
 
-    render(tripMenuElement, new TripInfoComponent(tripInfo, tripDate, tripCost).getElement(), RENDER_POSITION.AFTERBEGIN);
+    render(tirpInfoElement, new TripInfoComponent(tripInfo, tripDate).getElement(), RENDER_POSITION.AFTERBEGIN);
   }
 };
 
@@ -222,11 +229,14 @@ const checkTripPoint = (days) => {
   const isAllwayPointsMissing = days.every((day) => day.wayPoints.length === 0);
   const isAllDaysMissing = days.every((day) => day.length === 0);
 
+  renderTripCost();
+
   if (isAllwayPointsMissing || isAllDaysMissing) {
     render(tripEventsElement, new NoPointsComponent().getElement(), RENDER_POSITION.BEFOREEND);
     return;
   }
 
+  renderTripCost();
   renderTripInfo();
   renderTripMainContent();
   renderTripDay();
