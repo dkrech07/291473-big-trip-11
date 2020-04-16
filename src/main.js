@@ -6,27 +6,29 @@ import TripDaysComponent from './components/trip-days.js';
 import TripDayComponent from './components/trip-day.js';
 import EventComponent from './components/event.js';
 import EventOfferComponent from './components/event-offer.js';
-import FormComponent from './components/form.js';
-import FormDestinationComponent from './components/form-destination.js';
-import FormTripTypeComponent from './components/form-trip-type.js';
-import OffersComponent from './components/offers.js';
-import OfferComponent from './components/offer.js';
-import DescriptionComponent from './components/offer-description.js';
-import PhotosComponent from './components/offer-photos.js';
 
-import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
+
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
+import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 
+// Общие переменные -----------------------------------------------------------------
 const randomDaysList = generateRandomDays();
-
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
-const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
-const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
+const mainElement = document.querySelector(`.page-body__page-main`);
 
-render(tripSwitchElement, new MenuComponent().getElement(), RENDER_POSITION.AFTEREND);
-render(tripFilterElement, new FiltersComponent().getElement(), RENDER_POSITION.AFTEREND);
+// Отрисовка элементов меню: Table, Status, Everything, Future, Past-----------------------------------------------------------------
+const renderTripMenuOptions = () => {
+  const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
+  const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
 
+  render(tripSwitchElement, new MenuComponent().getElement(), RENDER_POSITION.AFTEREND);
+  render(tripFilterElement, new FiltersComponent().getElement(), RENDER_POSITION.AFTEREND);
+};
+
+renderTripMenuOptions();
+
+// Отрисовка Начальной и конечной точки маршрута / начальной и конечной даты. Отрисовка общей цены.-----------------------------------------------------------------
 const renderTripInfo = () => {
   const tripCost = getPrice(randomDaysList);
   const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
@@ -75,87 +77,31 @@ const renderTripInfo = () => {
 
 renderTripInfo();
 
-const renderOfferInfo = (currentPoint) => {
+// Отрисовка меню сортировки. Отрисовка "контейнера" для вывода дней путешествия -----------------------------------------------------------------
+const renderTripMainContent = () => {
+  const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
-const {type, destination, offers, destinationInfo, price, departure, arrival} = currentPoint;
-
-  const eventDetailsElement = tripEventsElement.querySelector(`.event__details`);
-  const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
-  const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
-  const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
-
-  for (const offer of offers) {
-    render(eventOffesElement, new OfferComponent(offer).getElement(), RENDER_POSITION.AFTERBEGIN);
-  }
-
-  const description = destinationInfo.destinationDescription;
-  render(eventDescriptionElement, new DescriptionComponent(description).getElement(), RENDER_POSITION.AFTEREND);
-
-  for (const photo of destinationInfo.destinationPhotos) {
-    render(eventPhotosElement, new PhotosComponent(photo).getElement(), RENDER_POSITION.AFTERBEGIN);
-  }
+  render(tripEventsElement, new SortComponent().getElement(), RENDER_POSITION.BEFOREEND);
+  render(tripEventsElement, new TripDaysComponent().getElement(), RENDER_POSITION.BEFOREEND);
 };
 
-const renderFormParameters = (currentPoint) => {
-  const eventHeadertElement = mainElement.querySelector(`.event__header`);
-  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
-  const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
-  const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
+renderTripMainContent();
 
-  render(eventHeadertElement, new OffersComponent().getElement(), RENDER_POSITION.AFTEREND);
-
-  renderOfferInfo(currentPoint);
-  console.log(currentPoint);
-
-  for (const destination of DESTINATIONS) {
-    render(destinationsListElement, new FormDestinationComponent(destination).getElement(), RENDER_POSITION.AFTERBEGIN);
-  }
-
-  for (const tripType of TRIP_TYPES) {
-    render(eventTripListElement, new FormTripTypeComponent(tripType).getElement(), RENDER_POSITION.AFTEREND);
-  }
-
-  for (const stopType of STOP_TYPES) {
-    render(eventStopListElement, new FormTripTypeComponent(stopType).getElement(), RENDER_POSITION.AFTEREND);
-  }
-};
-
-const removeFormParameters = () => {
-  const eventHeadertElement = mainElement.querySelector(`.event__header`);
-  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
-  const optionsElements = destinationsListElement.querySelectorAll(`option`);
-  const eventTypesListElement = eventHeadertElement.querySelector(`.event__type-list`);
-  const eventTypeElements = eventTypesListElement.querySelectorAll(`.event__type-item`);
-  const form = document.querySelector(`.event--edit`);
-  const shownOffer = form.querySelector(`.event__details`);
-
-  for (const option of optionsElements) {
-    option.remove();
-  }
-
-  for (const eventType of eventTypeElements) {
-    eventType.remove();
-  }
-
-  shownOffer.remove();
-};
-
-const mainElement = document.querySelector(`.page-body__page-main`);
-const tripEventsElement = mainElement.querySelector(`.trip-events`);
-
-render(tripEventsElement, new SortComponent().getElement(), RENDER_POSITION.BEFOREEND);
-
-render(tripEventsElement, new TripDaysComponent().getElement(), RENDER_POSITION.BEFOREEND);
+// Отрисовка дней путешествия --------------------------------------------------------
 const tripDaysElement = mainElement.querySelector(`.trip-days`);
+const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
 const renderTripDay = () => {
-  const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
-
   for (let i = 0; i < daysList.length; i++) {
     const tripDayComponent = new TripDayComponent(daysList[i]);
     render(tripDaysElement, tripDayComponent.getElement(), RENDER_POSITION.BEFOREEND);
   }
+};
 
+renderTripDay();
+
+// Отрисовка точек маршрута в днях путешествия --------------------------------------------------------
+const renderTripEvent = () => {
   const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
 
   for (let i = 0; i < daysList.length; i++) {
@@ -166,38 +112,15 @@ const renderTripDay = () => {
       const currentPoint = wayPoint[j];
 
       const eventComponent = new EventComponent(currentPoint);
-      const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-
-      const formComponent = new FormComponent();
-      const editForm = formComponent.getElement().querySelector(`form`);
-
-      const replaceEventToForm = () => {
-        currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
-        renderFormParameters(currentPoint);
-      };
-
-      const replaceFormToEvent = () => {
-        currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
-      };
-
-      const eventButtonClickHandler = () => {
-        replaceEventToForm();
-        editForm.addEventListener(`submit`, editFormClickHandler);
-      };
-
-      const editFormClickHandler = (evt) => {
-        evt.preventDefault();
-        removeFormParameters();
-        editForm.removeEventListener(`submit`, editFormClickHandler);
-        replaceFormToEvent();
-      };
-
-      eventButton.addEventListener(`click`, eventButtonClickHandler);
-
       render(currentTripDay, eventComponent.getElement(), RENDER_POSITION.BEFOREEND);
     }
   }
+};
 
+renderTripEvent();
+
+// Отрисовка дополнительных предложений в точках маршрута --------------------------------------------------------
+const renderTripOffers = () => {
   const daysElements = document.querySelectorAll(`.trip-events__list`);
 
   for (let i = 0; i < daysList.length; i++) {
@@ -216,7 +139,40 @@ const renderTripDay = () => {
   }
 };
 
-renderTripDay();
+renderTripOffers();
+
+// const renderTripDay = () => {
 
 
-// console.log(randomDaysList);
+
+      // const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+      //
+      // const formComponent = new FormComponent();
+      // const editForm = formComponent.getElement().querySelector(`form`);
+      //
+      // const replaceEventToForm = () => {
+      //   currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
+      //   renderFormParameters(currentPoint);
+      // };
+      //
+      // const replaceFormToEvent = () => {
+      //   currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
+      // };
+      //
+      // const eventButtonClickHandler = () => {
+      //   replaceEventToForm();
+      //   editForm.addEventListener(`submit`, editFormClickHandler);
+      // };
+      //
+      // const editFormClickHandler = (evt) => {
+      //   evt.preventDefault();
+      //   removeFormParameters();
+      //   editForm.removeEventListener(`submit`, editFormClickHandler);
+      //   replaceFormToEvent();
+      // };
+      //
+      // eventButton.addEventListener(`click`, eventButtonClickHandler);
+
+
+  //
+  //

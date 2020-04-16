@@ -10,7 +10,7 @@ const createEventTemplate = (point) => {
   const pointImage = point.type.toLowerCase();
 
   const getTimeInfo = (date) => {
-    return `${date.getHours()}:${date.getMinutes()}`;
+    return `${correctDateFormat(date.getHours())}:${correctDateFormat(date.getMinutes())}`;
   };
   const timeDeparture = getTimeInfo(departure);
   const timeArrival = getTimeInfo(arrival);
