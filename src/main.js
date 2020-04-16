@@ -17,13 +17,13 @@ import PhotosComponent from './components/offer-photos.js';
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 
-// Общие переменные -----------------------------------------------------------------
+// Общие переменные
 const randomDaysList = generateRandomDays();
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const mainElement = document.querySelector(`.page-body__page-main`);
 
-// Отрисовка элементов меню: Table, Status, Everything, Future, Past-----------------------------------------------------------------
+// Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
   const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
@@ -34,7 +34,7 @@ const renderTripMenuOptions = () => {
 
 renderTripMenuOptions();
 
-// Отрисовка Начальной и конечной точки маршрута / начальной и конечной даты. Отрисовка общей цены.-----------------------------------------------------------------
+// Отрисовка Начальной и конечной точки маршрута / начальной и конечной даты. Отрисовка общей цены.
 const renderTripInfo = () => {
   const tripCost = getPrice(randomDaysList);
   const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
@@ -83,7 +83,7 @@ const renderTripInfo = () => {
 
 renderTripInfo();
 
-// Отрисовка меню сортировки. Отрисовка "контейнера" для вывода дней путешествия -----------------------------------------------------------------
+// Отрисовка меню сортировки. Отрисовка "контейнера" для вывода дней путешествия
 const renderTripMainContent = () => {
   const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
@@ -93,7 +93,7 @@ const renderTripMainContent = () => {
 
 renderTripMainContent();
 
-// Отрисовка дней путешествия --------------------------------------------------------
+// Отрисовка дней путешествия
 const tripDaysElement = mainElement.querySelector(`.trip-days`);
 const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
@@ -106,16 +106,12 @@ const renderTripDay = () => {
 
 renderTripDay();
 
-// Наполнение данными шапки формы редактирования точки маршрута --------------------------------------------------------
-const renderFormParameters = (currentMainElement, currentPoint) => {
+// Наполнение данными шапки формы редактирования точки маршрута
+const renderFormParameters = (currentMainElement) => {
   const eventHeadertElement = currentMainElement.querySelector(`.event__header`);
   const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
   const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
   const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
-  // const formTripTypeElement = currentMainElement.querySelector();
-  //
-  // const {type, destination, offers, destinationInfo, price, departure, arrival} = currentPoint;
-  // const currentPointType = type;
 
   render(eventHeadertElement, new OffersComponent().getElement(), RENDER_POSITION.AFTEREND);
 
@@ -133,7 +129,7 @@ const renderFormParameters = (currentMainElement, currentPoint) => {
 
 };
 
-// Отрисовка данных о точке маршрута в форму редактирования --------------------------------------------------------
+// Отрисовка данных о точке маршрута в форму редактирования
 const renderOfferInfo = (currenTripElement, currentPoint) => {
   const {offers, destinationInfo} = currentPoint;
 
@@ -154,16 +150,21 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
   }
 };
 
-// Отрисовка формы редактирования точки маршрута --------------------------------------------------------
+// Отрисовка формы редактирования точки маршрута
 const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
 
   const formComponent = new FormComponent(currentPoint);
-  const editForm = formComponent.getElement().querySelector(`form`);
+  const getFormComponent = () => {
+    const editForm = formComponent.getElement().querySelector(`form`);
+
+    return editForm;
+  };
 
   const eventButtonClickHandler = () => {
+
     currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
-    editForm.addEventListener(`submit`, editFormClickHandler);
+    getFormComponent().addEventListener(`submit`, editFormClickHandler);
 
     renderFormParameters(formComponent.getElement(), currentPoint);
     renderOfferInfo(formComponent.getElement(), currentPoint);
@@ -171,18 +172,15 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
 
   const editFormClickHandler = (evt) => {
     evt.preventDefault();
-    editForm.removeEventListener(`submit`, editFormClickHandler);
+    getFormComponent().removeEventListener(`submit`, editFormClickHandler);
     currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
+    formComponent.removeElement();
   };
 
   eventButton.addEventListener(`click`, eventButtonClickHandler);
-  // console.log(eventComponent._element);
-  // console.log(currentPoint);
-  // console.log(editForm);
-  // console.log(currentTripDay);
 };
 
-// Отрисовка точек маршрута в днях путешествия --------------------------------------------------------
+// Отрисовка точек маршрута в днях путешествия
 const renderTripEvent = () => {
   const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
 
@@ -203,7 +201,7 @@ const renderTripEvent = () => {
 
 renderTripEvent();
 
-// Отрисовка дополнительных предложений в точках маршрута --------------------------------------------------------
+// Отрисовка дополнительных предложений в точках маршрута
 const renderTripOffers = () => {
   const daysElements = document.querySelectorAll(`.trip-events__list`);
 
@@ -224,23 +222,3 @@ const renderTripOffers = () => {
 };
 
 renderTripOffers();
-
-
-// const renderTripDay = () => {
-
-// renderFormParameters(currentPoint);
-//
-    // removeFormParameters();
-      //
-
-      //
-
-      //
-
-      //
-
-      //
-
-
-  //
-  //

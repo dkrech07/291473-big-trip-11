@@ -1,9 +1,6 @@
-import {createElement} from '../utils.js';
-import {correctDateFormat} from '../utils.js';
-import {getDayInfo} from '../utils.js';
+import {createElement, correctDateFormat, getDayInfo} from '../utils.js';
 
 const createFormTemplate = (currentPoint) => {
-
   const {type, destination, offers, price, departure, arrival} = currentPoint;
   const currentTripType = type.toLowerCase();
 
