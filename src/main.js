@@ -13,8 +13,10 @@ import FormTripTypeComponent from './components/form-trip-type.js';
 import OfferComponent from './components/offer.js';
 import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
+import NoPointsComponent from './components/no-points.js';
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
+const ESC_KEYCODE = 27;
 
 // Общие переменные
 const randomDaysList = generateRandomDays();
@@ -161,7 +163,7 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   const eventButtonClickHandler = () => {
     currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
     getFormComponent().addEventListener(`submit`, editFormClickHandler);
-
+    document.addEventListener(`keydown`, escKeyDownHandler);
     renderFormParameters(formComponent.getElement(), currentPoint);
     renderOfferInfo(formComponent.getElement(), currentPoint);
   };
@@ -169,8 +171,15 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   const editFormClickHandler = (evt) => {
     evt.preventDefault();
     getFormComponent().removeEventListener(`submit`, editFormClickHandler);
+    document.removeEventListener(`keydown`, escKeyDownHandler);
     currentTripDay.replaceChild(eventComponent.getElement(), formComponent.getElement());
     formComponent.removeElement();
+  };
+
+  const escKeyDownHandler = (evt) => {
+    if (evt.keyCode === ESC_KEYCODE) {
+      editFormClickHandler(evt);
+    }
   };
 
   eventButton.addEventListener(`click`, eventButtonClickHandler);
@@ -218,3 +227,17 @@ const renderTripOffers = () => {
 };
 
 renderTripOffers();
+
+// Проверка наличия точек маршрута. Вывод сообщения о необходимости добавить точку маршрута.
+const checkTripPoint = (days) => {
+  const isAllwayPointsMissing = days.every((day) => day.wayPoints.length === 0);
+  const isAllDaysMissing = days.every((day) => day.length === 0);
+
+  if (isAllwayPointsMissing === true || isAllDaysMissing === true) {
+    render(mainElement, new NoPointsComponent().getElement(), RENDER_POSITION.BEFOREEND);
+    return;
+  }
+
+};
+
+checkTripPoint(randomDaysList);
