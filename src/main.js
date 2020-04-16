@@ -13,7 +13,6 @@ import FormTripTypeComponent from './components/form-trip-type.js';
 import OfferComponent from './components/offer.js';
 import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
-
 import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 
@@ -153,7 +152,6 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 // Отрисовка формы редактирования точки маршрута
 const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-
   const formComponent = new FormComponent(currentPoint);
   const getFormComponent = () => {
     const editForm = formComponent.getElement().querySelector(`form`);
@@ -162,7 +160,6 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   };
 
   const eventButtonClickHandler = () => {
-
     currentTripDay.replaceChild(formComponent.getElement(), eventComponent.getElement());
     getFormComponent().addEventListener(`submit`, editFormClickHandler);
 
