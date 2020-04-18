@@ -81,44 +81,14 @@ const getDay = (day) => {
   return `${monthName} ${dayNumber}`;
 };
 
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-const RENDER_POSITION = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`,
-};
-
-const render = (container, element, place) => {
-  switch (place) {
-    case RENDER_POSITION.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RENDER_POSITION.BEFOREEND:
-      container.append(element);
-      break;
-    case RENDER_POSITION.AFTEREND:
-      container.after(element);
-      break;
-  }
-};
-
 export {
   MINUTES_COUNT,
   HOURS_COUNT,
   MONTHS_LIST,
   DAY_MILLISECONDS_COUNT,
-  RENDER_POSITION,
   correctDateFormat,
   calculateTripTime,
   getDayInfo,
   getPrice,
-  getDay,
-  createElement,
-  render
+  getDay
 };

@@ -1,4 +1,5 @@
-import {createElement, correctDateFormat, getDayInfo} from '../utils.js';
+import {correctDateFormat, getDayInfo} from '../utils.js';
+import {createElement} from '../utils/render.js';
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, offers, price, departure, arrival} = currentPoint;

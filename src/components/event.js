@@ -1,4 +1,5 @@
-import {createElement, correctDateFormat, calculateTripTime, getDayInfo} from '../utils.js';
+import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils.js';
+import {createElement} from '../utils/render.js';
 
 const createEventTemplate = (point) => {
   const {type, destination, departure, arrival, price} = point;

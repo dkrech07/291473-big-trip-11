@@ -15,7 +15,8 @@ import OfferComponent from './components/offer.js';
 import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
 import NoPointsComponent from './components/no-points.js';
-import {RENDER_POSITION, getPrice, getDay, render} from "./utils.js";
+import {getPrice, getDay} from "./utils.js";
+import {RENDER_POSITION, render} from "./utils/render.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 const ESC_KEYCODE = 27;
 

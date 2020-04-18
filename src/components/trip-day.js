@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import {createElement} from '../utils/render.js';
 import {correctDateFormat} from '../utils.js';
 import {getDayInfo} from '../utils.js';
 
