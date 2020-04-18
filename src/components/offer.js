@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createOfferTemplate = (offer) => {
   const {type, title, price} = offer;
@@ -15,25 +15,14 @@ const createOfferTemplate = (offer) => {
   );
 };
 
-export default class Offer {
+export default class Offer extends AbstractComponent {
   constructor(offer) {
+    super();
+
     this._offer = offer;
-    this._element = null;
   }
 
   getTemplate() {
     return createOfferTemplate(this._offer);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

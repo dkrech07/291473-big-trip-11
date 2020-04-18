@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createDescriptionTemplate = (description) => {
   return (
@@ -6,25 +6,14 @@ const createDescriptionTemplate = (description) => {
   );
 };
 
-export default class Description {
+export default class Description extends AbstractComponent {
   constructor(description) {
+    super();
+
     this._description = description;
-    this._element = null;
   }
 
   getTemplate() {
     return createDescriptionTemplate(this._description);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
