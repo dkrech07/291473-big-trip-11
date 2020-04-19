@@ -1,4 +1,4 @@
-import {DAY_MILLISECONDS_COUNT} from '../utils.js';
+import {DAY_MILLISECONDS_COUNT} from '../utils/common.js';
 
 const MIN_PRICE = 5;
 const MAX_PRICE = 100;

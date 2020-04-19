@@ -1,6 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-import {correctDateFormat} from '../utils.js';
-import {getDayInfo} from '../utils.js';
+import {getDayInfo, correctDateFormat} from '../utils/common.js';
 
 const createTripDayTemplate = (tripDayInfo) => {
   const [day, month, year, monthName, minYear] = getDayInfo(tripDayInfo.date);

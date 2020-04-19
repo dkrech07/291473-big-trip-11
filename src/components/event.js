@@ -1,4 +1,4 @@
-import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils.js';
+import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {

@@ -1,4 +1,4 @@
-import {correctDateFormat, getDayInfo} from '../utils.js';
+import {correctDateFormat, getDayInfo} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
 const createFormTemplate = (currentPoint) => {

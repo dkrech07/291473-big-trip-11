@@ -15,7 +15,7 @@ import OfferComponent from './components/offer.js';
 import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
 import NoPointsComponent from './components/no-points.js';
-import {getPrice, getDay} from "./utils.js";
+import {getPrice, getDay} from "./utils/common.js";
 import {RENDER_POSITION, render, replace, remove} from "./utils/render.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 const ESC_KEYCODE = 27;
@@ -161,7 +161,7 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   };
 
   const eventButtonClickHandler = () => {
-    replace(currentTripDay, formComponent.getElement(), eventComponent.getElement());
+    replace(formComponent, eventComponent);
     getFormComponent().addEventListener(`submit`, editFormClickHandler);
     document.addEventListener(`keydown`, escKeyDownHandler);
     renderFormParameters(formComponent.getElement(), currentPoint);
@@ -172,7 +172,7 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
     evt.preventDefault();
     getFormComponent().removeEventListener(`submit`, editFormClickHandler);
     document.removeEventListener(`keydown`, escKeyDownHandler);
-    replace(currentTripDay, eventComponent.getElement(), formComponent.getElement());
+    replace(eventComponent, formComponent);
     remove(formComponent);
   };
 
