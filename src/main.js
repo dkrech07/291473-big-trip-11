@@ -4,7 +4,7 @@ import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
 import SortComponent from './components/sort.js';
 import TripDaysComponent from './components/trip-days.js';
-import TripDayComponent from './components/trip-day.js';
+// import TripDayComponent from './components/trip-day.js';
 import EventComponent from './components/event.js';
 import EventOfferComponent from './components/event-offer.js';
 import FormComponent from './components/form.js';
@@ -15,10 +15,12 @@ import OfferComponent from './components/offer.js';
 import DescriptionComponent from './components/offer-description.js';
 import PhotosComponent from './components/offer-photos.js';
 import NoPointsComponent from './components/no-points.js';
-import {getPrice, getDay} from "./utils/common.js";
-import {RENDER_POSITION, render, replace, remove} from "./utils/render.js";
+import {getPrice, getDay} from './utils/common.js';
+import {RENDER_POSITION, render, replace, remove} from './utils/render.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateRandomDays} from './mock/way-point.js';
 const ESC_KEYCODE = 27;
+
+import TripController from './controllers/trip-days.js';
 
 // Общие переменные
 const randomDaysList = generateRandomDays();
@@ -108,12 +110,12 @@ const renderTripMainContent = () => {
 //   }
 // };
 
-const renderTripDay = (container, days) => {
-  for (let i = 0; i < days.length; i++) {
-    const tripDayComponent = new TripDayComponent(days[i]);
-    render(container.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
-  }
-};
+// const renderTripDay = (container, days) => {
+//   for (let i = 0; i < days.length; i++) {
+//     const tripDayComponent = new TripDayComponent(days[i]);
+//     render(container.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
+//   }
+// };
 
 // Наполнение данными шапки формы редактирования точки маршрута
 const renderFormParameters = (currentMainElement) => {
@@ -248,7 +250,10 @@ const checkTripPoint = (days) => {
 
   renderTripInfo();
   renderTripMainContent();
-  renderTripDay(tripDaysComponent, daysList);
+
+  const tripController = new TripController(tripDaysComponent);
+  tripController.render(daysList);
+
   renderTripEvent();
   renderTripOffers();
 };
