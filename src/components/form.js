@@ -90,4 +90,9 @@ export default class Form extends AbstractComponent {
   getTemplate() {
     return createFormTemplate(this._currentTripType);
   }
+
+  setEditFormClickHandler(handler) {
+    this.getElement().querySelector(`form`)
+    .addEventListener(`submit`, handler);
+  }
 }

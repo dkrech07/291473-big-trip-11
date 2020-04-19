@@ -152,7 +152,6 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 
 // Отрисовка формы редактирования точки маршрута
 const renderForm = (eventComponent, currentTripDay, currentPoint) => {
-  const eventButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
   const formComponent = new FormComponent(currentPoint);
   const getFormComponent = () => {
     const editForm = formComponent.getElement().querySelector(`form`);
@@ -162,7 +161,8 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
 
   const eventButtonClickHandler = () => {
     replace(formComponent, eventComponent);
-    getFormComponent().addEventListener(`submit`, editFormClickHandler);
+    formComponent.setEditFormClickHandler(editFormClickHandler);
+
     document.addEventListener(`keydown`, escKeyDownHandler);
     renderFormParameters(formComponent.getElement(), currentPoint);
     renderOfferInfo(formComponent.getElement(), currentPoint);
@@ -182,7 +182,7 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
     }
   };
 
-  eventButton.addEventListener(`click`, eventButtonClickHandler);
+  eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
 };
 
 // Отрисовка точек маршрута в днях путешествия
