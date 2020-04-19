@@ -27,6 +27,7 @@ const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const mainElement = document.querySelector(`.page-body__page-main`);
 const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
+const tripDaysComponent = new TripDaysComponent();
 
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
@@ -95,15 +96,22 @@ const renderTripInfo = () => {
 // Отрисовка меню сортировки. Отрисовка "контейнера" для вывода дней путешествия
 const renderTripMainContent = () => {
   render(tripEventsElement, new SortComponent(), RENDER_POSITION.BEFOREEND);
-  render(tripEventsElement, new TripDaysComponent(), RENDER_POSITION.BEFOREEND);
+  render(tripEventsElement, tripDaysComponent, RENDER_POSITION.BEFOREEND);
 };
 
 // Отрисовка дней путешествия
-const renderTripDay = () => {
-  const tripDaysElement = mainElement.querySelector(`.trip-days`);
-  for (let i = 0; i < daysList.length; i++) {
-    const tripDayComponent = new TripDayComponent(daysList[i]);
-    render(tripDaysElement, tripDayComponent, RENDER_POSITION.BEFOREEND);
+// const renderTripDay = () => {
+//   const tripDaysElement = mainElement.querySelector(`.trip-days`);
+//   for (let i = 0; i < daysList.length; i++) {
+//     const tripDayComponent = new TripDayComponent(daysList[i]);
+//     render(tripDaysElement, tripDayComponent, RENDER_POSITION.BEFOREEND);
+//   }
+// };
+
+const renderTripDay = (container, days) => {
+  for (let i = 0; i < days.length; i++) {
+    const tripDayComponent = new TripDayComponent(days[i]);
+    render(container.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
   }
 };
 
@@ -240,7 +248,7 @@ const checkTripPoint = (days) => {
 
   renderTripInfo();
   renderTripMainContent();
-  renderTripDay();
+  renderTripDay(tripDaysComponent, daysList);
   renderTripEvent();
   renderTripOffers();
 };
