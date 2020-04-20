@@ -196,24 +196,23 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
 };
 
 // Отрисовка точек маршрута в днях путешествия
-const renderTripEvent = () => {
-  const tripDaysElement = mainElement.querySelector(`.trip-days`);
-  const tripEventsListElements = tripDaysElement.querySelectorAll(`.trip-events__list`);
-
-  for (let i = 0; i < daysList.length; i++) {
-    const wayPoint = daysList[i].wayPoints;
-    const currentTripDay = tripEventsListElements[i];
-
-    for (let j = 0; j < wayPoint.length; j++) {
-      const currentPoint = wayPoint[j];
-
-      const eventComponent = new EventComponent(currentPoint);
-      render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
-
-      renderForm(eventComponent, currentTripDay, currentPoint);
-    }
-  }
-};
+// const renderTripEvent = (component, days) => {
+//   const tripEventsListElements = component.getElement().querySelectorAll(`.trip-events__list`);
+//   console.log(tripDaysComponent.getElement());
+//   for (let i = 0; i < days.length; i++) {
+//     const wayPoint = days[i].wayPoints;
+//     const currentTripDay = tripEventsListElements[i];
+//
+//     for (let j = 0; j < wayPoint.length; j++) {
+//       const currentPoint = wayPoint[j];
+//
+//       const eventComponent = new EventComponent(currentPoint);
+//       render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
+//
+//       // renderForm(eventComponent, currentTripDay, currentPoint);
+//     }
+//   }
+// };
 
 // Отрисовка дополнительных предложений в точках маршрута
 const renderTripOffers = () => {
@@ -254,7 +253,7 @@ const checkTripPoint = (days) => {
   const tripController = new TripController(tripDaysComponent);
   tripController.render(daysList);
 
-  renderTripEvent();
+  // renderTripEvent(tripDaysComponent, daysList);
   renderTripOffers();
 };
 
