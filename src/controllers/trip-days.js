@@ -7,6 +7,7 @@ import FormTripTypeComponent from '../components/form-trip-type.js';
 import OfferComponent from '../components/offer.js';
 import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
+import EventOfferComponent from '../components/event-offer.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 
 // import TripDaysComponent from '../components/trip-days.js';
@@ -91,6 +92,26 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
 };
 
+// Отрисовка дополнительных предложений в точках маршрута
+const renderTripOffers = (component, daysList) => {
+  const tripEventsListElements = component.getElement().querySelectorAll(`.trip-events__list`);
+
+  for (let i = 0; i < daysList.length; i++) {
+    const currentDay = daysList[i];
+    const currentOffersListElements = tripEventsListElements[i].querySelectorAll(`.event__selected-offers`);
+
+    for (let j = 0; j < currentDay.wayPoints.length; j++) {
+      const currentWayPoint = currentDay.wayPoints[j];
+      const curentOfferElements = currentOffersListElements[j];
+
+      for (let k = 0; k < currentWayPoint.offers.length; k++) {
+        const currentOffer = currentWayPoint.offers[k];
+        render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
+      }
+    }
+  }
+};
+
 export default class TripController {
   constructor(container) {
     this._container = container;
@@ -125,6 +146,8 @@ export default class TripController {
       }
     };
     renderTripEvent(this._container, days);
+
+    renderTripOffers(this._container, days);
 
   }
 }

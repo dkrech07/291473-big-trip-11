@@ -4,7 +4,6 @@ import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
 import SortComponent from './components/sort.js';
 import TripDaysComponent from './components/trip-days.js';
-import EventOfferComponent from './components/event-offer.js';
 import NoPointsComponent from './components/no-points.js';
 import {getPrice, getDay} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
@@ -90,26 +89,6 @@ const renderTripMainContent = () => {
   render(tripEventsElement, tripDaysComponent, RENDER_POSITION.BEFOREEND);
 };
 
-// Отрисовка дополнительных предложений в точках маршрута
-const renderTripOffers = () => {
-  const daysElements = document.querySelectorAll(`.trip-events__list`);
-
-  for (let i = 0; i < daysList.length; i++) {
-    const currentDay = daysList[i];
-    const currentOffersListElements = daysElements[i].querySelectorAll(`.event__selected-offers`);
-
-    for (let j = 0; j < currentDay.wayPoints.length; j++) {
-      const currentWayPoint = currentDay.wayPoints[j];
-      const curentOfferElements = currentOffersListElements[j];
-
-      for (let k = 0; k < currentWayPoint.offers.length; k++) {
-        const currentOffer = currentWayPoint.offers[k];
-        render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
-      }
-    }
-  }
-};
-
 // Проверка наличия точек маршрута. Вывод сообщения о необходимости добавить точку маршрута.
 const checkTripPoint = (days) => {
   const isAllWayPointsMissing = days.every((day) => day.wayPoints.length === 0);
@@ -128,8 +107,6 @@ const checkTripPoint = (days) => {
 
   const tripController = new TripController(tripDaysComponent);
   tripController.render(daysList);
-
-  renderTripOffers();
 };
 
 checkTripPoint(randomDaysList);
