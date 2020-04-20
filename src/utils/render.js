@@ -37,7 +37,6 @@ const replace = (newComponent, oldComponent) => {
   }
 };
 
-
 const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
