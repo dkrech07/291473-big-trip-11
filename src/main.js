@@ -97,14 +97,12 @@ const checkTripPoint = (days) => {
   renderTripCost();
 
   if (isAllWayPointsMissing || isAllDaysMissing) {
-
     render(tripEventsElement, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
     return;
   }
 
   renderTripInfo();
   renderTripMainContent();
-
   const tripController = new TripController(tripDaysComponent);
   tripController.render(daysList);
 };

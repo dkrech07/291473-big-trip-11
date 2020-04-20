@@ -9,31 +9,8 @@ import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
 import EventOfferComponent from '../components/event-offer.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
-
-// import TripDaysComponent from '../components/trip-days.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 const ESC_KEYCODE = 27;
-
-// Отрисовка данных о точке маршрута в форму редактирования
-const renderOfferInfo = (currenTripElement, currentPoint) => {
-  const {offers, destinationInfo} = currentPoint;
-
-  const eventDetailsElement = currenTripElement.querySelector(`.event__details`);
-  const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
-  const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
-  const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
-
-  for (const offer of offers) {
-    render(eventOffesElement, new OfferComponent(offer), RENDER_POSITION.AFTERBEGIN);
-  }
-
-  const description = destinationInfo.destinationDescription;
-  render(eventDescriptionElement, new DescriptionComponent(description), RENDER_POSITION.AFTEREND);
-
-  for (const photo of destinationInfo.destinationPhotos) {
-    render(eventPhotosElement, new PhotosComponent(photo), RENDER_POSITION.AFTERBEGIN);
-  }
-};
 
 // Наполнение данными шапки формы редактирования точки маршрута
 const renderFormParameters = (currentMainElement) => {
@@ -54,6 +31,27 @@ const renderFormParameters = (currentMainElement) => {
 
   for (const stopType of STOP_TYPES) {
     render(eventStopListElement, new FormTripTypeComponent(stopType), RENDER_POSITION.AFTEREND);
+  }
+};
+
+// Отрисовка данных о точке маршрута в форму редактирования
+const renderOfferInfo = (currenTripElement, currentPoint) => {
+  const {offers, destinationInfo} = currentPoint;
+
+  const eventDetailsElement = currenTripElement.querySelector(`.event__details`);
+  const eventOffesElement = eventDetailsElement.querySelector(`.event__available-offers`);
+  const eventDescriptionElement = eventDetailsElement.querySelector(`.event__section-title--destination`);
+  const eventPhotosElement = eventDetailsElement.querySelector(`.event__photos-tape`);
+
+  for (const offer of offers) {
+    render(eventOffesElement, new OfferComponent(offer), RENDER_POSITION.AFTERBEGIN);
+  }
+
+  const description = destinationInfo.destinationDescription;
+  render(eventDescriptionElement, new DescriptionComponent(description), RENDER_POSITION.AFTEREND);
+
+  for (const photo of destinationInfo.destinationPhotos) {
+    render(eventPhotosElement, new PhotosComponent(photo), RENDER_POSITION.AFTERBEGIN);
   }
 };
 
@@ -92,26 +90,6 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
   eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
 };
 
-// Отрисовка дополнительных предложений в точках маршрута
-const renderTripOffers = (component, daysList) => {
-  const tripEventsListElements = component.getElement().querySelectorAll(`.trip-events__list`);
-
-  for (let i = 0; i < daysList.length; i++) {
-    const currentDay = daysList[i];
-    const currentOffersListElements = tripEventsListElements[i].querySelectorAll(`.event__selected-offers`);
-
-    for (let j = 0; j < currentDay.wayPoints.length; j++) {
-      const currentWayPoint = currentDay.wayPoints[j];
-      const curentOfferElements = currentOffersListElements[j];
-
-      for (let k = 0; k < currentWayPoint.offers.length; k++) {
-        const currentOffer = currentWayPoint.offers[k];
-        render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
-      }
-    }
-  }
-};
-
 export default class TripController {
   constructor(container) {
     this._container = container;
@@ -119,35 +97,42 @@ export default class TripController {
 
   render(days) {
     // Отрисовка дней путешествия
-    const renderTripDay = (tripDaysComponent, daysList) => {
-      for (let i = 0; i < daysList.length; i++) {
-        const tripDayComponent = new TripDayComponent(daysList[i]);
-        render(tripDaysComponent.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
-      }
-    };
-    renderTripDay(this._container, days);
+    for (let i = 0; i < days.length; i++) {
+      const tripDayComponent = new TripDayComponent(days[i]);
+      render(this._container.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
+    }
 
     // Отрисовка точек маршрута в днях путешествия
-    const renderTripEvent = (component, daysList) => {
-      const tripEventsListElements = component.getElement().querySelectorAll(`.trip-events__list`);
+    const tripEventsListElements = this._container.getElement().querySelectorAll(`.trip-events__list`);
 
-      for (let i = 0; i < daysList.length; i++) {
-        const wayPoint = daysList[i].wayPoints;
-        const currentTripDay = tripEventsListElements[i];
+    for (let i = 0; i < days.length; i++) {
+      const wayPoint = days[i].wayPoints;
+      const currentTripDay = tripEventsListElements[i];
 
-        for (let j = 0; j < wayPoint.length; j++) {
-          const currentPoint = wayPoint[j];
+      for (let j = 0; j < wayPoint.length; j++) {
+        const currentPoint = wayPoint[j];
+        const eventComponent = new EventComponent(currentPoint);
+        render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
 
-          const eventComponent = new EventComponent(currentPoint);
-          render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
+        renderForm(eventComponent, currentTripDay, currentPoint);
+      }
+    }
 
-          renderForm(eventComponent, currentTripDay, currentPoint);
+    // Отрисовка дополнительных предложений в точках маршрута
+    for (let i = 0; i < days.length; i++) {
+      const currentDay = days[i];
+      const currentOffersListElements = tripEventsListElements[i].querySelectorAll(`.event__selected-offers`);
+
+      for (let j = 0; j < currentDay.wayPoints.length; j++) {
+        const currentWayPoint = currentDay.wayPoints[j];
+        const curentOfferElements = currentOffersListElements[j];
+
+        for (let k = 0; k < currentWayPoint.offers.length; k++) {
+          const currentOffer = currentWayPoint.offers[k];
+          render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
         }
       }
-    };
-    renderTripEvent(this._container, days);
-
-    renderTripOffers(this._container, days);
+    }
 
   }
 }
