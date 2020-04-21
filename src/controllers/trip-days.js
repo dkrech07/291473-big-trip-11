@@ -8,6 +8,7 @@ import OfferComponent from '../components/offer.js';
 import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
 import EventOfferComponent from '../components/event-offer.js';
+import SortComponent, {SORT_TYPES} from '../components/sort.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 const ESC_KEYCODE = 27;
@@ -93,6 +94,7 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
 export default class TripController {
   constructor(container) {
     this._container = container;
+    this._sortComponent = new SortComponent();
   }
 
   render(days) {
@@ -133,6 +135,10 @@ export default class TripController {
         }
       }
     }
+
+    this._sortComponent.setSortTypeChangeHandler(() => {
+
+    });
 
   }
 }
