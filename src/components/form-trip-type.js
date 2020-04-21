@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createEventTypeTemplate = (pointType) => {
   const poitTitle = pointType.toLowerCase();
@@ -11,25 +11,14 @@ const createEventTypeTemplate = (pointType) => {
   );
 };
 
-export default class FormTripType {
+export default class FormTripType extends AbstractComponent {
   constructor(tripType) {
+    super();
+
     this._tripType = tripType;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventTypeTemplate(this._tripType);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

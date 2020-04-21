@@ -1,4 +1,5 @@
-import {createElement, correctDateFormat, getDayInfo} from '../utils.js';
+import {correctDateFormat, getDayInfo} from '../utils/common.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, offers, price, departure, arrival} = currentPoint;
@@ -79,25 +80,19 @@ const createFormTemplate = (currentPoint) => {
   );
 };
 
-export default class Form {
+export default class Form extends AbstractComponent {
   constructor(currentTripType) {
+    super();
+
     this._currentTripType = currentTripType;
-    this._element = null;
   }
 
   getTemplate() {
     return createFormTemplate(this._currentTripType);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEditFormClickHandler(handler) {
+    this.getElement().querySelector(`form`)
+    .addEventListener(`submit`, handler);
   }
 }

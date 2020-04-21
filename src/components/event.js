@@ -1,4 +1,5 @@
-import {createElement, correctDateFormat, calculateTripTime, getDayInfo} from '../utils.js';
+import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils/common.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {
   const {type, destination, departure, arrival, price} = point;
@@ -50,25 +51,19 @@ const createEventTemplate = (point) => {
   );
 };
 
-export default class Event {
+export default class Event extends AbstractComponent {
   constructor(point) {
+    super();
+
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventTemplate(this._point, this._currentDate);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEventButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, handler);
   }
 }

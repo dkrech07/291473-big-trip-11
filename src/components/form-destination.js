@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createDestinationTemplate = (destination) => {
   return (
@@ -6,25 +6,14 @@ const createDestinationTemplate = (destination) => {
   );
 };
 
-export default class FormDestination {
+export default class FormDestination extends AbstractComponent {
   constructor(destination) {
+    super();
+
     this._destination = destination;
-    this._element = null;
   }
 
   getTemplate() {
     return createDestinationTemplate(this._destination);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

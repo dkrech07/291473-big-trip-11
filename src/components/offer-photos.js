@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createPhotosTemplate = (photoUrl) => {
   return (
@@ -6,25 +6,14 @@ const createPhotosTemplate = (photoUrl) => {
   );
 };
 
-export default class Photos {
+export default class Photos extends AbstractComponent {
   constructor(photoUrl) {
+    super();
+
     this._photoUrl = photoUrl;
-    this._element = null;
   }
 
   getTemplate() {
     return createPhotosTemplate(this._photoUrl);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
