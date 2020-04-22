@@ -62,7 +62,7 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 };
 
 // Отрисовка формы редактирования точки маршрута
-const renderForm = (eventComponent, currentTripDay, currentPoint) => {
+const renderForm = (eventComponent, currentPoint) => {
   const formComponent = new FormComponent(currentPoint);
   const getFormComponent = () => {
     const editForm = formComponent.getElement().querySelector(`form`);
@@ -129,7 +129,7 @@ export default class TripController {
         const eventComponent = new EventComponent(currentPoint);
         render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
 
-        renderForm(eventComponent, currentTripDay, currentPoint);
+        renderForm(eventComponent, currentPoint);
       }
     }
 
@@ -187,6 +187,7 @@ export default class TripController {
         const eventComponent = new EventComponent(tripPoit);
         render(sortPointsContaner, eventComponent, RENDER_POSITION.BEFOREEND);
         getTripListOffers(tripPoit, eventComponent);
+        renderForm(eventComponent, tripPoit);
       }
     };
 
@@ -211,6 +212,9 @@ export default class TripController {
       const sortType = evt.target.value;
       getSortedTrips(sortType);
     });
+
+    const tripList = days;
+    console.log(tripList.wayPoints);
 
   }
 }
