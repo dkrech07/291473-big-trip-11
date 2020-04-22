@@ -177,6 +177,9 @@ export default class TripController {
       switch (sortType) {
         case SORT_TYPES.SORT_PRICE:
           tripPointsList.sort((a, b) => a.price > b.price ? 1 : -1);
+
+          this._tripDaysComponent.getElement().innerHTML = ``;
+          renderTripsContainer();
           break;
       }
     };
