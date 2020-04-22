@@ -1,4 +1,5 @@
 import TripDayComponent from '../components/trip-day.js';
+import TripDaysComponent from '../components/trip-days.js';
 import EventComponent from '../components/event.js';
 import FormComponent from '../components/form.js';
 import OffersComponent from '../components/offers.js';
@@ -12,6 +13,9 @@ import SortComponent, {SORT_TYPES} from '../components/sort.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 const ESC_KEYCODE = 27;
+
+const mainElement = document.querySelector(`.page-body__page-main`);
+const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
 // Наполнение данными шапки формы редактирования точки маршрута
 const renderFormParameters = (currentMainElement) => {
@@ -92,20 +96,27 @@ const renderForm = (eventComponent, currentTripDay, currentPoint) => {
 };
 
 export default class TripController {
-  constructor(container) {
-    this._container = container;
+  constructor() {
+    this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
   }
 
   render(days) {
+
+    // Отрисовка меню сортировки.
+    render(tripEventsElement, this._sortComponent, RENDER_POSITION.BEFOREEND);
+
+    //  Отрисовка "контейнера" для вывода дней путешествия
+    render(tripEventsElement, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
+
     // Отрисовка дней путешествия
     for (let i = 0; i < days.length; i++) {
       const tripDayComponent = new TripDayComponent(days[i]);
-      render(this._container.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
+      render(this._tripDaysComponent.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
     }
 
     // Отрисовка точек маршрута в днях путешествия
-    const tripEventsListElements = this._container.getElement().querySelectorAll(`.trip-events__list`);
+    const tripEventsListElements = this._tripDaysComponent.getElement().querySelectorAll(`.trip-events__list`);
 
     for (let i = 0; i < days.length; i++) {
       const wayPoint = days[i].wayPoints;
@@ -137,7 +148,7 @@ export default class TripController {
     }
 
     this._sortComponent.setSortTypeChangeHandler(() => {
-
+      console.log(`ok`);
     });
 
   }

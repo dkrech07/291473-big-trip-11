@@ -3,7 +3,6 @@ import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
 import SortComponent from './components/sort.js';
-import TripDaysComponent from './components/trip-days.js';
 import NoPointsComponent from './components/no-points.js';
 import {getPrice, getDay} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
@@ -15,9 +14,8 @@ const randomDaysList = generateRandomDays();
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const mainElement = document.querySelector(`.page-body__page-main`);
-const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
-const tripDaysComponent = new TripDaysComponent();
+const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
@@ -83,12 +81,6 @@ const renderTripInfo = () => {
   }
 };
 
-// Отрисовка меню сортировки. Отрисовка "контейнера" для вывода дней путешествия
-const renderTripMainContent = () => {
-  render(tripEventsElement, new SortComponent(), RENDER_POSITION.BEFOREEND);
-  render(tripEventsElement, tripDaysComponent, RENDER_POSITION.BEFOREEND);
-};
-
 // Проверка наличия точек маршрута. Вывод сообщения о необходимости добавить точку маршрута.
 const checkTripPoint = (days) => {
   const isAllWayPointsMissing = days.every((day) => day.wayPoints.length === 0);
@@ -102,8 +94,7 @@ const checkTripPoint = (days) => {
   }
 
   renderTripInfo();
-  renderTripMainContent();
-  const tripController = new TripController(tripDaysComponent);
+  const tripController = new TripController();
   tripController.render(daysList);
 };
 
