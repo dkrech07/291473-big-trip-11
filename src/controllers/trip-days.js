@@ -1,3 +1,4 @@
+import TripsContainerComponent from '../components/trip-container.js';
 import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import EventComponent from '../components/event.js';
@@ -99,6 +100,7 @@ export default class TripController {
   constructor() {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
+    this._tripsContainerComponent = new TripsContainerComponent();
   }
 
   render(days) {
@@ -147,8 +149,43 @@ export default class TripController {
       }
     }
 
-    this._sortComponent.setSortTypeChangeHandler(() => {
-      console.log(`ok`);
+    // Отрисовка "контейнера" для отсортированных точек маршрута
+    const renderTripsContainer = () => {
+      render(this._tripDaysComponent.getElement(), this._tripsContainerComponent, RENDER_POSITION.BEFOREEND);
+    };
+
+    // Получение общего списка точек маршрута для дальнейшей сортировки (без разбивки по дням);
+    const getTripPoints = (dayList) => {
+      const tripsList = [];
+
+      for (const day of dayList) {
+        const currentWayPoints = day.wayPoints;
+        for (const wayPoint of currentWayPoints) {
+          tripsList.push(wayPoint);
+        }
+      }
+      return tripsList;
+    };
+
+    // console.log(getTripPoints(days));
+    // console.log(this._tripDaysComponent.getElement());
+
+    // Сортировка точек маршрута в зависимости от выбранного параметра сортировки
+    const getSortedTrips = (sortType) => {
+      const tripPointsList = getTripPoints(days.slice());
+
+      switch (sortType) {
+        case SORT_TYPES.SORT_PRICE:
+          tripPointsList.sort((a, b) => a.price > b.price ? 1 : -1);
+          break;
+      }
+    };
+
+    // Обработчик клика по кнопкам меню сортировки
+    this._sortComponent.setSortTypeChangeHandler((evt) => {
+      const sortType = evt.target.value;
+
+      getSortedTrips(sortType);
     });
 
   }
