@@ -100,7 +100,6 @@ export default class TripController {
   constructor() {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
-    this._tripDayContainerComponent = new TripDayContainerComponent();
   }
 
   render(days) {

@@ -2,7 +2,6 @@ import TripInfoComponent from './components/trip-info.js';
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
-import SortComponent from './components/sort.js';
 import NoPointsComponent from './components/no-points.js';
 import {getPrice, getDay} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
