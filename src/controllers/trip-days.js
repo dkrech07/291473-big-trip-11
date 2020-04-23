@@ -9,7 +9,7 @@ import OfferComponent from '../components/offer.js';
 import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
 import EventOfferComponent from '../components/event-offer.js';
-import SortComponent, {SORT_TYPES} from '../components/sort.js';
+import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
@@ -64,10 +64,8 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 // Отрисовка формы редактирования точки маршрута
 const renderForm = (eventComponent, currentPoint) => {
   const formComponent = new FormComponent(currentPoint);
-  const getFormComponent = () => {
-    const editFormElement = formComponent.getElement().querySelector(`form`);
-
-    return editFormElement;
+  const getFormElement = () => {
+    return formComponent.getElement().querySelector(`form`);
   };
 
   const eventButtonClickHandler = () => {
@@ -81,7 +79,7 @@ const renderForm = (eventComponent, currentPoint) => {
 
   const editFormClickHandler = (evt) => {
     evt.preventDefault();
-    getFormComponent().removeEventListener(`submit`, editFormClickHandler);
+    getFormElement().removeEventListener(`submit`, editFormClickHandler);
     document.removeEventListener(`keydown`, escKeyDownHandler);
     replace(eventComponent, formComponent);
     remove(formComponent);
@@ -103,7 +101,7 @@ export default class TripController {
   }
 
   render(days) {
-    // Отрисовка меню сортировки.
+    // Отрисовка меню сортировки
     render(tripEventsElement, this._sortComponent, RENDER_POSITION.BEFOREEND);
 
     // Отрисовка "контейнера" для вывода всех дней путешествия
@@ -173,18 +171,17 @@ export default class TripController {
     // Отрисовка предложений для отсортированных точек маршурта
     const getTripListOffers = (point, event) => {
       for (const offer of point.offers) {
-        const currentOffer = offer;
         const currentOfferElement = event.getElement().querySelector(`.event__selected-offers`);
-        render(currentOfferElement, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
+        render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
       }
     };
 
     // Отрисовка отсортированных точек маршурта
     const renderSortPoints = (tripPoints) => {
-      const sortPointsContaner = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
+      const pointsContainerElement = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
       for (const tripPoit of tripPoints) {
         const eventComponent = new EventComponent(tripPoit);
-        render(sortPointsContaner, eventComponent, RENDER_POSITION.BEFOREEND);
+        render(pointsContainerElement, eventComponent, RENDER_POSITION.BEFOREEND);
         getTripListOffers(tripPoit, eventComponent);
         renderForm(eventComponent, tripPoit);
       }
@@ -193,26 +190,22 @@ export default class TripController {
     // Сортировка точек маршрута в зависимости от выбранного параметра
     const getSortedTrips = (sortType) => {
       switch (sortType) {
-        case SORT_TYPES.SORT_EVENT:
+        case SortTypes.SORT_EVENT:
           this._tripDaysComponent.getElement().innerHTML = ``;
           renderTripDays(days);
           renderDaysTripPoints(days);
           getOffers(days);
           break;
-      }
 
-      switch (sortType) {
-        case SORT_TYPES.SORT_TIME:
+        case SortTypes.SORT_TIME:
           const tripPointsListTime = getTripPoints(days.slice());
           tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
           render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);
           renderSortPoints(tripPointsListTime);
           break;
-      }
 
-      switch (sortType) {
-        case SORT_TYPES.SORT_PRICE:
+        case SortTypes.SORT_PRICE:
           const tripPointsListPrice = getTripPoints(days.slice());
           tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
