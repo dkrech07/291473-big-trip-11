@@ -181,11 +181,6 @@ export default class TripController {
       return tripsList;
     };
 
-    // Отрисовка "контейнера" для отсортированных точек маршрута
-    // const renderTripsContainer = () => {
-    //   render(this._tripDaysComponent.getElement(), this._tripsContainerComponent, RENDER_POSITION.BEFOREEND);
-    // };     render(tripEventsElement, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
-
     // Отрисовка предложений для отсортированных точек маршурта
     const getTripListOffers = (point, event) => {
       for (const offer of point.offers) {
@@ -208,18 +203,6 @@ export default class TripController {
 
     // Сортировка точек маршрута в зависимости от выбранного параметра
     const getSortedTrips = (sortType) => {
-
-      switch (sortType) {
-        case SORT_TYPES.SORT_PRICE:
-          const tripPointsListPrice = getTripPoints(days.slice());
-          tripPointsListPrice.sort((a, b) => a.price > b.price ? 1 : -1);
-
-          this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
-          renderSortPoints(tripPointsListPrice);
-          break;
-      }
-
       switch (sortType) {
         case SORT_TYPES.SORT_EVENT:
           this._tripDaysComponent.getElement().innerHTML = ``;
@@ -227,6 +210,26 @@ export default class TripController {
           renderTripDays(days);
           renderDaysTripPoints(days);
           getOffers(days);
+          break;
+      }
+
+      switch (sortType) {
+        case SORT_TYPES.SORT_TIME:
+          const tripPointsListTime = getTripPoints(days.slice());
+          tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
+          this._tripDaysComponent.getElement().innerHTML = ``;
+          render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
+          renderSortPoints(tripPointsListTime);
+          break;
+      }
+
+      switch (sortType) {
+        case SORT_TYPES.SORT_PRICE:
+          const tripPointsListPrice = getTripPoints(days.slice());
+          tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
+          this._tripDaysComponent.getElement().innerHTML = ``;
+          render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
+          renderSortPoints(tripPointsListPrice);
           break;
       }
     };
