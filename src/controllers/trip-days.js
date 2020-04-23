@@ -1,4 +1,3 @@
-import TripDayContainerComponent from '../components/trip-container.js';
 import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import EventComponent from '../components/event.js';
@@ -11,6 +10,7 @@ import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
 import EventOfferComponent from '../components/event-offer.js';
 import SortComponent, {SORT_TYPES} from '../components/sort.js';
+import TripsContainerComponent from '../components/trips-container.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 const ESC_KEYCODE = 27;
@@ -65,9 +65,9 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 const renderForm = (eventComponent, currentPoint) => {
   const formComponent = new FormComponent(currentPoint);
   const getFormComponent = () => {
-    const editForm = formComponent.getElement().querySelector(`form`);
+    const editFormElement = formComponent.getElement().querySelector(`form`);
 
-    return editForm;
+    return editFormElement;
   };
 
   const eventButtonClickHandler = () => {
@@ -109,21 +109,11 @@ export default class TripController {
     // Отрисовка "контейнера" для вывода всех дней путешествия
     render(tripEventsElement, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
 
-    // Отрисовка "контейнеров" для вывода каждого дня путешествия
-    const renderTripDaysContainers = (daysList) => {
-      for (let i = 0; i < daysList.length; i++) {
-        render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
-      }
-    };
-    renderTripDaysContainers(days);
-
     // Отрисовка дней путешествия
     const renderTripDays = (daysList) => {
-      const tripDayContainersElements = this._tripDaysComponent.getElement().querySelectorAll(`.day__info`);
-
       for (let i = 0; i < daysList.length; i++) {
         const tripDayComponent = new TripDayComponent(daysList[i]);
-        render(tripDayContainersElements[i], tripDayComponent, RENDER_POSITION.BEFOREEND);
+        render(this._tripDaysComponent.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
       }
     };
     renderTripDays(days);
@@ -205,7 +195,6 @@ export default class TripController {
       switch (sortType) {
         case SORT_TYPES.SORT_EVENT:
           this._tripDaysComponent.getElement().innerHTML = ``;
-          renderTripDaysContainers(days);
           renderTripDays(days);
           renderDaysTripPoints(days);
           getOffers(days);
@@ -217,7 +206,7 @@ export default class TripController {
           const tripPointsListTime = getTripPoints(days.slice());
           tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
+          render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);
           renderSortPoints(tripPointsListTime);
           break;
       }
@@ -227,7 +216,7 @@ export default class TripController {
           const tripPointsListPrice = getTripPoints(days.slice());
           tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
+          render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);
           renderSortPoints(tripPointsListPrice);
           break;
       }
