@@ -1,4 +1,4 @@
-import TripsContainerComponent from '../components/trip-container.js';
+import TripDayContainerComponent from '../components/trip-container.js';
 import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import EventComponent from '../components/event.js';
@@ -100,121 +100,35 @@ export default class TripController {
   constructor() {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
-    this._tripsContainerComponent = new TripsContainerComponent();
+    this._tripDayContainerComponent = new TripDayContainerComponent();
   }
 
   render(days) {
-
     // Отрисовка меню сортировки.
     render(tripEventsElement, this._sortComponent, RENDER_POSITION.BEFOREEND);
 
-    //  Отрисовка "контейнера" для вывода дней путешествия
+    // Отрисовка "контейнера" для вывода всех дней путешествия
     render(tripEventsElement, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
 
+    // Отрисовка "контейнеров" для вывода каждого дня путешествия
+    const renderTripDaysContainers = (daysList) => {
+      for (let i = 0; i < daysList.length; i++) {
+        render(this._tripDaysComponent.getElement(), new TripDayContainerComponent(), RENDER_POSITION.BEFOREEND);
+      }
+    };
+    renderTripDaysContainers(days);
+
     // Отрисовка дней путешествия
-    for (let i = 0; i < days.length; i++) {
-      const tripDayComponent = new TripDayComponent(days[i]);
-      render(this._tripDaysComponent.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
-    }
+    const renderTripDays = (daysList) => {
+      const tripDayContainersElements = this._tripDaysComponent.getElement().querySelectorAll(`.day__info`);
 
-    // Отрисовка точек маршрута в днях путешествия
-    const tripEventsListElements = this._tripDaysComponent.getElement().querySelectorAll(`.trip-events__list`);
-
-    for (let i = 0; i < days.length; i++) {
-      const wayPoint = days[i].wayPoints;
-      const currentTripDay = tripEventsListElements[i];
-
-      for (let j = 0; j < wayPoint.length; j++) {
-        const currentPoint = wayPoint[j];
-        const eventComponent = new EventComponent(currentPoint);
-        render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
-
-        renderForm(eventComponent, currentPoint);
-      }
-    }
-
-    // Отрисовка дополнительных предложений в точках маршрута
-    const getOffers = (dayList) => {
-      for (let i = 0; i < dayList.length; i++) {
-        const currentDay = dayList[i];
-        const currentOffersListElements = tripEventsListElements[i].querySelectorAll(`.event__selected-offers`);
-
-        for (let j = 0; j < currentDay.wayPoints.length; j++) {
-          const currentWayPoint = currentDay.wayPoints[j];
-          const curentOfferElements = currentOffersListElements[j];
-
-          for (let k = 0; k < currentWayPoint.offers.length; k++) {
-            const currentOffer = currentWayPoint.offers[k];
-            render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
-          }
-        }
+      for (let i = 0; i < daysList.length; i++) {
+        const tripDayComponent = new TripDayComponent(daysList[i]);
+        render(tripDayContainersElements[i], tripDayComponent, RENDER_POSITION.BEFOREEND);
       }
     };
+    renderTripDays(days);
 
-    getOffers(days);
-
-    // Получение общего списка точек маршрута для дальнейшей сортировки (без разбивки по дням);
-    const getTripPoints = (dayList) => {
-      const tripsList = [];
-
-      for (const day of dayList) {
-        const currentWayPoints = day.wayPoints;
-        for (const wayPoint of currentWayPoints) {
-          tripsList.push(wayPoint);
-        }
-      }
-      return tripsList;
-    };
-
-    // Отрисовка "контейнера" для отсортированных точек маршрута
-    const renderTripsContainer = () => {
-      render(this._tripDaysComponent.getElement(), this._tripsContainerComponent, RENDER_POSITION.BEFOREEND);
-    };
-
-    // Отрисовка предложений для отсортированных точек маршурта
-    const getTripListOffers = (point, event) => {
-      for (const offer of point.offers) {
-        const currentOffer = offer;
-        const currentOfferElement = event.getElement().querySelector(`.event__selected-offers`);
-        render(currentOfferElement, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
-      }
-    };
-
-    // Отрисовка отсортированных точек маршурта
-    const renderSortPoints = (tripPoints) => {
-      const sortPointsContaner = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
-      for (const tripPoit of tripPoints) {
-        const eventComponent = new EventComponent(tripPoit);
-        render(sortPointsContaner, eventComponent, RENDER_POSITION.BEFOREEND);
-        getTripListOffers(tripPoit, eventComponent);
-        renderForm(eventComponent, tripPoit);
-      }
-    };
-
-    // Сортировка точек маршрута в зависимости от выбранного параметра
-    const getSortedTrips = (sortType) => {
-      const tripPointsList = getTripPoints(days.slice());
-
-      switch (sortType) {
-        case SORT_TYPES.SORT_PRICE:
-          tripPointsList.sort((a, b) => a.price > b.price ? 1 : -1);
-
-          this._tripDaysComponent.getElement().innerHTML = ``;
-          renderTripsContainer();
-
-          renderSortPoints(tripPointsList);
-          break;
-      }
-    };
-
-    // Обработчик клика по кнопкам меню сортировки
-    this._sortComponent.setSortTypeChangeHandler((evt) => {
-      const sortType = evt.target.value;
-      getSortedTrips(sortType);
-    });
-
-    const tripList = days;
-    console.log(tripList.wayPoints);
 
   }
 }
