@@ -233,11 +233,9 @@ export default class TripController {
       }
     };
 
-    // Обработчик клика по кнопкам меню сортировки
-    this._sortComponent.setSortTypeChangeHandler((evt) => {
-      const sortType = evt.target.value;
-      getSortedTrips(sortType);
+    // Обрботка клика по кнопкам меню сортировки
+    this._sortComponent.setSortTypeChangeHandler(() => {
+      getSortedTrips(this._sortComponent.getSortType());
     });
-
   }
 }
