@@ -10,7 +10,6 @@ const createTripDayTemplate = (tripDayInfo) => {
           <span class="day__counter">${day}</span>
           <time class="day__date" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}">${monthName} ${minYear}</time>
         </div>
-
         <ul class="trip-events__list"></ul>
       </li>`
   );

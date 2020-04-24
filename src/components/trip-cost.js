@@ -1,6 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
 const createTripCostTemplate = (cost) => {
+
   return (
     `<section class="trip-main__trip-info  trip-info">
       <p class="trip-info__cost">

@@ -4,7 +4,6 @@ const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
 const HOUR_MILLISECONDS_COUNT = MINUTES_COUNT * MIN_MILLISECONDS_COUNT;
 const DAY_MILLISECONDS_COUNT = MINUTES_COUNT * HOURS_COUNT * MIN_MILLISECONDS_COUNT;
 const DATE_LENGTH = 2;
-
 const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
 
 const correctDateFormat = (number) => {

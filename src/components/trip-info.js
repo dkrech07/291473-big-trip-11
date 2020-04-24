@@ -4,7 +4,6 @@ const createTripInfoTemplate = (tripInfo, tripDate) => {
   return (
     `<div class="trip-info__main">
         <h1 class="trip-info__title">${tripInfo}</h1>
-
         <p class="trip-info__dates">${tripDate}</p>
       </div>`
   );
