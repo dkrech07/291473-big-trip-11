@@ -7,6 +7,7 @@ import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
+import EventComponent from '../components/event.js';
 
 const ESC_KEYCODE = 27;
 
@@ -54,12 +55,19 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 };
 
 export default class PointController {
-  constructor(container) {
-    // container — элемент, в который контроллер отрисовывает открытую форму
-
+  constructor(currentTripDay) {
+    // container (currentTripDay) — элемент, в который контроллер отрисовывает открытую форму
+    this._container = currentTripDay;
   }
 
-  render(eventComponent, currentPoint) {
+  render(currentPoint) {
+    const eventComponent = new EventComponent(currentPoint);
+
+    const renderTripPoint = () => {
+      render(this._container, eventComponent, RENDER_POSITION.BEFOREEND);
+    };
+    renderTripPoint();
+
 
     // Отрисовка формы редактирования точки маршрута
     const renderForm = () => {
@@ -94,5 +102,6 @@ export default class PointController {
       eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
     };
     renderForm();
+
   }
 }

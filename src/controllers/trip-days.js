@@ -44,11 +44,11 @@ export default class TripController {
 
         for (let j = 0; j < wayPoint.length; j++) {
           const currentPoint = wayPoint[j];
-          const eventComponent = new EventComponent(currentPoint);
-          render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
+          // const eventComponent = new EventComponent(currentPoint);
+          // render(currentTripDay, eventComponent, RENDER_POSITION.BEFOREEND);
 
           // renderForm(eventComponent, currentPoint);
-          new PointController().render(eventComponent, currentPoint);
+          new PointController(currentTripDay).render(currentPoint);
         }
       }
     };
@@ -99,11 +99,13 @@ export default class TripController {
     const renderSortPoints = (tripPoints) => {
       const pointsContainerElement = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
       for (const tripPoit of tripPoints) {
-        const eventComponent = new EventComponent(tripPoit);
-        render(pointsContainerElement, eventComponent, RENDER_POSITION.BEFOREEND);
-        getTripListOffers(tripPoit, eventComponent);
+        const eventComponent = new EventComponent(tripPoit); // Убрать после переноса в контроллер !!! -------------------
+        // render(pointsContainerElement, eventComponent, RENDER_POSITION.BEFOREEND);
+        getTripListOffers(tripPoit, eventComponent); // Перенести в контроллер !!! -------------------
         // renderForm(eventComponent, tripPoit);
-        new PointController().render(eventComponent, tripPoit);
+        // new PointController(eventComponent).render(tripPoit);
+
+        new PointController(pointsContainerElement).render(tripPoit);
       }
     };
 
