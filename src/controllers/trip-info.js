@@ -6,6 +6,7 @@ import OfferComponent from '../components/offer.js';
 import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
 import EventComponent from '../components/event.js';
+import EventOfferComponent from '../components/event-offer.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 
@@ -69,6 +70,23 @@ export default class PointController {
       render(this._container, eventComponent, RENDER_POSITION.BEFOREEND);
     };
     renderTripPoint();
+
+    const renderTripOffers = () => {
+      // const tripEventsListElements = this._tripDaysComponent.getElement().querySelectorAll(`.trip-events__list`);
+      // const currentOffersListElements = tripEventsListElements[i].querySelectorAll(`.event__selected-offers`);
+      // console.log(eventComponent);
+      // console.log(currentPoint);
+      // for (let k = 0; k < currentPoint.offers.length; k++) {
+      //   const currentOffer = currentPoint.offers[k];
+      //   render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
+      // }
+      for (const offer of currentPoint.offers) {
+        const currentOfferElement = eventComponent.getElement().querySelector(`.event__selected-offers`);
+        console.log(offer);
+        render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
+      }
+    };
+    renderTripOffers();
 
     // Отрисовка формы редактирования точки маршрута
     const renderForm = () => {
