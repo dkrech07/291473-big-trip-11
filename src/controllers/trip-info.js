@@ -5,6 +5,7 @@ import FormTripTypeComponent from '../components/form-trip-type.js';
 import OfferComponent from '../components/offer.js';
 import DescriptionComponent from '../components/offer-description.js';
 import PhotosComponent from '../components/offer-photos.js';
+import EventComponent from '../components/event.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 
@@ -55,11 +56,19 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 
 export default class PointController {
   constructor(container) {
-    // container — элемент, в который контроллер отрисовывает открытую форму
+    this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
 
   }
 
-  render(eventComponent, currentPoint) {
+  render(currentPoint) {
+    // Создание новой текущей точки маршурта
+    const eventComponent = new EventComponent(currentPoint);
+
+    // Отрисовка точки маршрута
+    const renderTripPoint = () => {
+      render(this._container, eventComponent, RENDER_POSITION.BEFOREEND);
+    };
+    renderTripPoint();
 
     // Отрисовка формы редактирования точки маршрута
     const renderForm = () => {
