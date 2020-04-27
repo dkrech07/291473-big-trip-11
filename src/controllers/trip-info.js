@@ -88,6 +88,12 @@ export default class PointController {
         return formComponent.getElement().querySelector(`form`);
       };
 
+      const favoriteButtonClickHandler = () => {
+        console.log(`ok`);
+      };
+
+      formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
+
       const eventButtonClickHandler = () => {
         replace(formComponent, eventComponent);
         formComponent.setEditFormClickHandler(editFormClickHandler);
