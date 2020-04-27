@@ -71,18 +71,11 @@ export default class PointController {
     };
     renderTripPoint();
 
+    // Отрисовка предложений в точке маршрута
     const renderTripOffers = () => {
-      // const tripEventsListElements = this._tripDaysComponent.getElement().querySelectorAll(`.trip-events__list`);
-      // const currentOffersListElements = tripEventsListElements[i].querySelectorAll(`.event__selected-offers`);
-      // console.log(eventComponent);
-      // console.log(currentPoint);
-      // for (let k = 0; k < currentPoint.offers.length; k++) {
-      //   const currentOffer = currentPoint.offers[k];
-      //   render(curentOfferElements, new EventOfferComponent(currentOffer), RENDER_POSITION.BEFOREEND);
-      // }
       for (const offer of currentPoint.offers) {
         const currentOfferElement = eventComponent.getElement().querySelector(`.event__selected-offers`);
-        console.log(offer);
+
         render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
       }
     };
