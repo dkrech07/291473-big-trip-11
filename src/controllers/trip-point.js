@@ -92,8 +92,8 @@ export default class PointController {
 
       const favoriteButtonClickHandler = () => {
         console.log(`ok`);
-        this._onDataChange(this, task, Object.assign({}, task, {
-          isFavorite: !task.isFavorite,
+        this._onDataChange(this, currentPoint, Object.assign({}, currentPoint, {
+          favorite: true,
         }));
       };
 
