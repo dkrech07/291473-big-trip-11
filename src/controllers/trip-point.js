@@ -56,25 +56,28 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 };
 
 export default class PointController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
-
+    this._eventComponent = null;
+    this._onDataChange = onDataChange;
   }
 
   render(currentPoint) {
     // Создание новой текущей точки маршурта
-    const eventComponent = new EventComponent(currentPoint);
+    this._currentPoint = currentPoint;
+    this._eventComponent = new EventComponent(this._currentPoint);
+    this._formComponent = new FormComponent(this._currentPoint);
 
     // Отрисовка точки маршрута
     const renderTripPoint = () => {
-      render(this._container, eventComponent, RENDER_POSITION.BEFOREEND);
+      render(this._container, this._eventComponent, RENDER_POSITION.BEFOREEND);
     };
     renderTripPoint();
 
     // Отрисовка предложений в точке маршрута
     const renderTripOffers = () => {
-      for (const offer of currentPoint.offers) {
-        const currentOfferElement = eventComponent.getElement().querySelector(`.event__selected-offers`);
+      for (const offer of this._currentPoint.offers) {
+        const currentOfferElement = this._eventComponent.getElement().querySelector(`.event__selected-offers`);
 
         render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
       }
@@ -83,32 +86,34 @@ export default class PointController {
 
     // Отрисовка формы редактирования точки маршрута
     const renderForm = () => {
-      const formComponent = new FormComponent(currentPoint);
       const getFormElement = () => {
-        return formComponent.getElement().querySelector(`form`);
+        return this._formComponent.getElement().querySelector(`form`);
       };
 
       const favoriteButtonClickHandler = () => {
         console.log(`ok`);
+        this._onDataChange(this, task, Object.assign({}, task, {
+          isFavorite: !task.isFavorite,
+        }));
       };
 
-      formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
+      this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
 
       const eventButtonClickHandler = () => {
-        replace(formComponent, eventComponent);
-        formComponent.setEditFormClickHandler(editFormClickHandler);
+        replace(this._formComponent, this._eventComponent);
+        this._formComponent.setEditFormClickHandler(editFormClickHandler);
 
         document.addEventListener(`keydown`, escKeyDownHandler);
-        renderFormParameters(formComponent.getElement(), currentPoint);
-        renderOfferInfo(formComponent.getElement(), currentPoint);
+        renderFormParameters(this._formComponent.getElement(), this._currentPoint);
+        renderOfferInfo(this._formComponent.getElement(), this._currentPoint);
       };
 
       const editFormClickHandler = (evt) => {
         evt.preventDefault();
         getFormElement().removeEventListener(`submit`, editFormClickHandler);
         document.removeEventListener(`keydown`, escKeyDownHandler);
-        replace(eventComponent, formComponent);
-        remove(formComponent);
+        replace(this._eventComponent, this._formComponent);
+        remove(this._formComponent);
       };
 
       const escKeyDownHandler = (evt) => {
@@ -117,7 +122,7 @@ export default class PointController {
         }
       };
 
-      eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
+      this._eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
     };
     renderForm();
   }
