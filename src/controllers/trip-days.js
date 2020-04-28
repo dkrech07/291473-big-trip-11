@@ -12,6 +12,7 @@ export default class TripController {
   constructor() {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
+    this._showedTripPoints = [];
   }
 
   render(days) {
@@ -40,7 +41,9 @@ export default class TripController {
 
         for (let j = 0; j < wayPoint.length; j++) {
           const currentPoint = wayPoint[j];
-          new PointController(currentTripDay).render(currentPoint);
+          const pointController = new PointController(currentTripDay);
+          pointController.render(currentPoint);
+          this._showedTripPoints.push(pointController);
         }
       }
     };
@@ -63,7 +66,9 @@ export default class TripController {
     const renderSortPoints = (tripPoints) => {
       const pointsContainerElement = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
       for (const tripPoit of tripPoints) {
-        new PointController(pointsContainerElement).render(tripPoit);
+        const pointController = new PointController(pointsContainerElement);
+        pointController.render(tripPoit);
+        this._showedTripPoints.push(pointController);
       }
     };
 
@@ -93,7 +98,8 @@ export default class TripController {
           break;
       }
     };
-
+    // Сохранены showedTripPoints
+    console.log(this._showedTripPoints);
     // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {
       getSortedTrips(this._sortComponent.getSortType());
