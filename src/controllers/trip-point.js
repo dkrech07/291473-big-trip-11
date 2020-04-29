@@ -56,17 +56,15 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 };
 
 export default class PointController {
-  constructor(container, onDataChange) {
+  constructor(container) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
-    this._eventComponent = null;
-    this._onDataChange = onDataChange;
   }
 
-  render(currentPoint) {
+  render(point) {
     // Создание новой текущей точки маршурта
-    this._currentPoint = currentPoint;
-    this._eventComponent = new EventComponent(this._currentPoint);
-    this._formComponent = new FormComponent(this._currentPoint);
+    this._point = point; // point - точка маршрута, которая будет отрисована в контейнере
+    this._eventComponent = new EventComponent(this._point);
+    this._formComponent = new FormComponent(this._point);
 
     // Отрисовка точки маршрута
     const renderTripPoint = () => {
@@ -76,7 +74,7 @@ export default class PointController {
 
     // Отрисовка предложений в точке маршрута
     const renderTripOffers = () => {
-      for (const offer of this._currentPoint.offers) {
+      for (const offer of this._point.offers) {
         const currentOfferElement = this._eventComponent.getElement().querySelector(`.event__selected-offers`);
 
         render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
@@ -84,49 +82,37 @@ export default class PointController {
     };
     renderTripOffers();
 
-    // Отрисовка формы редактирования точки маршрута
-    const renderForm = () => {
-      const getFormElement = () => {
-        return this._formComponent.getElement().querySelector(`form`);
-      };
-
-      const favoriteButtonClickHandler = () => {
-        console.log(`ok`);
-        this._onDataChange(this, this._currentPoint, Object.assign({}, this._currentPoint, {
-          favorite: true,
-        }));
-
-        // this.rerender();
-        console.log(this._currentPoint);
-      };
-
-      this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
-
-      const eventButtonClickHandler = () => {
-        replace(this._formComponent, this._eventComponent);
-        this._formComponent.setEditFormClickHandler(editFormClickHandler);
-
-        document.addEventListener(`keydown`, escKeyDownHandler);
-        renderFormParameters(this._formComponent.getElement(), this._currentPoint);
-        renderOfferInfo(this._formComponent.getElement(), this._currentPoint);
-      };
-
-      const editFormClickHandler = (evt) => {
-        evt.preventDefault();
-        getFormElement().removeEventListener(`submit`, editFormClickHandler);
-        document.removeEventListener(`keydown`, escKeyDownHandler);
-        replace(this._eventComponent, this._formComponent);
-        remove(this._formComponent);
-      };
-
-      const escKeyDownHandler = (evt) => {
-        if (evt.keyCode === ESC_KEYCODE) {
-          editFormClickHandler(evt);
-        }
-      };
-
-      this._eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
+    const getFormElement = () => {
+      return this._formComponent.getElement().querySelector(`form`);
     };
-    renderForm();
+
+    const eventButtonClickHandler = () => {
+      getFormElement();
+
+      console.log(getFormElement());
+
+      replace(this._formComponent, this._eventComponent);
+      this._formComponent.setEditFormClickHandler(editFormClickHandler);
+
+      document.addEventListener(`keydown`, escKeyDownHandler);
+      renderFormParameters(this._formComponent.getElement(), this._point);
+      renderOfferInfo(this._formComponent.getElement(), this._point);
+    };
+
+    const editFormClickHandler = (evt) => {
+      evt.preventDefault();
+      getFormElement().removeEventListener(`submit`, editFormClickHandler);
+      document.removeEventListener(`keydown`, escKeyDownHandler);
+      replace(this._eventComponent, this._formComponent);
+      remove(this._formComponent);
+    };
+
+    const escKeyDownHandler = (evt) => {
+      if (evt.keyCode === ESC_KEYCODE) {
+        editFormClickHandler(evt);
+      }
+    };
+
+    this._eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
   }
 }

@@ -105,9 +105,9 @@ export default class Form extends AbstractSmartComponent {
     super();
 
     this._currentTripType = currentTripType;
-    this._eventButtonClickHandler = null;
-    this._favoriteButtonClickHandler = null;
-    this._subscribeOnEvents();
+    // this._eventButtonClickHandler = null;
+    // this._favoriteButtonClickHandler = null;
+    // this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -118,39 +118,44 @@ export default class Form extends AbstractSmartComponent {
     this.getElement().querySelector(`form`)
     .addEventListener(`submit`, handler);
 
-    this._eventButtonClickHandler = handler;
+    // this._eventButtonClickHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`)
     .addEventListener(`click`, handler);
 
-    this._favoriteButtonClickHandler = handler;
+    // this._favoriteButtonClickHandler = handler;
   }
 
-  recoveryListeners() {
-    this.setEditFormClickHandler(this._eventButtonClickHandler);
-    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
-    this._subscribeOnEvents();
-    console.log(`recoveryListeners`);
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`form`)
-    .addEventListener(`click`, () => {
-      this.rerender();
-    });
-
-    element.querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, () => {
-        this.rerender();
-      });
-  }
+  // recoveryListeners() {
+  //   this.setEditFormClickHandler(this._eventButtonClickHandler);
+  //   this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+  //   this._subscribeOnEvents();
+  //   console.log(`recoveryListeners`);
+  // }
+  //
+  // rerender() {
+  //   super.rerender();
+  // }
+  //
+  // _subscribeOnEvents() {
+  //   const element = this.getElement();
+  //   console.log(element);
+  //   element.querySelector(`form`)
+  //   .addEventListener(`click`, () => {
+  //     // this.rerender();
+  //   });
+  //
+  //   element.querySelector(`.event__favorite-btn`)
+  //     .addEventListener(`click`, () => {
+  //       this.rerender();
+  //     });
+  // }
+  //
+  // reset() {
+  //   const point = this._element;
+  //   this.rerender();
+  // }
 
 }
