@@ -120,8 +120,8 @@ export default class TripController {
       }
     };
 
-    console.log(this._showedTripPoints);
-    console.log(this._points);
+    // console.log(this._showedTripPoints);
+    // console.log(this._points);
 
     // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {
@@ -139,6 +139,5 @@ export default class TripController {
 
     this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
     pointController.render(this._points[index]);
-    console.log(this._points);
   }
 }

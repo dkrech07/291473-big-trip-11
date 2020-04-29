@@ -92,9 +92,12 @@ export default class PointController {
 
       const favoriteButtonClickHandler = () => {
         console.log(`ok`);
-        this._onDataChange(this, currentPoint, Object.assign({}, currentPoint, {
+        this._onDataChange(this, this._currentPoint, Object.assign({}, this._currentPoint, {
           favorite: true,
         }));
+
+        // this.rerender();
+        console.log(this._currentPoint);
       };
 
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);

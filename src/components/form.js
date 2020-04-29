@@ -1,8 +1,8 @@
 import {correctDateFormat, getDayInfo} from '../utils/common.js';
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createFormTemplate = (currentPoint) => {
-  const {type, destination, offers, price, departure, arrival} = currentPoint;
+  const {type, destination, offers, price, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
   const getTripTimeInfo = (date) => {
@@ -17,6 +17,14 @@ const createFormTemplate = (currentPoint) => {
   const timeArrival = getTripTimeInfo(arrival);
 
   const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
+
+  const getCheckFavorite = (check) => {
+    let checkValue = ``;
+    if (check) {
+      checkValue = `checked`;
+    }
+    return checkValue;
+  };
 
   return (
     `<li class="trip-events__item">
@@ -75,7 +83,7 @@ const createFormTemplate = (currentPoint) => {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${getCheckFavorite(favorite)}>
           <label class="event__favorite-btn" for="event-favorite-1">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -92,11 +100,14 @@ const createFormTemplate = (currentPoint) => {
   );
 };
 
-export default class Form extends AbstractComponent {
+export default class Form extends AbstractSmartComponent {
   constructor(currentTripType) {
     super();
 
     this._currentTripType = currentTripType;
+    this._eventButtonClickHandler = null;
+    this._favoriteButtonClickHandler = null;
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -106,10 +117,40 @@ export default class Form extends AbstractComponent {
   setEditFormClickHandler(handler) {
     this.getElement().querySelector(`form`)
     .addEventListener(`submit`, handler);
+
+    this._eventButtonClickHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`)
     .addEventListener(`click`, handler);
+
+    this._favoriteButtonClickHandler = handler;
   }
+
+  recoveryListeners() {
+    this.setEditFormClickHandler(this._eventButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+    this._subscribeOnEvents();
+    console.log(`recoveryListeners`);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`form`)
+    .addEventListener(`click`, () => {
+      this.rerender();
+    });
+
+    element.querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, () => {
+        this.rerender();
+      });
+  }
+
 }
