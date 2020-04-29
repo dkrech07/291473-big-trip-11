@@ -8,15 +8,31 @@ import PointController from '../controllers/trip-point.js';
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
+// Получение общего списка точек маршрута без разбивки по дням;
+const getTripPoints = (days) => {
+  const tripsList = [];
+
+  for (const day of days) {
+    const currentWayPoints = day.wayPoints;
+    for (const wayPoint of currentWayPoints) {
+      tripsList.push(wayPoint);
+    }
+  }
+  return tripsList;
+};
+
 export default class TripController {
   constructor() {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
     this._showedTripPoints = [];
+    this._points = [];
+    this._onDataChange = this._onDataChange.bind(this);
   }
 
   render(days) {
     this._days = days;
+    this._points = getTripPoints(this._days);
 
     // Отрисовка меню сортировки
     render(tripEventsElement, this._sortComponent, RENDER_POSITION.BEFOREEND);
@@ -51,19 +67,6 @@ export default class TripController {
       }
     };
     renderDaysTripPoints();
-
-    // Получение общего списка точек маршрута для дальнейшей сортировки (без разбивки по дням);
-    const getTripPoints = () => {
-      const tripsList = [];
-
-      for (const day of this._days) {
-        const currentWayPoints = day.wayPoints;
-        for (const wayPoint of currentWayPoints) {
-          tripsList.push(wayPoint);
-        }
-      }
-      return tripsList;
-    };
 
     // Отрисовка отсортированных точек маршурта
     const renderSortPoints = (tripPoints) => {
@@ -104,9 +107,20 @@ export default class TripController {
 
     // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {
-
       getSortedTrips(this._sortComponent.getSortType());
     });
+  }
+
+  _onDataChange(pointController, oldData, newData) {
+    const index = this._points.findIndex((point) => point === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
+    pointController.render(this._points[index]);
+    // console.log(this._points[index]);
   }
 
 }

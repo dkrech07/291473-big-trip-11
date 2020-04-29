@@ -56,8 +56,9 @@ const renderOfferInfo = (currenTripElement, currentPoint) => {
 };
 
 export default class PointController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
+    this._onDataChange = onDataChange;
   }
 
   render(point) {
@@ -86,10 +87,16 @@ export default class PointController {
       return this._formComponent.getElement().querySelector(`form`);
     };
 
+    const favoriteButtonClickHandler = () => {
+      this._onDataChange(this, this._point, Object.assign({}, this._point, {
+        favorite: true,
+      }));
+
+      // this.rerender();
+    };
+
     const eventButtonClickHandler = () => {
       getFormElement();
-
-      console.log(getFormElement());
 
       replace(this._formComponent, this._eventComponent);
       this._formComponent.setEditFormClickHandler(editFormClickHandler);
@@ -97,6 +104,8 @@ export default class PointController {
       document.addEventListener(`keydown`, escKeyDownHandler);
       renderFormParameters(this._formComponent.getElement(), this._point);
       renderOfferInfo(this._formComponent.getElement(), this._point);
+
+      this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
     };
 
     const editFormClickHandler = (evt) => {
