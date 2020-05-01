@@ -1,10 +1,34 @@
 import {correctDateFormat, getDayInfo} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
+  // Выводит в форму список предложений
+  const createTripTypesMarkup = (tripTypes) => {
+    return tripTypes.map((pointTitle) => {
+      const pointType = pointTitle.toLowerCase();
+      return (
+        `<div class="event__type-item">
+          <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointTitle}</label>
+        </div>`
+      );
+    }).join(`\n`);
+  };
+
+  // Выводит в форму список точек маршурта
+  const createDestinationsMarkup = () => {
+    return DESTINATIONS.map((destinationItem) => {
+      return (
+        `<option value="${destinationItem}"></option>`
+      );
+    }).join(`\n`);
+  };
+
+  // Выводит в форму время отправления и прибытия
   const getTripTimeInfo = (date) => {
     const [day, month, , , minYear] = getDayInfo(date);
     const hours = correctDateFormat(date.getHours());
@@ -12,20 +36,13 @@ const createFormTemplate = (currentPoint) => {
 
     return `${correctDateFormat(day)}/${correctDateFormat(month)}/${correctDateFormat(minYear)} ${hours}:${minutes}`;
   };
-
   const timeDeparture = getTripTimeInfo(departure);
   const timeArrival = getTripTimeInfo(arrival);
 
+  // Выводит в форму цену поездки
   const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
 
-  const getCheckFavorite = (check) => {
-    let checkValue = ``;
-    if (check) {
-      checkValue = `checked`;
-    }
-    return checkValue;
-  };
-
+  // Выводит в форму список предложений
   const createOffersMarkup = () => {
     return offers.map((offer) => {
       return (
@@ -41,6 +58,7 @@ const createFormTemplate = (currentPoint) => {
     }).join(`\n`);
   };
 
+  // Выводит в форму текст описания
   const createDescriptionMarkup = () => {
     return (
       `<p class="event__destination-description">${destinationInfo.destinationDescription}</p>`
@@ -53,6 +71,15 @@ const createFormTemplate = (currentPoint) => {
         `<img class="event__photo" src="${photoUrl}" alt="Event photo">`
       );
     }).join(`\n`);
+  };
+
+  // Проставляет для всех "звездочек" нективное состояние
+  const getCheckFavorite = (check) => {
+    let checkValue = ``;
+    if (check) {
+      checkValue = `checked`;
+    }
+    return checkValue;
   };
 
   return (
@@ -69,12 +96,12 @@ const createFormTemplate = (currentPoint) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
-
+                ${createTripTypesMarkup(TRIP_TYPES)}
               </fieldset>
 
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
-
+                ${createTripTypesMarkup(STOP_TYPES)}
               </fieldset>
             </div>
           </div>
@@ -85,7 +112,7 @@ const createFormTemplate = (currentPoint) => {
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
-
+              ${createDestinationsMarkup()}
             </datalist>
           </div>
 

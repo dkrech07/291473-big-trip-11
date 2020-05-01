@@ -1,31 +1,8 @@
 import FormComponent from '../components/form.js';
-import FormDestinationComponent from '../components/form-destination.js';
-import FormTripTypeComponent from '../components/form-trip-type.js';
 import EventComponent from '../components/trip-point.js';
-import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
-
-// Наполнение данными шапки формы редактирования точки маршрута
-const renderFormParameters = (currentMainElement) => {
-  const eventHeadertElement = currentMainElement.querySelector(`.event__header`);
-  const destinationsListElement = eventHeadertElement.querySelector(`.event__input--destination + datalist`);
-  const eventTripListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:first-child legend`);
-  const eventStopListElement = eventHeadertElement.querySelector(`.event__type-list .event__type-group:last-child legend`);
-
-  for (const destinationElement of DESTINATIONS) {
-    render(destinationsListElement, new FormDestinationComponent(destinationElement), RENDER_POSITION.AFTERBEGIN);
-  }
-
-  for (const tripType of TRIP_TYPES) {
-    render(eventTripListElement, new FormTripTypeComponent(tripType), RENDER_POSITION.AFTEREND);
-  }
-
-  for (const stopType of STOP_TYPES) {
-    render(eventStopListElement, new FormTripTypeComponent(stopType), RENDER_POSITION.AFTEREND);
-  }
-};
 
 export default class PointController {
   constructor(container, onDataChange) {
@@ -53,8 +30,6 @@ export default class PointController {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: true,
       }));
-
-      // this.rerender();
     };
 
     const eventButtonClickHandler = () => {
@@ -64,8 +39,6 @@ export default class PointController {
       this._formComponent.setEditFormClickHandler(editFormClickHandler);
 
       document.addEventListener(`keydown`, escKeyDownHandler);
-      renderFormParameters(this._formComponent.getElement(), this._point);
-      // renderOfferInfo(this._formComponent.getElement(), this._point);
 
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
     };
