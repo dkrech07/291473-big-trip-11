@@ -6,7 +6,7 @@ import FormTripTypeComponent from '../components/form-trip-type.js';
 // import DescriptionComponent from '../components/offer-description.js';
 // import PhotosComponent from '../components/offer-photos.js';
 import EventComponent from '../components/event.js';
-import EventOfferComponent from '../components/event-offer.js';
+// import EventOfferComponent from '../components/event-offer.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 
@@ -74,14 +74,14 @@ export default class PointController {
     renderTripPoint();
 
     // Отрисовка предложений в точке маршрута
-    const renderTripOffers = () => {
-      for (const offer of this._point.offers) {
-        const currentOfferElement = this._eventComponent.getElement().querySelector(`.event__selected-offers`);
-
-        render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
-      }
-    };
-    renderTripOffers();
+    // const renderTripOffers = () => {
+    //   for (const offer of this._point.offers) {
+    //     const currentOfferElement = this._eventComponent.getElement().querySelector(`.event__selected-offers`);
+    //
+    //     // render(currentOfferElement, new EventOfferComponent(offer), RENDER_POSITION.BEFOREEND);
+    //   }
+    // };
+    // renderTripOffers();
 
     const getFormElement = () => {
       return this._formComponent.getElement().querySelector(`form`);

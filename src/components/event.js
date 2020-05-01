@@ -2,7 +2,7 @@ import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils/common.
 import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {
-  const {type, destination, departure, arrival, price} = point;
+  const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
   const [dayDeparture, monthDeparture, yearDeparture] = getDayInfo(departure);
@@ -16,6 +16,18 @@ const createEventTemplate = (point) => {
 
   const timeDeparture = getTimeInfo(departure);
   const timeArrival = getTimeInfo(arrival);
+
+  const createOffersMarkup = () => {
+    return offers.map((offer) => {
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+         </li>`
+      );
+    }).join(`\n`);
+  };
 
   return (
     `<li class="trip-events__item">
@@ -40,7 +52,7 @@ const createEventTemplate = (point) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-
+          ${createOffersMarkup()}
         </ul>
 
         <button class="event__rollup-btn" type="button">
