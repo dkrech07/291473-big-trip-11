@@ -10,13 +10,15 @@ const Mode = {
 };
 
 export default class PointController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
     this._mode = Mode.DEFAULT;
+
     this._eventComponent = null;
     this._formComponent = null;
-    // this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._onEscKeyDown = null;
   }
 
   render(point) {
@@ -45,23 +47,24 @@ export default class PointController {
     const eventButtonClickHandler = () => {
       getFormElement();
       this._replacePointToEdit();
-      replace(this._formComponent, this._eventComponent);
+
       this._formComponent.setEditFormClickHandler(editFormClickHandler);
 
-      document.addEventListener(`keydown`, escKeyDownHandler);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
 
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
     };
 
     const editFormClickHandler = (evt) => {
       evt.preventDefault();
+      this._replaceEditToPoint();
+
       getFormElement().removeEventListener(`submit`, editFormClickHandler);
-      document.removeEventListener(`keydown`, escKeyDownHandler);
-      replace(this._eventComponent, this._formComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
       remove(this._formComponent);
     };
 
-    const escKeyDownHandler = (evt) => {
+    this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE) {
         editFormClickHandler(evt);
       }
@@ -77,17 +80,16 @@ export default class PointController {
   }
 
   _replacePointToEdit() {
-    // this._onViewChange();
-    // replace(this._eventComponent, this._formComponent);
+    this._onViewChange();
+    replace(this._formComponent, this._eventComponent);
     this._mode = Mode.EDIT;
     console.log(this._mode);
   }
 
   _replaceEditToPoint() {
-    console.log(`replace`);
-    // document.removeEventListener(`keydown`, this._onEscKeyDown);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
     // this._formComponent.reset();
-    // replace(this._eventComponent, this._formComponent);
+    replace(this._eventComponent, this._formComponent);
     this._mode = Mode.DEFAULT;
     console.log(this._mode);
   }
