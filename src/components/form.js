@@ -204,6 +204,7 @@ export default class Form extends AbstractSmartComponent {
   }
 
   reset() {
+    console.log(`reset`);
     // const currentPoint = this._currentPoint;
     // currentPoint.destination;
     // currentPoint.eventType;

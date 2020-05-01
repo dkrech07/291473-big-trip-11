@@ -57,6 +57,7 @@ export default class PointController {
 
     const editFormClickHandler = (evt) => {
       evt.preventDefault();
+      this._formComponent.reset();
       this._replaceEditToPoint();
 
       getFormElement().removeEventListener(`submit`, editFormClickHandler);
@@ -88,7 +89,8 @@ export default class PointController {
 
   _replaceEditToPoint() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    // this._formComponent.reset();
+    this._formComponent.reset();
+
     replace(this._eventComponent, this._formComponent);
     this._mode = Mode.DEFAULT;
     console.log(this._mode);
