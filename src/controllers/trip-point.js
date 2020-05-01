@@ -4,10 +4,19 @@ import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export default class PointController {
   constructor(container, onDataChange) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
     this._onDataChange = onDataChange;
+    this._mode = Mode.DEFAULT;
+    this._eventComponent = null;
+    this._formComponent = null;
+    // this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   render(point) {
@@ -28,13 +37,14 @@ export default class PointController {
 
     const favoriteButtonClickHandler = () => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
-        favorite: true,
+        favorite: !this._point.favorite,
       }));
+      console.log(this._point);
     };
 
     const eventButtonClickHandler = () => {
       getFormElement();
-
+      this._replacePointToEdit();
       replace(this._formComponent, this._eventComponent);
       this._formComponent.setEditFormClickHandler(editFormClickHandler);
 
@@ -58,5 +68,27 @@ export default class PointController {
     };
 
     this._eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditToPoint();
+    }
+  }
+
+  _replacePointToEdit() {
+    // this._onViewChange();
+    // replace(this._eventComponent, this._formComponent);
+    this._mode = Mode.EDIT;
+    console.log(this._mode);
+  }
+
+  _replaceEditToPoint() {
+    console.log(`replace`);
+    // document.removeEventListener(`keydown`, this._onEscKeyDown);
+    // this._formComponent.reset();
+    // replace(this._eventComponent, this._formComponent);
+    this._mode = Mode.DEFAULT;
+    console.log(this._mode);
   }
 }

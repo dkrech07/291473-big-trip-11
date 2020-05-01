@@ -179,17 +179,36 @@ const createFormTemplate = (currentPoint) => {
 };
 
 export default class Form extends AbstractSmartComponent {
-  constructor(currentTripType) {
+  constructor(currentPoint) {
     super();
 
-    this._currentTripType = currentTripType;
+    this._currentPoint = currentPoint;
     this._eventButtonClickHandler = null;
     this._favoriteButtonClickHandler = null;
-    // this._subscribeOnEvents();
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createFormTemplate(this._currentTripType);
+    return createFormTemplate(this._currentPoint);
+  }
+
+  recoveryListeners() {
+    this.setEditFormClickHandler(this._eventButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  reset() {
+    // const currentPoint = this._currentPoint;
+    // currentPoint.destination;
+    // currentPoint.eventType;
+
+    this.rerender();
   }
 
   setEditFormClickHandler(handler) {
@@ -206,14 +225,16 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = handler;
   }
 
-  recoveryListeners() {
-    this.setEditFormClickHandler(this._eventButtonClickHandler);
-    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+  _subscribeOnEvents() {
+    const element = this.getElement();
 
-    // this._subscribeOnEvents();
-    console.log(`recoveryListeners`);
+    element.querySelector(`.event__favorite-btn`)
+    .addEventListener(`click`, () => {
+      // this._isDateShowing = !this._isDateShowing;
+
+      this.rerender();
+    });
   }
-
 
 
 }

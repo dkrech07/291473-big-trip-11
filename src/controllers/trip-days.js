@@ -25,9 +25,10 @@ export default class TripController {
   constructor() {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
-    this._showedTripPoints = [];
+    this._showedPointsControllers = [];
     this._points = [];
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
   }
 
   render(days) {
@@ -62,7 +63,7 @@ export default class TripController {
 
           const pointController = new PointController(currentTripDay, this._onDataChange, this._onViewChange);
           pointController.render(currentPoint);
-          this._showedTripPoints = this._showedTripPoints.concat(pointController);
+          this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
         }
       }
     };
@@ -74,7 +75,7 @@ export default class TripController {
       for (const tripPoit of tripPoints) {
         const pointController = new PointController(pointsContainerElement, this._onDataChange, this._onViewChange);
         pointController.render(tripPoit);
-        this._showedTripPoints = this._showedTripPoints.concat(pointController);
+        this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
       }
     };
 
@@ -120,6 +121,11 @@ export default class TripController {
 
     this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
     pointController.render(this._points[index]);
+  }
+
+  _onViewChange() {
+    console.log(this._showedPointsControllers);
+    this._showedPointsControllers.forEach((it) => it.setDefaultView());
   }
 
 }
