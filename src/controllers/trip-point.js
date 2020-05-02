@@ -28,8 +28,8 @@ export default class PointController {
     const oldPointComponent = this._pointComponent;
     this._pointComponent = new EventComponent(this._point);
 
+    // Отрисовка точки маршрута
     if (!oldPointComponent) {
-      // Отрисовка точки маршрута
       render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
     }
 
@@ -37,6 +37,7 @@ export default class PointController {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: !this._point.favorite,
       }));
+      console.log(this._point);
     };
 
     // Замена карточки пункта маршрута на форму
@@ -46,17 +47,26 @@ export default class PointController {
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
+
+      document.addEventListener(`keydown`, this._onEscKeyDown);
     };
 
     // Замена формы на карточку пункта маршрута
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
-      // this._formComponent.reset();
       this._replaceEditToPoint();
+
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    };
+
+    // Удаление обработчика нажатия на esc;
+    this._onEscKeyDown = (evt) => {
+      if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
+        this._replaceEditToPoint();
+      }
     };
 
     this._pointComponent.setEventButtonClickHandler(tripRollUpClickHandler);
-
   }
 
   setDefaultView() {
@@ -72,7 +82,8 @@ export default class PointController {
   }
 
   _replaceEditToPoint() {
-    // this._formComponent.reset();
+    console.log(this._formComponent);
+    this._formComponent.reset();
 
     replace(this._pointComponent, this._formComponent);
     this._mode = Mode.DEFAULT;

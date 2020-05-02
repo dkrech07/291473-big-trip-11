@@ -1,16 +1,7 @@
 
 
 
-  recoveryListeners() {
-    this.setEditFormClickHandler(this._eventButtonClickHandler);
-    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
 
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-  }
 
   reset() {
     const currentPoint = this._currentPoint;
