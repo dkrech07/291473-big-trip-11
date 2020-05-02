@@ -1,6 +1,6 @@
 import {correctDateFormat, getDayInfo} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys} from '../mock/way-point.js';
+import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
@@ -248,10 +248,12 @@ export default class Form extends AbstractSmartComponent {
         const tripType = evt.target.value;
         this._currentPoint.type = tripType[0].toUpperCase() + tripType.slice(1);
         this._currentPoint.offers = generateOffers(generateOfferKeys());
+        this._currentPoint.destinationInfo.destinationDescription = generateDescription();
 
-        console.log(evt.target.value);
-        console.log(this._currentPoint.type);
+        // console.log(evt.target.value);
+        // console.log(this._currentPoint.type);
         console.log(this._currentPoint);
+        console.log(this._currentPoint.destination);
         this.rerender();
       });
     });

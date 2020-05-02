@@ -1,7 +1,7 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
-import {generateOffers, generateOfferKeys} from '../mock/way-point.js';
+import {generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
 

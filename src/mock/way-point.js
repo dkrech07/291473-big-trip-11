@@ -166,5 +166,6 @@ export {
   STOP_TYPES,
   generateRandomDays,
   generateOffers,
-  generateOfferKeys
+  generateOfferKeys,
+  generateDescription
 };
