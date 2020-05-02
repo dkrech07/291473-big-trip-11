@@ -1,6 +1,7 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
+import {generateOffers, generateOfferKeys} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
 
@@ -33,34 +34,6 @@ export default class PointController {
       render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
     }
 
-    //--------------------------
-
-    // const setDestination = (newDestination) => {
-    //   const output = newDestination;
-    //   const input = document.querySelector(`.event__input`);
-    //
-    //   const data = {
-    //     _value: ``,
-    //     get value() {
-    //       return this._value;
-    //     },
-    //     set value(newValue) {
-    //       this._value = newValue;
-    //       input.value = newValue;
-    //       output.textContent = newValue;
-    //     }
-    //   };
-    //
-    //   input.addEventListener(`input`, (evt) => {
-    //     data.value = evt.target.value;
-    //   });
-    //
-    //
-    // }
-
-
-    //----------------------------
-
     const favoriteButtonClickHandler = () => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: !this._point.favorite,
@@ -68,13 +41,9 @@ export default class PointController {
     };
 
     const destinationsClickHandner = (evt) => {
-      // this._point.type = evt.target.value;
-      // console.log(this._point);
-      console.log(evt.target.value);
-      // setDestination(evt.target.value);
-
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         type: evt.target.value,
+        offers: generateOffers(generateOfferKeys()),
       }));
     };
 
@@ -85,7 +54,6 @@ export default class PointController {
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
-      //--------------------------------------------------------------------------
       this._formComponent.setDestinationsClickHandner(destinationsClickHandner);
 
       document.addEventListener(`keydown`, this._onEscKeyDown);

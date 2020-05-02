@@ -164,5 +164,7 @@ export {
   DESTINATIONS,
   TRIP_TYPES,
   STOP_TYPES,
-  generateRandomDays
+  generateRandomDays,
+  generateOffers,
+  generateOfferKeys
 };
