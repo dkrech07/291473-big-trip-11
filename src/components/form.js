@@ -188,6 +188,7 @@ export default class Form extends AbstractSmartComponent {
 
     this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
+    this._destinationsClickHandner = null;
 
     // this._currentFavorite = null;
     this._subscribeOnEvents();
@@ -207,9 +208,19 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = handler;
   }
 
+//------------------------------------------------------------------------------
+  setDestinationsClickHandner(handler) {
+    this.getElement().querySelectorAll(`.event__type-input`).forEach((item) => {
+      item.addEventListener(`click`, handler);
+    });
+
+    this._destinationsClickHandner = handler;
+  }
+
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
+    this.setDestinationsClickHandner(this._destinationsClickHandner);
 
     this._subscribeOnEvents();
   }
@@ -230,9 +241,14 @@ export default class Form extends AbstractSmartComponent {
 
     element.querySelector(`.event__favorite-btn`)
     .addEventListener(`click`, () => {
+    });
 
-      // console.log(this._currentPoint);
-      this.rerender();
+    element.querySelectorAll(`.event__type-input`).forEach((item) => {
+      item.addEventListener(`click`, (evt) => {
+        this._currentPoint.type = evt.target.value;
+        console.log(evt.target.value);
+        this.rerender();
+      });
     });
   }
 

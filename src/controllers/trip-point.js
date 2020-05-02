@@ -33,11 +33,49 @@ export default class PointController {
       render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
     }
 
+    //--------------------------
+
+    // const setDestination = (newDestination) => {
+    //   const output = newDestination;
+    //   const input = document.querySelector(`.event__input`);
+    //
+    //   const data = {
+    //     _value: ``,
+    //     get value() {
+    //       return this._value;
+    //     },
+    //     set value(newValue) {
+    //       this._value = newValue;
+    //       input.value = newValue;
+    //       output.textContent = newValue;
+    //     }
+    //   };
+    //
+    //   input.addEventListener(`input`, (evt) => {
+    //     data.value = evt.target.value;
+    //   });
+    //
+    //
+    // }
+
+
+    //----------------------------
+
     const favoriteButtonClickHandler = () => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: !this._point.favorite,
       }));
-      console.log(this._point);
+    };
+
+    const destinationsClickHandner = (evt) => {
+      // this._point.type = evt.target.value;
+      // console.log(this._point);
+      console.log(evt.target.value);
+      // setDestination(evt.target.value);
+
+      this._onDataChange(this, this._point, Object.assign({}, this._point, {
+        type: evt.target.value,
+      }));
     };
 
     // Замена карточки пункта маршрута на форму
@@ -47,6 +85,8 @@ export default class PointController {
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
+      //--------------------------------------------------------------------------
+      this._formComponent.setDestinationsClickHandner(destinationsClickHandner);
 
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -82,7 +122,6 @@ export default class PointController {
   }
 
   _replaceEditToPoint() {
-    console.log(this._formComponent);
     this._formComponent.reset();
 
     replace(this._pointComponent, this._formComponent);
