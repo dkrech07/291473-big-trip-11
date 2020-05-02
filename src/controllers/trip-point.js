@@ -26,7 +26,6 @@ export default class PointController {
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнереy
 
     const oldPointComponent = this._pointComponent;
-    this._formComponent = new FormComponent(this._point);
     this._pointComponent = new EventComponent(this._point);
 
     if (!oldPointComponent) {
@@ -34,42 +33,30 @@ export default class PointController {
       render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
     }
 
-    const getFormElement = () => {
-      return this._formComponent.getElement().querySelector(`form`);
-    };
-
     const favoriteButtonClickHandler = () => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: !this._point.favorite,
       }));
     };
 
-    const eventButtonClickHandler = () => {
-      getFormElement();
+    // Замена карточки пункта маршрута на форму
+    const tripRollUpClickHandler = () => {
+      this._formComponent = new FormComponent(this._point);
       this._replacePointToEdit();
 
-      this._formComponent.setEditFormClickHandler(editFormClickHandler);
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+      this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
     };
 
-    const editFormClickHandler = (evt) => {
+    // Замена формы на карточку пункта маршрута
+    const saveFormClickHandler = (evt) => {
       evt.preventDefault();
-      this._formComponent.reset();
+      // this._formComponent.reset();
       this._replaceEditToPoint();
-
-      getFormElement().removeEventListener(`submit`, editFormClickHandler);
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-      remove(this._formComponent);
     };
 
-    this._onEscKeyDown = (evt) => {
-      if (evt.keyCode === ESC_KEYCODE) {
-        editFormClickHandler(evt);
-      }
-    };
+    this._pointComponent.setEventButtonClickHandler(tripRollUpClickHandler);
 
-    this._pointComponent.setEventButtonClickHandler(eventButtonClickHandler);
   }
 
   setDefaultView() {
@@ -85,8 +72,7 @@ export default class PointController {
   }
 
   _replaceEditToPoint() {
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._formComponent.reset();
+    // this._formComponent.reset();
 
     replace(this._pointComponent, this._formComponent);
     this._mode = Mode.DEFAULT;

@@ -183,35 +183,19 @@ export default class Form extends AbstractSmartComponent {
     super();
 
     this._currentPoint = currentPoint;
-    this._eventButtonClickHandler = null;
+
+    this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
-    this._subscribeOnEvents();
+
+    // this._currentFavorite = null;
+    // this._subscribeOnEvents();
   }
 
-  getTemplate() {
-    return createFormTemplate(this._currentPoint);
-  }
-
-  recoveryListeners() {
-    this.setEditFormClickHandler(this._eventButtonClickHandler);
-    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
-
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
-  reset() {
-    this.rerender();
-  }
-
-  setEditFormClickHandler(handler) {
+  setSaveFormClickHandler(handler) {
     this.getElement().querySelector(`form`)
     .addEventListener(`submit`, handler);
 
-    this._eventButtonClickHandler = handler;
+    this._saveFormClickHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
@@ -221,17 +205,7 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = handler;
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`.event__favorite-btn`)
-    .addEventListener(`click`, () => {
-      this.rerender();
-    });
-
-    element.querySelector(`form`)
-    .addEventListener(`submit`, () => {
-      this.rerender();
-    });
+  getTemplate() {
+    return createFormTemplate(this._currentPoint);
   }
 }
