@@ -204,11 +204,6 @@ export default class Form extends AbstractSmartComponent {
   }
 
   reset() {
-    console.log(`reset`);
-    // const currentPoint = this._currentPoint;
-    // currentPoint.destination;
-    // currentPoint.eventType;
-
     this.rerender();
   }
 
@@ -231,11 +226,12 @@ export default class Form extends AbstractSmartComponent {
 
     element.querySelector(`.event__favorite-btn`)
     .addEventListener(`click`, () => {
-      // this._isDateShowing = !this._isDateShowing;
+      this.rerender();
+    });
 
+    element.querySelector(`form`)
+    .addEventListener(`submit`, () => {
       this.rerender();
     });
   }
-
-
 }

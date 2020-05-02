@@ -16,22 +16,23 @@ export default class PointController {
     this._onViewChange = onViewChange;
     this._mode = Mode.DEFAULT;
 
-    this._eventComponent = null;
+    this._pointComponent = null;
     this._formComponent = null;
     this._onEscKeyDown = null;
   }
 
   render(point) {
     // Создание новой текущей точки маршурта
-    this._point = point; // point - точка маршрута, которая будет отрисована в контейнере
-    this._eventComponent = new EventComponent(this._point);
-    this._formComponent = new FormComponent(this._point);
+    this._point = point; // point - точка маршрута, которая будет отрисована в контейнереy
 
-    // Отрисовка точки маршрута
-    const renderTripPoint = () => {
-      render(this._container, this._eventComponent, RENDER_POSITION.BEFOREEND);
-    };
-    renderTripPoint();
+    const oldPointComponent = this._pointComponent;
+    this._formComponent = new FormComponent(this._point);
+    this._pointComponent = new EventComponent(this._point);
+
+    if (!oldPointComponent) {
+      // Отрисовка точки маршрута
+      render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
+    }
 
     const getFormElement = () => {
       return this._formComponent.getElement().querySelector(`form`);
@@ -41,7 +42,6 @@ export default class PointController {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: !this._point.favorite,
       }));
-      console.log(this._point);
     };
 
     const eventButtonClickHandler = () => {
@@ -49,9 +49,7 @@ export default class PointController {
       this._replacePointToEdit();
 
       this._formComponent.setEditFormClickHandler(editFormClickHandler);
-
       document.addEventListener(`keydown`, this._onEscKeyDown);
-
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
     };
 
@@ -71,7 +69,7 @@ export default class PointController {
       }
     };
 
-    this._eventComponent.setEventButtonClickHandler(eventButtonClickHandler);
+    this._pointComponent.setEventButtonClickHandler(eventButtonClickHandler);
   }
 
   setDefaultView() {
@@ -82,17 +80,15 @@ export default class PointController {
 
   _replacePointToEdit() {
     this._onViewChange();
-    replace(this._formComponent, this._eventComponent);
+    replace(this._formComponent, this._pointComponent);
     this._mode = Mode.EDIT;
-    console.log(this._mode);
   }
 
   _replaceEditToPoint() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._formComponent.reset();
 
-    replace(this._eventComponent, this._formComponent);
+    replace(this._pointComponent, this._formComponent);
     this._mode = Mode.DEFAULT;
-    console.log(this._mode);
   }
 }
