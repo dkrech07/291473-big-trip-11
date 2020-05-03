@@ -1,7 +1,6 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import {RENDER_POSITION, render, replace} from '../utils/render.js';
-import {generateOffers, generateOfferKeys} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
 
@@ -34,28 +33,12 @@ export default class PointController {
       render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
     }
 
-    // Хендлер для клика по звездочке;
-    const favoriteButtonClickHandler = () => {
-      this._onDataChange(this, this._point, Object.assign({}, this._point, {
-        favorite: !this._point.favorite,
-      }));
-    };
-
-    // Хендлер клика по типам точек маршрута;
-    const tripTypeClickHandner = (evt) => {
-      this._onDataChange(this, this._point, Object.assign({}, this._point, {
-        type: evt.target.value,
-        offers: generateOffers(generateOfferKeys()),
-      }));
-    };
-
     // Замена карточки пункта маршрута на форму
     const tripRollUpClickHandler = () => {
       this._formComponent = new FormComponent(this._point);
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
-
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };
 
@@ -91,7 +74,6 @@ export default class PointController {
 
   _replaceEditToPoint() {
     this._formComponent.reset();
-
     replace(this._pointComponent, this._formComponent);
     this._mode = Mode.DEFAULT;
   }

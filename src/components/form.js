@@ -201,7 +201,7 @@ export default class Form extends AbstractSmartComponent {
   }
 
   setFavoriteButtonClickHandler(handler) {
-    this.getElement().querySelector(`.event__favorite-btn`)
+    this.getElement().querySelector(`#event-favorite-1`)
     .addEventListener(`click`, handler);
 
     this._favoriteButtonClickHandler = handler;
@@ -244,10 +244,12 @@ export default class Form extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    // Хендлер для клика по звездочке;
-    element.querySelector(`.event__favorite-btn`)
+    // Хендлер клика по звездочке;
+    element.querySelector(`#event-favorite-1`)
     .addEventListener(`click`, (evt) => {
-      this._currentPoint.favorite = evt.target.favorite;
+      this._currentPoint.favorite = evt.target.checked;
+
+      this.rerender();
     });
 
     // Хендлер клика по типам точек маршрута;
