@@ -1,6 +1,6 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
-import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
+import {RENDER_POSITION, render, replace} from '../utils/render.js';
 import {generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
@@ -42,7 +42,7 @@ export default class PointController {
     };
 
     // Хендлер клика по типам точек маршрута;
-    const destinationsClickHandner = (evt) => {
+    const tripTypeClickHandner = (evt) => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         type: evt.target.value,
         offers: generateOffers(generateOfferKeys()),
@@ -56,7 +56,7 @@ export default class PointController {
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
       this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
-      this._formComponent.setDestinationsClickHandner(destinationsClickHandner);
+      this._formComponent.setTripTypeClickHandner(tripTypeClickHandner);
 
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };

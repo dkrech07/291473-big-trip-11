@@ -110,7 +110,7 @@ const createFormTemplate = (currentPoint) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
             <datalist id="destination-list-1">
               ${createDestinationsMarkup()}
             </datalist>
@@ -187,7 +187,8 @@ export default class Form extends AbstractSmartComponent {
     this._currentPoint.favorite = null;
     this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
-    this._destinationsClickHandner = null;
+    this._tripTypeClickHandner = null;
+    this._destinationClickHandner = null;
 
     this._subscribeOnEvents();
   }
@@ -206,18 +207,25 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = handler;
   }
 
-  setDestinationsClickHandner(handler) {
+  setTripTypeClickHandner(handler) {
     this.getElement().querySelectorAll(`.event__type-input`).forEach((item) => {
-      item.addEventListener(`click`, handler);
+      item.addEventListener(`change`, handler);
     });
 
-    this._destinationsClickHandner = handler;
+    this._tripTypeClickHandner = handler;
+  }
+
+  setDestinationClickHandner(handler) {
+    this.getElement().querySelector(`.event__input--destination`)
+    .addEventListener(`change`, handler);
+
+    this._destinationClickHandner = handler;
   }
 
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
-    this.setDestinationsClickHandner(this._destinationsClickHandner);
+    this.setTripTypeClickHandner(this._tripTypeClickHandner);
 
     this._subscribeOnEvents();
   }
@@ -237,18 +245,24 @@ export default class Form extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`.event__favorite-btn`)
-    .addEventListener(`click`, () => {
+    .addEventListener(`click`, (evt) => {
+      this._currentPoint.favorite = evt.target.favorite;
     });
 
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
-      item.addEventListener(`click`, (evt) => {
-        const tripType = evt.target.value;
-        this._currentPoint.type = tripType[0].toUpperCase() + tripType.slice(1);
+      item.addEventListener(`change`, (evt) => {
+        this._currentPoint.type = evt.target.value[0].toUpperCase() + evt.target.value.slice(1);
         this._currentPoint.offers = generateOffers(generateOfferKeys());
-        this._currentPoint.destinationInfo.destinationDescription = generateDescription();
 
         this.rerender();
       });
+    });
+
+    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      this._currentPoint.destination = evt.target.value;
+      this._currentPoint.destinationInfo.destinationDescription = generateDescription();
+
+      this.rerender();
     });
   }
 
