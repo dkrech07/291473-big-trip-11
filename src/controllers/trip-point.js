@@ -12,8 +12,8 @@ const Mode = {
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
-    this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
+    this._onDataChange = onDataChange; // Понадобятся чуть позже, после реализации удаления / добавления карточки точки маршрута
+    this._onViewChange = onViewChange; // Понадобятся чуть позже, после реализации удаления / добавления карточки точки маршрута
     this._mode = Mode.DEFAULT;
 
     this._pointComponent = null;
