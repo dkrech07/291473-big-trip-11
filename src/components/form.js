@@ -185,12 +185,10 @@ export default class Form extends AbstractSmartComponent {
     this._currentPoint = currentPoint;
 
     this._currentPoint.favorite = null;
-
     this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
     this._destinationsClickHandner = null;
 
-    // this._currentFavorite = null;
     this._subscribeOnEvents();
   }
 
@@ -208,7 +206,6 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = handler;
   }
 
-//------------------------------------------------------------------------------
   setDestinationsClickHandner(handler) {
     this.getElement().querySelectorAll(`.event__type-input`).forEach((item) => {
       item.addEventListener(`click`, handler);
@@ -250,10 +247,6 @@ export default class Form extends AbstractSmartComponent {
         this._currentPoint.offers = generateOffers(generateOfferKeys());
         this._currentPoint.destinationInfo.destinationDescription = generateDescription();
 
-        // console.log(evt.target.value);
-        // console.log(this._currentPoint.type);
-        console.log(this._currentPoint);
-        console.log(this._currentPoint.destination);
         this.rerender();
       });
     });

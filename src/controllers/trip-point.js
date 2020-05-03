@@ -34,12 +34,14 @@ export default class PointController {
       render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
     }
 
+    // Хендлер для клика по звездочке;
     const favoriteButtonClickHandler = () => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         favorite: !this._point.favorite,
       }));
     };
 
+    // Хендлер клика по типам точек маршрута;
     const destinationsClickHandner = (evt) => {
       this._onDataChange(this, this._point, Object.assign({}, this._point, {
         type: evt.target.value,
