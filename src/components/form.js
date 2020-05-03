@@ -110,7 +110,7 @@ const createFormTemplate = (currentPoint) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${createDestinationsMarkup()}
             </datalist>
@@ -244,11 +244,13 @@ export default class Form extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
+    // Хендлер для клика по звездочке;
     element.querySelector(`.event__favorite-btn`)
     .addEventListener(`click`, (evt) => {
       this._currentPoint.favorite = evt.target.favorite;
     });
 
+    // Хендлер клика по типам точек маршрута;
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
       item.addEventListener(`change`, (evt) => {
         this._currentPoint.type = evt.target.value[0].toUpperCase() + evt.target.value.slice(1);
@@ -258,6 +260,13 @@ export default class Form extends AbstractSmartComponent {
       });
     });
 
+    // Хендлер клика по пунктам назначения (очистка значения в поле по фокусу);
+    element.querySelector(`.event__input--destination`).addEventListener(`focus`, () => {
+      const destinationInput = element.querySelector(`.event__input--destination`);
+      destinationInput.value = null;
+    });
+
+    // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       this._currentPoint.destination = evt.target.value;
       this._currentPoint.destinationInfo.destinationDescription = generateDescription();

@@ -1,7 +1,7 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import {RENDER_POSITION, render, replace} from '../utils/render.js';
-import {generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
+import {generateOffers, generateOfferKeys} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
 
@@ -55,8 +55,6 @@ export default class PointController {
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
-      this._formComponent.setFavoriteButtonClickHandler(favoriteButtonClickHandler);
-      this._formComponent.setTripTypeClickHandner(tripTypeClickHandner);
 
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };
