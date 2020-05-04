@@ -128,6 +128,7 @@ const generateTripPoint = (dateCount) => {
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
     departure: new Date(randomEventCount),
     arrival: new Date(randomEventCount + getRandom(DAY_MILLISECONDS_COUNT * 3)),
+    favorite: false,
   };
 };
 
@@ -163,5 +164,8 @@ export {
   DESTINATIONS,
   TRIP_TYPES,
   STOP_TYPES,
-  generateRandomDays
+  generateRandomDays,
+  generateOffers,
+  generateOfferKeys,
+  generateDescription
 };
