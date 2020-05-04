@@ -75,11 +75,7 @@ const createFormTemplate = (currentPoint) => {
 
   // Проставляет для всех "звездочек" нективное состояние
   const getCheckFavorite = (check) => {
-    let checkValue = ``;
-    if (check) {
-      checkValue = `checked`;
-    }
-    return checkValue;
+    return (check && `checked`) || ``;
   };
 
   return (
