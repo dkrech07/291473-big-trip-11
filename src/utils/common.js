@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const MINUTES_COUNT = 60;
 const HOURS_COUNT = 24;
 const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
@@ -16,6 +18,14 @@ const correctDateFormat = (number) => {
 
   return date;
 };
+
+// const correctDateFormat = (date) => {
+//   return moment(date).format(`DD MMMM`);
+// };
+//
+// const correctTimeFormat = (time) => {
+//   return moment(time).format(`hh:mm`);
+// };
 
 const calculateTripTime = (departure, arrival) => {
   let remain = arrival - departure;

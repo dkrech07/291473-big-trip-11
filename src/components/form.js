@@ -5,7 +5,7 @@ import flatpickr from "flatpickr";
 
 import "flatpickr/dist/flatpickr.min.css";
 
-const INPUT_DATE_FORMAT = `d/m/y H:i`;
+const INPUT_DATE_FORMAT = `d-m-Y H:i`;
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
@@ -276,7 +276,6 @@ export default class Form extends AbstractSmartComponent {
       this._flatpickr = flatpickr(item, {
         enableTime: true,
         dateFormat: INPUT_DATE_FORMAT,
-        altInput: true,
       });
     });
   }
@@ -318,12 +317,10 @@ export default class Form extends AbstractSmartComponent {
 
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`focus`, (evt) => {
       console.log(evt.target.value);
-      this.rerender();
     });
 
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
-      console.log(evt.target);
-      this.rerender();
+      console.log(evt.target.value);
     });
   }
 
