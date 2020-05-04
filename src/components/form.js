@@ -1,6 +1,11 @@
 import {correctDateFormat, getDayInfo} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
+
+const INPUT_DATE_FORMAT = `d/m/y H:i`;
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
@@ -185,8 +190,12 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = null;
     this._tripTypeClickHandner = null;
     this._destinationClickHandner = null;
+    this._startTimeClickHandler = null;
+    this._endTimeClickHandler = null;
+    this._flatpickr = null;
 
     this._subscribeOnEvents();
+    this._applyFlatpickr();
   }
 
   setSaveFormClickHandler(handler) {
@@ -218,16 +227,33 @@ export default class Form extends AbstractSmartComponent {
     this._destinationClickHandner = handler;
   }
 
+  setStartTimeClickHandler(handler) {
+    this.getElement().querySelector(`input[name="event-start-time"]`)
+    .addEventListener(`focus`, handler);
+
+    this._startTimeClickHandler = handler;
+  }
+
+  setEndTimeClickHandler(handler) {
+    this.getElement().querySelector(`input[name="event-end-time"]`)
+    .addEventListener(`focus`, handler);
+
+    this._endTimeClickHandler = handler;
+  }
+
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
+    this.setDestinationClickHandner(this._destinationClickHandner);
 
     this._subscribeOnEvents();
   }
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -235,6 +261,24 @@ export default class Form extends AbstractSmartComponent {
     this._currentPoint.favorite = currentPoint.favorite;
 
     this.rerender();
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      // При своем создании `flatpickr` дополнительно создает вспомогательные DOM-элементы.
+      // Что бы их удалять, нужно вызывать метод `destroy` у созданного инстанса `flatpickr`.
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    const dateElements = this.getElement().querySelectorAll(`.event__input--time`);
+    dateElements.forEach((item) => {
+      this._flatpickr = flatpickr(item, {
+        enableTime: true,
+        dateFormat: INPUT_DATE_FORMAT,
+        altInput: true,
+      });
+    });
   }
 
   _subscribeOnEvents() {
@@ -269,6 +313,16 @@ export default class Form extends AbstractSmartComponent {
       this._currentPoint.destination = evt.target.value;
       this._currentPoint.destinationInfo.destinationDescription = generateDescription();
 
+      this.rerender();
+    });
+
+    element.querySelector(`input[name="event-start-time"]`).addEventListener(`focus`, (evt) => {
+      console.log(evt.target.value);
+      this.rerender();
+    });
+
+    element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
+      console.log(evt.target);
       this.rerender();
     });
   }
