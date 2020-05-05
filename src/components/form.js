@@ -255,8 +255,6 @@ export default class Form extends AbstractSmartComponent {
 
   _applyFlatpickr() {
     if (this._flatpickr) {
-      // При своем создании `flatpickr` дополнительно создает вспомогательные DOM-элементы.
-      // Что бы их удалять, нужно вызывать метод `destroy` у созданного инстанса `flatpickr`.
       this._startTimeFlatpickr.destroy();
       this._endTimeFlatpickr.destroy();
 
@@ -315,15 +313,15 @@ export default class Form extends AbstractSmartComponent {
       this.rerender();
     });
 
+    // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`focus`, (evt) => {
       this._currentPoint.departure = evt.target.value;
     });
 
+    // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
     });
-
-    console.log(this._currentPoint);
   }
 
   getTemplate() {

@@ -1,11 +1,11 @@
 import moment from "moment";
-
-const MINUTES_COUNT = 60;
-const HOURS_COUNT = 24;
-const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
-const HOUR_MILLISECONDS_COUNT = MINUTES_COUNT * MIN_MILLISECONDS_COUNT;
-const DAY_MILLISECONDS_COUNT = MINUTES_COUNT * HOURS_COUNT * MIN_MILLISECONDS_COUNT;
 const DATE_LENGTH = 2;
+const INPUT_DAY_FORMAT = `DD`;
+const INPUT_MONTH_YEAR_FORMAT = `MMM YY`;
+const INPUT_MONTH_DAY_FORMAT = `MMM DD`;
+const INPUT_YEAR_MONTH_DAY_FORMAT = `YYYY-MM-DD`;
+const INPUT_YEAR_MONTH_DAY_TIME_FORMAT = `YYYY-MM-DDTHH:MM`;
+const INPUT_TIME_FORMAT = `HH:MM`;
 
 // Корректировка формата времени: добавляет вначале ноль, если число однозначное;
 const correctFormat = (number) => {
@@ -21,29 +21,30 @@ const correctFormat = (number) => {
 
 // Корректировка формата даты: год, день, часы, минуты;
 const correctDayFormat = (date) => {
-  return moment(date).format(`DD`);
+  return moment(date).format(INPUT_DAY_FORMAT);
 };
 
 const correctMonthAndYearFormat = (date) => {
-  return moment(date).format(`MMM YY`);
+  return moment(date).format(INPUT_MONTH_YEAR_FORMAT);
 };
 
 const correctMonthAndDayFormat = (date) => {
-  return moment(date).format(`MMM DD`);
+  return moment(date).format(INPUT_MONTH_DAY_FORMAT);
 };
 
 const correctDateFormat = (date) => {
-  return moment(date).format(`YYYY-MM-DD`);
+  return moment(date).format(INPUT_YEAR_MONTH_DAY_FORMAT);
 };
 
 const correctDateISOFormat = (date) => {
-  return moment(date).format(`YYYY-MM-DDTHH:MM`);
+  return moment(date).format(INPUT_YEAR_MONTH_DAY_TIME_FORMAT);
 };
 
 const correctTimeFormat = (time) => {
-  return moment(time).format(`HH:MM`);
+  return moment(time).format(INPUT_TIME_FORMAT);
 };
 
+// Расчет длительности путешествия;
 const calculateTripTime = (departure, arrival) => {
   const duration = moment.duration(moment(arrival).diff(moment(departure)));
 
@@ -60,6 +61,7 @@ const calculateTripTime = (departure, arrival) => {
   }
 };
 
+// Получение цены путешествия (цена путешествия + цена предложений);
 const getPrice = (daysList) => {
   let tripPrices = 0;
   let offersPrices = 0;
@@ -79,9 +81,6 @@ const getPrice = (daysList) => {
 };
 
 export {
-  MINUTES_COUNT,
-  HOURS_COUNT,
-  DAY_MILLISECONDS_COUNT,
   correctDateFormat,
   correctDateISOFormat,
   correctMonthAndYearFormat,
