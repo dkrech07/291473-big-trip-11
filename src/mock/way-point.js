@@ -125,6 +125,7 @@ const generateDestinationInfo = () => {
 const generateTripPoint = (dateCount) => {
   const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
   return {
+    id: String(new Date() + Math.random()),
     type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
     destination: getRandomArrayItem(DESTINATIONS),
     offers: generateOffers(generateOfferKeys()),

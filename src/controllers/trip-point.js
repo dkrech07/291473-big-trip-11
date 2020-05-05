@@ -24,7 +24,7 @@ export default class PointController {
   render(point) {
     // Создание новой текущей точки маршурта
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнереy
-
+    console.log(this._point);
     const oldPointComponent = this._pointComponent;
     this._pointComponent = new EventComponent(this._point);
 
