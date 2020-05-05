@@ -5,8 +5,6 @@ const HOURS_COUNT = 24;
 const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
 const HOUR_MILLISECONDS_COUNT = MINUTES_COUNT * MIN_MILLISECONDS_COUNT;
 const DAY_MILLISECONDS_COUNT = MINUTES_COUNT * HOURS_COUNT * MIN_MILLISECONDS_COUNT;
-const DATE_LENGTH = 2;
-const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
 
 // const correctDateFormat = (number) => {
 //   const date = number.toString();
@@ -27,6 +25,9 @@ const correctMonthAndYearFormat = (date) => {
   return moment(date).format(`MMM YY`);
 };
 
+const correctMonthAndDayFormat = (date) => {
+  return moment(date).format(`MMM DD`);
+};
 
 const correctDateFormat = (date) => {
   return moment(date).format(`YYYY-MM-DD`);
@@ -40,26 +41,26 @@ const correctTimeFormat = (time) => {
   return moment(time).format(`HH:MM`);
 };
 
-// const calculateTripTime = (departure, arrival) => {
-//   let remain = arrival - departure;
-//
-//   const days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
-//   remain = remain % (HOUR_MILLISECONDS_COUNT * HOURS_COUNT);
-//
-//   const hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
-//   remain = remain % (HOUR_MILLISECONDS_COUNT);
-//
-//   const minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
-//   remain = remain % (MIN_MILLISECONDS_COUNT);
-//
-//   if (days <= 0 && hours <= 0) {
-//     return `${correctDateFormat(minutes)}М`;
-//   } else if (days <= 0) {
-//     return `${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
-//   } else {
-//     return `${correctDateFormat(days)}D ${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
-//   }
-// };
+const calculateTripTime = (departure, arrival) => {
+  let remain = arrival - departure;
+
+  const days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
+  remain = remain % (HOUR_MILLISECONDS_COUNT * HOURS_COUNT);
+
+  const hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
+  remain = remain % (HOUR_MILLISECONDS_COUNT);
+
+  const minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
+  remain = remain % (MIN_MILLISECONDS_COUNT);
+
+  if (days <= 0 && hours <= 0) {
+    return `${correctDateFormat(minutes)}М`;
+  } else if (days <= 0) {
+    return `${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
+  } else {
+    return `${correctDateFormat(days)}D ${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
+  }
+};
 
 const getPrice = (daysList) => {
   let tripPrices = 0;
@@ -79,24 +80,15 @@ const getPrice = (daysList) => {
   return tripPrices + offersPrices;
 };
 
-const getDay = (day) => {
-  const dayNumber = day.getDate();
-  const monthNumber = day.getMonth();
-  const monthName = MONTHS_LIST[monthNumber];
-
-  return `${monthName} ${dayNumber}`;
-};
-
 export {
   MINUTES_COUNT,
   HOURS_COUNT,
-  MONTHS_LIST,
   DAY_MILLISECONDS_COUNT,
   correctDateFormat,
   correctDateISOFormat,
-  correctTimeFormat,
   correctMonthAndYearFormat,
+  correctMonthAndDayFormat,
   correctDayFormat,
+  correctTimeFormat,
   getPrice,
-  getDay
 };

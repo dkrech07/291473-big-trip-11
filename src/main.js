@@ -3,7 +3,7 @@ import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
 import NoPointsComponent from './components/no-points.js';
-import {getPrice, getDay} from './utils/common.js';
+import {getPrice, correctMonthAndDayFormat} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
 import {generateRandomDays} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
@@ -43,7 +43,7 @@ const renderTripInfo = () => {
 
   if (sortList.length === 1) {
     const tripInfo = `${firstPointDestination}`;
-    const tripDate = `${getDay(firstDate)}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)}`;
 
     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
   }
@@ -53,7 +53,7 @@ const renderTripInfo = () => {
     const lastDate = sortList[sortList.length - 1].date;
 
     const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
-    const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
 
     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
   }
@@ -64,7 +64,7 @@ const renderTripInfo = () => {
     const lastDate = sortList[sortList.length - 1].date;
 
     const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
-    const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
 
     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
   }
@@ -74,7 +74,7 @@ const renderTripInfo = () => {
     const lastDate = sortList[sortList.length - 1].date;
 
     const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
-    const tripDate = `${getDay(firstDate)} — ${getDay(lastDate)}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
 
     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
   }
