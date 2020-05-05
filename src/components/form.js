@@ -328,12 +328,14 @@ export default class Form extends AbstractSmartComponent {
     });
 
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`focus`, (evt) => {
-      console.log(evt.target.value);
+      this._currentPoint.departure = evt.target.value;
     });
 
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
-      console.log(evt.target.value);
+      this._currentPoint.arrival = evt.target.value;
     });
+
+    console.log(this._currentPoint);
   }
 
   getTemplate() {
