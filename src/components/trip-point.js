@@ -1,4 +1,4 @@
-import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils/common.js';
+import {correctDateFormat, correctTimeFormat, calculateTripTime, getDayInfo} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {
@@ -10,12 +10,8 @@ const createEventTemplate = (point) => {
 
   const pointImage = point.type.toLowerCase();
 
-  const getTimeInfo = (date) => {
-    return `${correctDateFormat(date.getHours())}:${correctDateFormat(date.getMinutes())}`;
-  };
-
-  const timeDeparture = getTimeInfo(departure);
-  const timeArrival = getTimeInfo(arrival);
+  const timeDeparture = correctTimeFormat(departure);
+  const timeArrival = correctTimeFormat(arrival);
 
   const createOffersMarkup = () => {
     return offers.map((offer) => {

@@ -23,9 +23,9 @@ const correctDateFormat = (number) => {
 //   return moment(date).format(`DD MMMM`);
 // };
 //
-// const correctTimeFormat = (time) => {
-//   return moment(time).format(`hh:mm`);
-// };
+const correctTimeFormat = (time) => {
+  return moment(time).format(`HH:MM`);
+};
 
 const calculateTripTime = (departure, arrival) => {
   let remain = arrival - departure;
@@ -96,6 +96,7 @@ export {
   MONTHS_LIST,
   DAY_MILLISECONDS_COUNT,
   correctDateFormat,
+  correctTimeFormat,
   calculateTripTime,
   getDayInfo,
   getPrice,
