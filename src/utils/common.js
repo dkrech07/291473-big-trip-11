@@ -32,6 +32,10 @@ const correctDateFormat = (date) => {
   return moment(date).format(`YYYY-MM-DD`);
 };
 
+const correctDateISOFormat = (date) => {
+  return moment(date).format(`YYYY-MM-DDTHH:MM`);
+};
+
 const correctTimeFormat = (time) => {
   return moment(time).format(`HH:MM`);
 };
@@ -56,22 +60,6 @@ const correctTimeFormat = (time) => {
 //     return `${correctDateFormat(days)}D ${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
 //   }
 // };
-
-const getDayInfo = (currentDate) => {
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const monthName = MONTHS_LIST[currentDate.getMonth()];
-  const year = currentDate.getFullYear();
-  const minYear = year.toString().slice(2);
-
-  return [
-    day,
-    month,
-    year,
-    monthName,
-    minYear,
-  ];
-};
 
 const getPrice = (daysList) => {
   let tripPrices = 0;
@@ -105,10 +93,10 @@ export {
   MONTHS_LIST,
   DAY_MILLISECONDS_COUNT,
   correctDateFormat,
+  correctDateISOFormat,
   correctTimeFormat,
   correctMonthAndYearFormat,
   correctDayFormat,
-  getDayInfo,
   getPrice,
   getDay
 };

@@ -1,4 +1,3 @@
-import {correctDateFormat, getDayInfo} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 import flatpickr from "flatpickr";
@@ -32,17 +31,6 @@ const createFormTemplate = (currentPoint) => {
       );
     }).join(`\n`);
   };
-
-  // Выводит в форму время отправления и прибытия
-  // const getTripTimeInfo = (date) => {
-  //   const [day, month, , , minYear] = getDayInfo(date);
-  //   const hours = correctDateFormat(date.getHours());
-  //   const minutes = correctDateFormat(date.getMinutes());
-  //
-  //   return `${correctDateFormat(day)}/${correctDateFormat(month)}/${correctDateFormat(minYear)} ${hours}:${minutes}`;
-  // };
-  const timeDeparture = (departure);
-  const timeArrival = (arrival);
 
   // Выводит в форму цену поездки
   const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
@@ -121,12 +109,12 @@ const createFormTemplate = (currentPoint) => {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeDeparture}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${departure}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeArrival}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${arrival}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
