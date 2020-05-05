@@ -5,18 +5,21 @@ const HOURS_COUNT = 24;
 const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
 const HOUR_MILLISECONDS_COUNT = MINUTES_COUNT * MIN_MILLISECONDS_COUNT;
 const DAY_MILLISECONDS_COUNT = MINUTES_COUNT * HOURS_COUNT * MIN_MILLISECONDS_COUNT;
+const DATE_LENGTH = 2;
 
-// const correctDateFormat = (number) => {
-//   const date = number.toString();
-//
-//   if (date.length < DATE_LENGTH) {
-//     const newDate = `0` + date;
-//     return newDate;
-//   }
-//
-//   return date;
-// };
+// Корректировка формата времени: добавляет вначале ноль, если число однозначное;
+const correctFormat = (number) => {
+  const date = number.toString();
 
+  if (date.length < DATE_LENGTH) {
+    const newDate = `0` + date;
+    return newDate;
+  }
+
+  return date;
+};
+
+// Корректировка формата даты: год, день, часы, минуты;
 const correctDayFormat = (date) => {
   return moment(date).format(`DD`);
 };
@@ -42,23 +45,18 @@ const correctTimeFormat = (time) => {
 };
 
 const calculateTripTime = (departure, arrival) => {
-  let remain = arrival - departure;
+  const duration = moment.duration(moment(arrival).diff(moment(departure)));
 
-  const days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
-  remain = remain % (HOUR_MILLISECONDS_COUNT * HOURS_COUNT);
+  const durationMinutes = duration.minutes();
+  const durationHours = duration.hours();
+  const durationDays = duration.days();
 
-  const hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
-  remain = remain % (HOUR_MILLISECONDS_COUNT);
-
-  const minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
-  remain = remain % (MIN_MILLISECONDS_COUNT);
-
-  if (days <= 0 && hours <= 0) {
-    return `${correctDateFormat(minutes)}М`;
-  } else if (days <= 0) {
-    return `${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
+  if (durationDays < 0 && durationHours < 0) {
+    return `${correctFormat(durationMinutes)}М`;
+  } else if (durationDays <= 0) {
+    return `${correctFormat(durationHours)}H ${correctFormat(durationMinutes)}М`;
   } else {
-    return `${correctDateFormat(days)}D ${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
+    return `${correctFormat(durationDays)}D ${correctFormat(durationHours)}H ${correctFormat(durationMinutes)}М`;
   }
 };
 
@@ -91,4 +89,5 @@ export {
   correctDayFormat,
   correctTimeFormat,
   getPrice,
+  calculateTripTime
 };

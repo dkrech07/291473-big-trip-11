@@ -1,10 +1,10 @@
-import {correctDateISOFormat, correctTimeFormat} from '../utils/common.js';
+import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {
   const {type, destination, offers, departure, arrival, price} = point;
 
-  const tripTime = `calculateTripTime(departure, arrival)`;
+  const tripTime = calculateTripTime(departure, arrival);
 
   const pointImage = point.type.toLowerCase();
 
