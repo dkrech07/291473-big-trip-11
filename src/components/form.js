@@ -262,8 +262,8 @@ export default class Form extends AbstractSmartComponent {
       this._endTimeFlatpickr = null;
     }
 
-    const startTimeInput = this.getElement().querySelectorAll(`input[name="event-start-time"]`);
-    const endTimeInput = this.getElement().querySelectorAll(`input[name="event-end-time"]`);
+    const startTimeInput = this.getElement().querySelector(`input[name="event-start-time"]`);
+    const endTimeInput = this.getElement().querySelector(`input[name="event-end-time"]`);
 
     this._startTimeFlatpickr = flatpickr(startTimeInput, {
       enableTime: true,
