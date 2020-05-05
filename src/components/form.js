@@ -1,6 +1,10 @@
-import {correctDateFormat, getDayInfo} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
+
+const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint) => {
   const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
@@ -27,17 +31,6 @@ const createFormTemplate = (currentPoint) => {
       );
     }).join(`\n`);
   };
-
-  // Выводит в форму время отправления и прибытия
-  const getTripTimeInfo = (date) => {
-    const [day, month, , , minYear] = getDayInfo(date);
-    const hours = correctDateFormat(date.getHours());
-    const minutes = correctDateFormat(date.getMinutes());
-
-    return `${correctDateFormat(day)}/${correctDateFormat(month)}/${correctDateFormat(minYear)} ${hours}:${minutes}`;
-  };
-  const timeDeparture = getTripTimeInfo(departure);
-  const timeArrival = getTripTimeInfo(arrival);
 
   // Выводит в форму цену поездки
   const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
@@ -116,12 +109,12 @@ const createFormTemplate = (currentPoint) => {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeDeparture}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${departure}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeArrival}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${arrival}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -185,8 +178,14 @@ export default class Form extends AbstractSmartComponent {
     this._favoriteButtonClickHandler = null;
     this._tripTypeClickHandner = null;
     this._destinationClickHandner = null;
+    this._startTimeClickHandler = null;
+    this._endTimeClickHandler = null;
+
+    this._startTimeFlatpickr = null;
+    this._endTimeFlatpickr = null;
 
     this._subscribeOnEvents();
+    this._applyFlatpickr();
   }
 
   setSaveFormClickHandler(handler) {
@@ -218,16 +217,33 @@ export default class Form extends AbstractSmartComponent {
     this._destinationClickHandner = handler;
   }
 
+  setStartTimeClickHandler(handler) {
+    this.getElement().querySelector(`input[name="event-start-time"]`)
+    .addEventListener(`focus`, handler);
+
+    this._startTimeClickHandler = handler;
+  }
+
+  setEndTimeClickHandler(handler) {
+    this.getElement().querySelector(`input[name="event-end-time"]`)
+    .addEventListener(`focus`, handler);
+
+    this._endTimeClickHandler = handler;
+  }
+
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
+    this.setDestinationClickHandner(this._destinationClickHandner);
 
     this._subscribeOnEvents();
   }
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -235,6 +251,31 @@ export default class Form extends AbstractSmartComponent {
     this._currentPoint.favorite = currentPoint.favorite;
 
     this.rerender();
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      this._startTimeFlatpickr.destroy();
+      this._endTimeFlatpickr.destroy();
+
+      this._startTimeFlatpickr = null;
+      this._endTimeFlatpickr = null;
+    }
+
+    const startTimeInput = this.getElement().querySelector(`input[name="event-start-time"]`);
+    const endTimeInput = this.getElement().querySelector(`input[name="event-end-time"]`);
+
+    this._startTimeFlatpickr = flatpickr(startTimeInput, {
+      enableTime: true,
+      dateFormat: INPUT_DATE_FORMAT,
+      defaultDate: this._currentPoint.departure,
+    });
+
+    this._endTimeFlatpickr = flatpickr(endTimeInput, {
+      enableTime: true,
+      dateFormat: INPUT_DATE_FORMAT,
+      defaultDate: this._currentPoint.arrival,
+    });
   }
 
   _subscribeOnEvents() {
@@ -270,6 +311,16 @@ export default class Form extends AbstractSmartComponent {
       this._currentPoint.destinationInfo.destinationDescription = generateDescription();
 
       this.rerender();
+    });
+
+    // Хендлер для клика по времени начала путешествия;
+    element.querySelector(`input[name="event-start-time"]`).addEventListener(`focus`, (evt) => {
+      this._currentPoint.departure = evt.target.value;
+    });
+
+    // Хендлер для клика по времени окончания путешествия;
+    element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
+      this._currentPoint.arrival = evt.target.value;
     });
   }
 

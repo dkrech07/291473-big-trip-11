@@ -1,14 +1,13 @@
 import AbstractComponent from "./abstract-component.js";
-import {getDayInfo, correctDateFormat} from '../utils/common.js';
+import {correctDateFormat, correctMonthAndYearFormat, correctDayFormat} from '../utils/common.js';
 
 const createTripDayTemplate = (tripDayInfo) => {
-  const [day, month, year, monthName, minYear] = getDayInfo(tripDayInfo.date);
 
   return (
     `<li class="trip-days__item  day">
         <div class="day__info">
-          <span class="day__counter">${day}</span>
-          <time class="day__date" datetime="${year}-${correctDateFormat(month)}-${correctDateFormat(day)}">${monthName} ${minYear}</time>
+          <span class="day__counter">${correctDayFormat(tripDayInfo.date)}</span>
+          <time class="day__date" datetime="${correctDateFormat(tripDayInfo.date)}">${correctMonthAndYearFormat(tripDayInfo.date)}</time>
         </div>
         <ul class="trip-events__list"></ul>
       </li>`

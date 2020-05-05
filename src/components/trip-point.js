@@ -1,21 +1,12 @@
-import {correctDateFormat, calculateTripTime, getDayInfo} from '../utils/common.js';
+import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {
   const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
-  const [dayDeparture, monthDeparture, yearDeparture] = getDayInfo(departure);
-  const [dayArrival, monthArrival, yearArrival] = getDayInfo(arrival);
 
   const pointImage = point.type.toLowerCase();
-
-  const getTimeInfo = (date) => {
-    return `${correctDateFormat(date.getHours())}:${correctDateFormat(date.getMinutes())}`;
-  };
-
-  const timeDeparture = getTimeInfo(departure);
-  const timeArrival = getTimeInfo(arrival);
 
   const createOffersMarkup = () => {
     return offers.map((offer) => {
@@ -39,9 +30,9 @@ const createEventTemplate = (point) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${yearDeparture}-${correctDateFormat(monthDeparture)}-${correctDateFormat(dayDeparture)}T${timeDeparture}">${timeDeparture}</time>
+            <time class="event__start-time" datetime="${correctDateISOFormat(departure)}">${correctTimeFormat(departure)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${yearArrival}-${correctDateFormat(monthArrival)}-${correctDateFormat(dayArrival)}T${timeArrival}">${timeArrival}</time>
+            <time class="event__end-time" datetime="${correctDateISOFormat(arrival)}">${correctTimeFormat(arrival)}</time>
           </p>
           <p class="event__duration">${tripTime}</p>
         </div>

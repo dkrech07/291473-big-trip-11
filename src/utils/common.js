@@ -1,12 +1,14 @@
-const MINUTES_COUNT = 60;
-const HOURS_COUNT = 24;
-const MIN_MILLISECONDS_COUNT = MINUTES_COUNT * 1000;
-const HOUR_MILLISECONDS_COUNT = MINUTES_COUNT * MIN_MILLISECONDS_COUNT;
-const DAY_MILLISECONDS_COUNT = MINUTES_COUNT * HOURS_COUNT * MIN_MILLISECONDS_COUNT;
+import moment from "moment";
 const DATE_LENGTH = 2;
-const MONTHS_LIST = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`, `Sept`, `Oct`, `Nov`, `Dec`];
+const INPUT_DAY_FORMAT = `DD`;
+const INPUT_MONTH_YEAR_FORMAT = `MMM YY`;
+const INPUT_MONTH_DAY_FORMAT = `MMM DD`;
+const INPUT_YEAR_MONTH_DAY_FORMAT = `YYYY-MM-DD`;
+const INPUT_YEAR_MONTH_DAY_TIME_FORMAT = `YYYY-MM-DDTHH:MM`;
+const INPUT_TIME_FORMAT = `HH:MM`;
 
-const correctDateFormat = (number) => {
+// Корректировка формата времени: добавляет вначале ноль, если число однозначное;
+const correctFormat = (number) => {
   const date = number.toString();
 
   if (date.length < DATE_LENGTH) {
@@ -17,43 +19,49 @@ const correctDateFormat = (number) => {
   return date;
 };
 
+// Корректировка формата даты: год, день, часы, минуты;
+const correctDayFormat = (date) => {
+  return moment(date).format(INPUT_DAY_FORMAT);
+};
+
+const correctMonthAndYearFormat = (date) => {
+  return moment(date).format(INPUT_MONTH_YEAR_FORMAT);
+};
+
+const correctMonthAndDayFormat = (date) => {
+  return moment(date).format(INPUT_MONTH_DAY_FORMAT);
+};
+
+const correctDateFormat = (date) => {
+  return moment(date).format(INPUT_YEAR_MONTH_DAY_FORMAT);
+};
+
+const correctDateISOFormat = (date) => {
+  return moment(date).format(INPUT_YEAR_MONTH_DAY_TIME_FORMAT);
+};
+
+const correctTimeFormat = (time) => {
+  return moment(time).format(INPUT_TIME_FORMAT);
+};
+
+// Расчет длительности путешествия;
 const calculateTripTime = (departure, arrival) => {
-  let remain = arrival - departure;
+  const duration = moment.duration(moment(arrival).diff(moment(departure)));
 
-  const days = Math.floor(remain / (HOUR_MILLISECONDS_COUNT * HOURS_COUNT));
-  remain = remain % (HOUR_MILLISECONDS_COUNT * HOURS_COUNT);
+  const durationMinutes = duration.minutes();
+  const durationHours = duration.hours();
+  const durationDays = duration.days();
 
-  const hours = Math.ceil(remain / (HOUR_MILLISECONDS_COUNT));
-  remain = remain % (HOUR_MILLISECONDS_COUNT);
-
-  const minutes = Math.floor(remain / (MIN_MILLISECONDS_COUNT));
-  remain = remain % (MIN_MILLISECONDS_COUNT);
-
-  if (days <= 0 && hours <= 0) {
-    return `${correctDateFormat(minutes)}М`;
-  } else if (days <= 0) {
-    return `${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
+  if (durationDays < 0 && durationHours < 0) {
+    return `${correctFormat(durationMinutes)}М`;
+  } else if (durationDays <= 0) {
+    return `${correctFormat(durationHours)}H ${correctFormat(durationMinutes)}М`;
   } else {
-    return `${correctDateFormat(days)}D ${correctDateFormat(hours)}H ${correctDateFormat(minutes)}М`;
+    return `${correctFormat(durationDays)}D ${correctFormat(durationHours)}H ${correctFormat(durationMinutes)}М`;
   }
 };
 
-const getDayInfo = (currentDate) => {
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const monthName = MONTHS_LIST[currentDate.getMonth()];
-  const year = currentDate.getFullYear();
-  const minYear = year.toString().slice(2);
-
-  return [
-    day,
-    month,
-    year,
-    monthName,
-    minYear,
-  ];
-};
-
+// Получение цены путешествия (цена путешествия + цена предложений);
 const getPrice = (daysList) => {
   let tripPrices = 0;
   let offersPrices = 0;
@@ -72,22 +80,13 @@ const getPrice = (daysList) => {
   return tripPrices + offersPrices;
 };
 
-const getDay = (day) => {
-  const dayNumber = day.getDate();
-  const monthNumber = day.getMonth();
-  const monthName = MONTHS_LIST[monthNumber];
-
-  return `${monthName} ${dayNumber}`;
-};
-
 export {
-  MINUTES_COUNT,
-  HOURS_COUNT,
-  MONTHS_LIST,
-  DAY_MILLISECONDS_COUNT,
   correctDateFormat,
-  calculateTripTime,
-  getDayInfo,
+  correctDateISOFormat,
+  correctMonthAndYearFormat,
+  correctMonthAndDayFormat,
+  correctDayFormat,
+  correctTimeFormat,
   getPrice,
-  getDay
+  calculateTripTime
 };
