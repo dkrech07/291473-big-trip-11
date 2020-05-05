@@ -1,10 +1,10 @@
-import {correctDateFormat, correctTimeFormat, calculateTripTime, getDayInfo} from '../utils/common.js';
+import {correctDateFormat, correctTimeFormat, getDayInfo} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
 const createEventTemplate = (point) => {
   const {type, destination, offers, departure, arrival, price} = point;
 
-  const tripTime = calculateTripTime(departure, arrival);
+  const tripTime = `calculateTripTime(departure, arrival)`;
   const [dayDeparture, monthDeparture, yearDeparture] = getDayInfo(departure);
   const [dayArrival, monthArrival, yearArrival] = getDayInfo(arrival);
 
