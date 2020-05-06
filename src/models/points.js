@@ -6,7 +6,7 @@ export default class Points {
   }
 
   getPoints() {
-    return this._tasks;
+    return this._points;
   }
 
   setPoints(points) {

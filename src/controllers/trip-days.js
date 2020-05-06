@@ -5,9 +5,6 @@ import TripsContainerComponent from '../components/trips-container.js';
 import {RENDER_POSITION, render} from '../utils/render.js';
 import PointController from '../controllers/trip-point.js';
 
-const mainElement = document.querySelector(`.page-body__page-main`);
-const tripEventsElement = mainElement.querySelector(`.trip-events`);
-
 // Получение общего списка точек маршрута без разбивки по дням;
 const getTripPoints = (days) => {
   const tripsList = [];
@@ -22,7 +19,10 @@ const getTripPoints = (days) => {
 };
 
 export default class TripController {
-  constructor() {
+  constructor(container, pointsModel) {
+    this._container = container;
+    this._pointsModel = pointsModel;
+
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
     this._showedPointsControllers = [];
@@ -36,10 +36,10 @@ export default class TripController {
     this._points = getTripPoints(this._days);
 
     // Отрисовка меню сортировки
-    render(tripEventsElement, this._sortComponent, RENDER_POSITION.BEFOREEND);
+    render(this._container, this._sortComponent, RENDER_POSITION.BEFOREEND);
 
     // Отрисовка "контейнера" для вывода всех дней путешествия
-    render(tripEventsElement, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
+    render(this._container, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
 
     // Отрисовка дней путешествия
     const renderTripDays = () => {

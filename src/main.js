@@ -16,6 +16,9 @@ const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
+// const mainElement = document.querySelector(`.page-body__page-main`);
+// const tripEventsElement = mainElement.querySelector(`.trip-events`);
+
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
@@ -93,7 +96,7 @@ const checkTripPoint = (days) => {
   }
 
   renderTripInfo();
-  const tripController = new TripController();
+  const tripController = new TripController(tripEventsElement);
   tripController.render(daysList);
 };
 
