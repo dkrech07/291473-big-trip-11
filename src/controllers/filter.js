@@ -1,5 +1,5 @@
 import FilterComponent from "../components/filters.js";
-import {render, replace, RenderPosition} from "../utils/render.js";
+import {render, replace, RENDER_POSITION} from "../utils/render.js";
 import {getPointsByFilter} from "../utils/filter.js";
 
 export const FilterType = {
@@ -24,7 +24,7 @@ export default class FilterController {
 
   render() {
     const container = this._container;
-    const allPoints = this._pointsModel.getPoints();
+    const allPoints = this._pointsModel.getPointsAll();
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
@@ -40,7 +40,7 @@ export default class FilterController {
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent, RenderPosition.BEFOREEND);
+      render(container, this._filterComponent, RENDER_POSITION.BEFOREEND);
     }
   }
 

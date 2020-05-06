@@ -1,11 +1,21 @@
+import {getPointsByFilter} from "../utils/filter.js";
+import {FilterType} from "../controllers/filter.js";
+
+
 export default class Points {
   constructor() {
     this._points = [];
+    this._activeFilterType = FilterType.EVERYTHING;
 
+    this._filterChangeHandlers = [];
     this._dataChangeHandlers = [];
   }
 
   getPoints() {
+    return getPointsByFilter(this._points, this._activeFilterType);
+  }
+
+  getPointsAll() {
     return this._points;
   }
 
@@ -13,6 +23,12 @@ export default class Points {
     this._points = Array.from(points);
     this._callHandlers(this._dataChangeHandlers);
   }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
 
   updatePoint(id, point) {
     const index = this._points.findIndex((it) => it.id === id);
