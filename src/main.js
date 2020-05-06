@@ -101,23 +101,15 @@ const renderTripInfo = () => {
 
 // Проверка наличия точек маршрута. Вывод сообщения о необходимости добавить точку маршрута.
 const checkTripPoint = () => {
-  // const isAllWayPointsMissing = days.every((day) => day.wayPoints.length === 0);
-  // const isAllDaysMissing = days.every((day) => day.length === 0);
-
   // Отрисовка общей стоимости поездок в шапке;
   renderTripCost();
-
-  // if (isAllWayPointsMissing || isAllDaysMissing) {
-  //   render(tripEventsElement, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
-  //   return;
-  // }
-
-  // Отрисовка информации о крайних точках маршрута в шапке;
-  renderTripInfo();
 
   // Отрисовка информации о днях путешествия;
   const tripController = new TripController(tripEventsElement, pointsModel);
   tripController.render(daysList);
+
+  // Отрисовка информации о крайних точках маршрута в шапке;
+  renderTripInfo();
 };
 
 checkTripPoint(randomDaysList);

@@ -25,14 +25,13 @@ export default class TripController {
 
     console.log(points);
     // Пороверка точек маршрута на наличие
-    // const isPointsMissing = points.every((point) => point.isArchive);
-    //
-    // const isAllDaysMissing = days.every((day) => day.length === 0);
-    //
-    // if (isPointsMissing || isAllDaysMissing) {
-    //   render(this._container, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
-    //   return;
-    // }
+    const isAllPointsMissing = points.every((point) => point.length === 0);
+    const isAllDaysMissing = days.every((day) => day.length === 0);
+
+    if (isAllPointsMissing || isAllDaysMissing) {
+      render(this._container, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
+      return;
+    }
 
     // Отрисовка меню сортировки
     render(this._container, this._sortComponent, RENDER_POSITION.BEFOREEND);
