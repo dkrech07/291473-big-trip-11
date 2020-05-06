@@ -4,19 +4,20 @@ import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
 import {RENDER_POSITION, render} from '../utils/render.js';
 import PointController from '../controllers/trip-point.js';
+import NoPointsComponent from '../components/no-points.js';
 
 // Получение общего списка точек маршрута без разбивки по дням;
-const getTripPoints = (days) => {
-  const tripsList = [];
-
-  for (const day of days) {
-    const currentWayPoints = day.wayPoints;
-    for (const wayPoint of currentWayPoints) {
-      tripsList.push(wayPoint);
-    }
-  }
-  return tripsList;
-};
+// const getTripPoints = (days) => {
+//   const tripsList = [];
+//
+//   for (const day of days) {
+//     const currentWayPoints = day.wayPoints;
+//     for (const wayPoint of currentWayPoints) {
+//       tripsList.push(wayPoint);
+//     }
+//   }
+//   return tripsList;
+// };
 
 export default class TripController {
   constructor(container, pointsModel) {
@@ -26,7 +27,7 @@ export default class TripController {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
     this._showedPointsControllers = [];
-    this._points = [];
+    // this._points = [];
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
   }
@@ -34,6 +35,21 @@ export default class TripController {
   render(days) {
     this._days = days;
     this._points = getTripPoints(this._days);
+
+    // Заменить this._points на points;
+
+    // Пороверка точек маршрута на наличие
+    const points = this._pointsModel.getPoints();
+    console.log(points);
+
+    // const isPointsMissing = points.every((point) => point.isArchive);
+    //
+    // const isAllDaysMissing = days.every((day) => day.length === 0);
+    //
+    // if (isPointsMissing || isAllDaysMissing) {
+    //   render(this._container, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
+    //   return;
+    // }
 
     // Отрисовка меню сортировки
     render(this._container, this._sortComponent, RENDER_POSITION.BEFOREEND);

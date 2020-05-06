@@ -7,6 +7,7 @@ import {getPrice, correctMonthAndDayFormat} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
 import {generateRandomDays} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
+import PointsModel from './models/points.js';
 
 // Общие переменные
 const randomDaysList = generateRandomDays();
@@ -16,8 +17,25 @@ const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 const daysList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
-// const mainElement = document.querySelector(`.page-body__page-main`);
-// const tripEventsElement = mainElement.querySelector(`.trip-events`);
+// Функция получения списока точек маршрута из списка дней путешествия;
+const getTripPoints = (days) => {
+  const tripsList = [];
+
+  for (const day of days) {
+    const currentWayPoints = day.wayPoints;
+    for (const wayPoint of currentWayPoints) {
+      tripsList.push(wayPoint);
+    }
+  }
+  return tripsList;
+};
+
+// Получаем список точек маршрута из списка дней путешествия (для наглядности записываю в points);
+const points = getTripPoints(randomDaysList);
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
+
 
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
@@ -84,19 +102,23 @@ const renderTripInfo = () => {
 };
 
 // Проверка наличия точек маршрута. Вывод сообщения о необходимости добавить точку маршрута.
-const checkTripPoint = (days) => {
-  const isAllWayPointsMissing = days.every((day) => day.wayPoints.length === 0);
-  const isAllDaysMissing = days.every((day) => day.length === 0);
+const checkTripPoint = () => {
+  // const isAllWayPointsMissing = days.every((day) => day.wayPoints.length === 0);
+  // const isAllDaysMissing = days.every((day) => day.length === 0);
 
+  // Отрисовка общей стоимости поездок в шапке;
   renderTripCost();
 
-  if (isAllWayPointsMissing || isAllDaysMissing) {
-    render(tripEventsElement, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
-    return;
-  }
+  // if (isAllWayPointsMissing || isAllDaysMissing) {
+  //   render(tripEventsElement, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
+  //   return;
+  // }
 
+  // Отрисовка информации о крайних точках маршрута в шапке;
   renderTripInfo();
-  const tripController = new TripController(tripEventsElement);
+
+  // Отрисовка информации о днях путешествия;
+  const tripController = new TripController(tripEventsElement, pointsModel);
   tripController.render(daysList);
 };
 
