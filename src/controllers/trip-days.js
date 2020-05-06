@@ -17,6 +17,9 @@ export default class TripController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._pointsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render(days) {
@@ -123,6 +126,20 @@ export default class TripController {
 
   _onViewChange() {
     this._showedPointsControllers.forEach((it) => it.setDefaultView());
+  }
+
+  _removePoints() {
+    this._showedPointsControllers.forEach((pointController) => pointController.destroy());
+    this._showedPointsControllers = [];
+  }
+
+  _updatePoints() {
+    this._removePoints();
+    // this._renderTasks(this._tasksModel.getTasks().slice());  нужно приспособить renderDaysTripPoints();
+  }
+
+  _onFilterChange() {
+    this._updatePoints();
   }
 
 }

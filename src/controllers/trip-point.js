@@ -1,6 +1,6 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
-import {RENDER_POSITION, render, replace} from '../utils/render.js';
+import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
 
@@ -76,5 +76,10 @@ export default class PointController {
     this._formComponent.reset();
     replace(this._pointComponent, this._formComponent);
     this._mode = Mode.DEFAULT;
+  }
+
+  destroy() {
+    remove(this._formComponent);
+    remove(this._pointComponent);
   }
 }

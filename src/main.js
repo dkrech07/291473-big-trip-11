@@ -8,6 +8,7 @@ import {RENDER_POSITION, render} from './utils/render.js';
 import {generateRandomDays} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
+import FilterController from './controllers/filter.js';
 
 // Общие переменные
 const randomDaysList = generateRandomDays();
@@ -34,6 +35,10 @@ const getTripPoints = (days) => {
 const points = getTripPoints(randomDaysList);
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
+
+// Отрисовка отфильтрованных точек маршрута;
+const filterController = new FilterController(mainElement, pointsModel);
+filterController.render();
 
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
