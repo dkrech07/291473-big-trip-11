@@ -6,19 +6,6 @@ import {RENDER_POSITION, render} from '../utils/render.js';
 import PointController from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 
-// Получение общего списка точек маршрута без разбивки по дням;
-// const getTripPoints = (days) => {
-//   const tripsList = [];
-//
-//   for (const day of days) {
-//     const currentWayPoints = day.wayPoints;
-//     for (const wayPoint of currentWayPoints) {
-//       tripsList.push(wayPoint);
-//     }
-//   }
-//   return tripsList;
-// };
-
 export default class TripController {
   constructor(container, pointsModel) {
     this._container = container;
@@ -27,21 +14,17 @@ export default class TripController {
     this._tripDaysComponent = new TripDaysComponent();
     this._sortComponent = new SortComponent();
     this._showedPointsControllers = [];
-    // this._points = [];
+
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
   }
 
   render(days) {
     this._days = days;
-    this._points = getTripPoints(this._days);
-
-    // Заменить this._points на points;
-
-    // Пороверка точек маршрута на наличие
     const points = this._pointsModel.getPoints();
-    console.log(points);
 
+    console.log(points);
+    // Пороверка точек маршрута на наличие
     // const isPointsMissing = points.every((point) => point.isArchive);
     //
     // const isAllDaysMissing = days.every((day) => day.length === 0);
@@ -105,7 +88,7 @@ export default class TripController {
           break;
 
         case SortTypes.SORT_TIME:
-          const tripPointsListTime = getTripPoints(this._days.slice());
+          const tripPointsListTime = points.slice();
           tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
           render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);
@@ -113,7 +96,7 @@ export default class TripController {
           break;
 
         case SortTypes.SORT_PRICE:
-          const tripPointsListPrice = getTripPoints(this._days.slice());
+          const tripPointsListPrice = points.slice();
           tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
           render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);

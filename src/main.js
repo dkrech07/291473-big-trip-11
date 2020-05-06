@@ -2,7 +2,7 @@ import TripInfoComponent from './components/trip-info.js';
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
 import FiltersComponent from './components/filters.js';
-import NoPointsComponent from './components/no-points.js';
+// import NoPointsComponent from './components/no-points.js';
 import {getPrice, correctMonthAndDayFormat} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
 import {generateRandomDays} from './mock/way-point.js';
@@ -34,8 +34,6 @@ const getTripPoints = (days) => {
 const points = getTripPoints(randomDaysList);
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
-
-
 
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
