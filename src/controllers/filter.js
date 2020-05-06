@@ -2,6 +2,10 @@ import FilterComponent from "../components/filters.js";
 import {render, replace, RENDER_POSITION} from "../utils/render.js";
 import {getPointsByFilter} from "../utils/filter.js";
 
+const headerElement = document.querySelector(`.page-header`);
+const tripMenuElement = headerElement.querySelector(`.trip-main`);
+const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
+
 export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
@@ -10,10 +14,12 @@ export const FilterType = {
 
 export default class FilterController {
   constructor(container, pointsModel) {
-    this._container = container;
+    // this._container = container;
+    this._container = tripFilterElement;
+
     this._pointsModel = pointsModel;
 
-    this._activeFilterType = FilterType.ALL;
+    this._activeFilterType = FilterType.EVERYTHING;
     this._filterComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -25,6 +31,7 @@ export default class FilterController {
   render() {
     const container = this._container;
     const allPoints = this._pointsModel.getPointsAll();
+
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
@@ -32,15 +39,19 @@ export default class FilterController {
         checked: filterType === this._activeFilterType,
       };
     });
+
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
 
+    console.log(this._filterComponent);
+
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent, RENDER_POSITION.BEFOREEND);
+      render(container, this._filterComponent, RENDER_POSITION.AFTEREND);
+      // render(tripFilterElement, new FiltersComponent(), RENDER_POSITION.AFTEREND);
     }
   }
 

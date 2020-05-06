@@ -1,7 +1,7 @@
 import TripInfoComponent from './components/trip-info.js';
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
-import FiltersComponent from './components/filters.js';
+// import FiltersComponent from './components/filters.js';
 // import NoPointsComponent from './components/no-points.js';
 import {getPrice, correctMonthAndDayFormat} from './utils/common.js';
 import {RENDER_POSITION, render} from './utils/render.js';
@@ -43,10 +43,10 @@ filterController.render();
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
-  const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
+  // const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
 
   render(tripSwitchElement, new MenuComponent(), RENDER_POSITION.AFTEREND);
-  render(tripFilterElement, new FiltersComponent(), RENDER_POSITION.AFTEREND);
+  // render(tripFilterElement, new FiltersComponent(), RENDER_POSITION.AFTEREND);
 };
 
 renderTripMenuOptions();
