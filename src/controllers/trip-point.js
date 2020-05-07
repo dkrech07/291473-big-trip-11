@@ -4,7 +4,7 @@ import {render, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
 
-const Mode = {
+export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
 };

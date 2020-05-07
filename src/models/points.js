@@ -7,8 +7,8 @@ export default class Points {
     this._points = [];
     this._activeFilterType = FilterType.EVERYTHING;
 
-    this._filterChangeHandlers = [];
     this._dataChangeHandlers = [];
+    this._filterChangeHandlers = [];
   }
 
   getPoints() {

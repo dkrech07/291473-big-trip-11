@@ -36,10 +36,6 @@ const points = getTripPoints(randomDaysList);
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
-// Отрисовка отфильтрованных точек маршрута;
-const filterController = new FilterController(mainElement, pointsModel);
-filterController.render();
-
 // Отрисовка элементов меню: Table, Status, Everything, Future, Past
 const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
@@ -108,6 +104,10 @@ const renderTripInfo = () => {
 const checkTripPoint = () => {
   // Отрисовка общей стоимости поездок в шапке;
   renderTripCost();
+
+  // Отрисовка отфильтрованных точек маршрута;
+  const filterController = new FilterController(mainElement, pointsModel);
+  filterController.render();
 
   // Отрисовка информации о днях путешествия;
   const tripController = new TripController(tripEventsElement, pointsModel);
