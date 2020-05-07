@@ -45,8 +45,6 @@ export default class FilterController {
     this._filterComponent = new FilterComponent(filters);
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
 
-    console.log(this._filterComponent);
-
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {

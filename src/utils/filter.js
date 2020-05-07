@@ -1,24 +1,39 @@
 import {FilterType} from "../controllers/filter.js";
+import moment from "moment";
+
+const oneDay = (dateA, dateB) => {
+  const a = moment(dateA);
+  const b = moment(dateB);
+
+  return a.diff(b, `days`) === 0 && dateA.getDate() === dateB.getDate();
+};
+
+const futureDate = (currentDate, pointArrivalDate) => {
+  return pointArrivalDate > currentDate && !oneDay(currentDate, pointArrivalDate);
+};
+
+const pastDate = (currentDate, pointArrivalDate) => {
+  return pointArrivalDate < currentDate && !oneDay(currentDate, pointArrivalDate);
+};
+
+const getFutureFilteredPoints = (points, date) => {
+  return points.filter((point) => futureDate(date, point.arrival));
+};
+
+const getPastFilteredPoints = (points, date) => {
+  return points.filter((point) => pastDate(date, point.arrival));
+};
 
 export const getPointsByFilter = (points, filterType) => {
-  // const nowDate = new Date();
+  const currentDate = new Date();
 
   switch (filterType) {
+    case FilterType.EVERYTHING:
+      return points;
     case FilterType.FUTURE:
-      console.log(`FUTURE`);
-      return 1;
-      // return getNotArchiveTasks(tasks);
+      return getFutureFilteredPoints(points, currentDate);
     case FilterType.PAST:
-      console.log(`PAST`);
-      return 1;
-    // case FilterType.FAVORITES:
-    //   return getFavoriteTasks(getNotArchiveTasks(tasks));
-    // case FilterType.OVERDUE:
-    //   return getOverdueTasks(getNotArchiveTasks(tasks), nowDate);
-    // case FilterType.REPEATING:
-    //   return getRepeatingTasks(getNotArchiveTasks(tasks));
-    // case FilterType.TODAY:
-    //   return getTasksInOneDay(getNotArchiveTasks(tasks), nowDate);
+      return getPastFilteredPoints(points, currentDate);
   }
 
   return points;
