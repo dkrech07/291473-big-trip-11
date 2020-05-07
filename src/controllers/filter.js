@@ -1,5 +1,5 @@
 import FilterComponent from "../components/filters.js";
-import {render, replace, RENDER_POSITION} from "../utils/render.js";
+import {render, replace, RenderPosition} from "../utils/render.js";
 import {getPointsByFilter} from "../utils/filter.js";
 
 const headerElement = document.querySelector(`.page-header`);
@@ -48,8 +48,8 @@ export default class FilterController {
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent, RENDER_POSITION.AFTEREND);
-      // render(tripFilterElement, new FiltersComponent(), RENDER_POSITION.AFTEREND);
+      render(container, this._filterComponent, RenderPosition.AFTEREND);
+      // render(tripFilterElement, new FiltersComponent(), RenderPosition.AFTEREND);
     }
   }
 

@@ -2,7 +2,7 @@ import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
-import {RENDER_POSITION, render} from '../utils/render.js';
+import {render} from '../utils/render.js';
 import PointController from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 
@@ -32,21 +32,21 @@ export default class TripController {
     const isAllDaysMissing = days.every((day) => day.length === 0);
 
     if (isAllPointsMissing || isAllDaysMissing) {
-      render(this._container, new NoPointsComponent(), RENDER_POSITION.BEFOREEND);
+      render(this._container, new NoPointsComponent());
       return;
     }
 
     // Отрисовка меню сортировки
-    render(this._container, this._sortComponent, RENDER_POSITION.BEFOREEND);
+    render(this._container, this._sortComponent);
 
     // Отрисовка "контейнера" для вывода всех дней путешествия
-    render(this._container, this._tripDaysComponent, RENDER_POSITION.BEFOREEND);
+    render(this._container, this._tripDaysComponent);
 
     // Отрисовка дней путешествия
     const renderTripDays = () => {
       for (let i = 0; i < this._days.length; i++) {
         const tripDayComponent = new TripDayComponent(this._days[i]);
-        render(this._tripDaysComponent.getElement(), tripDayComponent, RENDER_POSITION.BEFOREEND);
+        render(this._tripDaysComponent.getElement(), tripDayComponent);
       }
     };
     renderTripDays();
@@ -93,7 +93,7 @@ export default class TripController {
           const tripPointsListTime = points.slice();
           tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);
+          render(this._tripDaysComponent.getElement(), new TripsContainerComponent());
           this._renderPoints(tripPointsListTime);
           break;
 
@@ -101,7 +101,7 @@ export default class TripController {
           const tripPointsListPrice = points.slice();
           tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripsContainerComponent(), RENDER_POSITION.BEFOREEND);
+          render(this._tripDaysComponent.getElement(), new TripsContainerComponent());
           this._renderPoints(tripPointsListPrice);
           break;
       }

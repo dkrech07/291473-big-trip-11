@@ -1,6 +1,6 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
-import {RENDER_POSITION, render, replace, remove} from '../utils/render.js';
+import {render, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
 
@@ -30,7 +30,7 @@ export default class PointController {
 
     // Отрисовка точки маршрута
     if (!oldPointComponent) {
-      render(this._container, this._pointComponent, RENDER_POSITION.BEFOREEND);
+      render(this._container, this._pointComponent);
     }
 
     // Замена карточки пункта маршрута на форму

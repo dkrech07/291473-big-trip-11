@@ -4,7 +4,7 @@ import MenuComponent from './components/menu.js';
 // import FiltersComponent from './components/filters.js';
 // import NoPointsComponent from './components/no-points.js';
 import {getPrice, correctMonthAndDayFormat} from './utils/common.js';
-import {RENDER_POSITION, render} from './utils/render.js';
+import {RenderPosition, render} from './utils/render.js';
 import {generateRandomDays} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
@@ -45,8 +45,8 @@ const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
   // const tripFilterElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:last-child`);
 
-  render(tripSwitchElement, new MenuComponent(), RENDER_POSITION.AFTEREND);
-  // render(tripFilterElement, new FiltersComponent(), RENDER_POSITION.AFTEREND);
+  render(tripSwitchElement, new MenuComponent(), RenderPosition.AFTEREND);
+  // render(tripFilterElement, new FiltersComponent(), RenderPosition.AFTEREND);
 };
 
 renderTripMenuOptions();
@@ -54,7 +54,7 @@ renderTripMenuOptions();
 // Отрисовка общей цены поездок (для всех точек маршрута)
 const renderTripCost = () => {
   const tripCost = getPrice(randomDaysList);
-  render(tripMenuElement, new TripCostComponent(tripCost), RENDER_POSITION.AFTERBEGIN);
+  render(tripMenuElement, new TripCostComponent(tripCost), RenderPosition.AFTERBEGIN);
 };
 
 // Отрисовка Начальной и конечной точки маршрута / начальной и конечной даты. Отрисовка общей цены.
@@ -69,7 +69,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination}`;
     const tripDate = `${correctMonthAndDayFormat(firstDate)}`;
 
-    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
+    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
   }
 
   if (sortList.length === 2) {
@@ -79,7 +79,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
     const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
 
-    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
+    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
   }
 
   if (sortList.length === 3) {
@@ -90,7 +90,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
     const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
 
-    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
+    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
   }
 
   if (sortList.length > 3) {
@@ -100,7 +100,7 @@ const renderTripInfo = () => {
     const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
     const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
 
-    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RENDER_POSITION.AFTERBEGIN);
+    render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
   }
 };
 
