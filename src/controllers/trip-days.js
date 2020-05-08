@@ -156,7 +156,7 @@ export default class TripController {
 
   _updatePoints() {
     this._removePoints();
-    this._renderPoints(this._tripDaysComponent, this._pointsModel.getPoints());
+    this._renderPoints(this._pointsModel.getPoints());
   }
 
   _onFilterChange() {
