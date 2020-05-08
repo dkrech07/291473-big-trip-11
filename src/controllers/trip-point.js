@@ -21,13 +21,15 @@ export default class PointController {
     this._onEscKeyDown = null;
   }
 
-  render(point) {
+  render(point, mode) {
     // Создание новой текущей точки маршурта
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнереy
-
     const oldPointComponent = this._pointComponent;
+
     this._pointComponent = new EventComponent(this._point);
     this._formComponent = new FormComponent(this._point);
+
+    this._mode = mode;
 
     // Отрисовка точки маршрута
     if (!oldPointComponent) {
