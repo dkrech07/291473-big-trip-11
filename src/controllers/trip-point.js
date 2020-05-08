@@ -27,6 +27,7 @@ export default class PointController {
 
     const oldPointComponent = this._pointComponent;
     this._pointComponent = new EventComponent(this._point);
+    this._formComponent = new FormComponent(this._point);
 
     // Отрисовка точки маршрута
     if (!oldPointComponent) {
@@ -35,7 +36,6 @@ export default class PointController {
 
     // Замена карточки пункта маршрута на форму
     const tripRollUpClickHandler = () => {
-      this._formComponent = new FormComponent(this._point);
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
@@ -79,7 +79,7 @@ export default class PointController {
   }
 
   destroy() {
-    // remove(this._formComponent);
+    remove(this._formComponent);
     remove(this._pointComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }

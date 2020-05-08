@@ -106,6 +106,8 @@ export default class TripController {
     this._sortComponent.setSortTypeChangeHandler(() => {
       getSortedTrips(this._sortComponent.getSortType());
     });
+
+    console.log(this._showedPointsControllers);
   }
 
   _onDataChange(pointController, oldData, newData) {
@@ -159,7 +161,7 @@ export default class TripController {
   }
 
   _updatePoints() {
-    // this._removePoints();
+    this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
   }
 
