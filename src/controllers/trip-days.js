@@ -14,6 +14,8 @@ export default class TripController {
     this._pointsModel = pointsModel;
 
     this._tripDaysComponent = new TripDaysComponent();
+    this._tripDayComponent = null;
+
     this._sortComponent = new SortComponent();
     this._showedPointsControllers = [];
 
@@ -46,8 +48,8 @@ export default class TripController {
     // Отрисовка дней путешествия
     const renderTripDays = () => {
       for (let i = 0; i < this._days.length; i++) {
-        const tripDayComponent = new TripDayComponent(this._days[i]);
-        render(this._tripDaysComponent.getElement(), tripDayComponent);
+        this._tripDayComponent = new TripDayComponent(this._days[i]);
+        render(this._tripDaysComponent.getElement(), this._tripDayComponent);
       }
     };
     renderTripDays();
@@ -84,7 +86,8 @@ export default class TripController {
           const tripPointsListTime = points.slice();
           tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripsContainerComponent());
+          this._tripDayComponent = new TripsContainerComponent();
+          render(this._tripDaysComponent.getElement(), this._tripDayComponent);
           this._renderPoints(tripPointsListTime);
           break;
 
@@ -92,7 +95,8 @@ export default class TripController {
           const tripPointsListPrice = points.slice();
           tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
           this._tripDaysComponent.getElement().innerHTML = ``;
-          render(this._tripDaysComponent.getElement(), new TripsContainerComponent());
+          this._tripDayComponent = new TripsContainerComponent();
+          render(this._tripDaysComponent.getElement(), this._tripDayComponent);
           this._renderPoints(tripPointsListPrice);
           break;
       }
@@ -155,7 +159,7 @@ export default class TripController {
   }
 
   _updatePoints() {
-    this._removePoints();
+    // this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
   }
 
