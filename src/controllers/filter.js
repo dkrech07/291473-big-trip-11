@@ -38,8 +38,6 @@ export default class FilterController {
       };
     });
 
-    console.log(filters);
-
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
@@ -55,8 +53,6 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._pointsModel.setFilter(filterType);
     this._activeFilterType = filterType;
-
-    console.log(filterType);
   }
 
   _onDataChange() {
