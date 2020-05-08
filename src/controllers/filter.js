@@ -14,9 +14,7 @@ export const FilterType = {
 
 export default class FilterController {
   constructor(container, pointsModel) {
-    // this._container = container;
     this._container = tripFilterElement;
-
     this._pointsModel = pointsModel;
 
     this._activeFilterType = FilterType.EVERYTHING;
@@ -40,6 +38,8 @@ export default class FilterController {
       };
     });
 
+    console.log(filters);
+
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
@@ -49,13 +49,14 @@ export default class FilterController {
       replace(this._filterComponent, oldComponent);
     } else {
       render(container, this._filterComponent, RenderPosition.AFTEREND);
-      // render(tripFilterElement, new FiltersComponent(), RenderPosition.AFTEREND);
     }
   }
 
   _onFilterChange(filterType) {
     this._pointsModel.setFilter(filterType);
     this._activeFilterType = filterType;
+
+    console.log(filterType);
   }
 
   _onDataChange() {

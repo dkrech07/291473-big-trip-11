@@ -35,6 +35,5 @@ export const getPointsByFilter = (points, filterType) => {
     case FilterType.PAST:
       return getPastFilteredPoints(points, currentDate);
   }
-
   return points;
 };

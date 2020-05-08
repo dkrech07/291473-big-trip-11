@@ -29,7 +29,7 @@ export default class TripController {
   render(days) {
     this._days = days;
     const points = this._pointsModel.getPointsAll();
-
+    console.log(points);
     // Пороверка точек маршрута на наличие
     const isAllPointsMissing = points.every((point) => point.length === 0);
     const isAllDaysMissing = days.every((day) => day.length === 0);
@@ -140,7 +140,7 @@ export default class TripController {
       pointController.render(point, Mode.DEFAULT);
       this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
     }
-    console.log(this._showedPointsControllers);
+    // console.log(this._showedPointsControllers);
   }
 
   _removePoints() {
@@ -150,7 +150,8 @@ export default class TripController {
 
   _updatePoints() {
     this._removePoints();
-    this._renderPoints(this._tripDayComponent.getElement(), this._pointsModel.getPoints());
+    this._renderPoints(this._tripDaysComponent.getElement(), this._pointsModel.getPoints());
+    console.log(this._pointsModel.getPoints());
   }
 
   _onFilterChange() {
