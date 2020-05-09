@@ -29,27 +29,26 @@
 //   render(days) {
 //     this._days = days;
 //     const points = this._pointsModel.getPointsAll();
-//
-//     // Пороверка точек маршрута на наличие
-//     const isAllPointsMissing = points.every((point) => point.length === 0);
-//     const isAllDaysMissing = days.every((day) => day.length === 0);
-//
-//     if (isAllPointsMissing || isAllDaysMissing) {
-//       render(this._container, new NoPointsComponent());
-//       return;
-//     }
-//
-//     // Отрисовка меню сортировки
-//     render(this._container, this._sortComponent);
-//
-//     // Отрисовка "контейнера" для вывода всех дней путешествия
-//     render(this._container, this._tripDaysComponent);
+
+    // // Пороверка точек маршрута на наличие
+    // const isAllPointsMissing = points.every((point) => point.length === 0);
+    // const isAllDaysMissing = days.every((day) => day.length === 0);
+    //
+    // if (isAllPointsMissing || isAllDaysMissing) {
+    //   render(this._container, new NoPointsComponent());
+    //   return;
+    // }
+
+    // // Отрисовка меню сортировки
+    // render(this._container, this._sortComponent);
+
+
 
     // // Отрисовка дней путешествия
     // this._renderTripDays();
 
-    // // Отрисовка точек маршрута в днях путешествия
-    // this._renderDaysTripPoints();
+    // Отрисовка точек маршрута в днях путешествия
+    this._renderDaysTripPoints();
 
     // Сортировка точек маршрута в зависимости от выбранного параметра
     const getSortedTrips = (sortType) => {
@@ -92,38 +91,38 @@
     });
   }
 
-  _onDataChange(pointController, oldData, newData) {
-    if (oldData === EmptyPoint) {
-      if (newData === null) {
-        pointController.destroy();
-        this._updatePoints();
-      } else {
-        this._pointsModel.addPoint(newData);
-        pointController.render(newData, Mode.DEFAULT);
-      }
-    } else if (newData === null) {
-      this._pointsModel.removePoint(oldData.id);
-      this._updatePoints();
-    } else {
-      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-
-      if (isSuccess) {
-        pointController.render(newData, Mode.DEFAULT);
-      }
-    }
-  }
-
-  _onViewChange() {
-    this._showedPointsControllers.forEach((it) => it.setDefaultView());
-  }
-
-  // // Отрисовка дней путешествия
-  // _renderTripDays() {
-  //   for (let i = 0; i < this._days.length; i++) {
-  //     this._tripDayComponent = new TripDayComponent(this._days[i]);
-  //     render(this._tripDaysComponent.getElement(), this._tripDayComponent);
+  // _onDataChange(pointController, oldData, newData) {
+  //   if (oldData === EmptyPoint) {
+  //     if (newData === null) {
+  //       pointController.destroy();
+  //       this._updatePoints();
+  //     } else {
+  //       this._pointsModel.addPoint(newData);
+  //       pointController.render(newData, Mode.DEFAULT);
+  //     }
+  //   } else if (newData === null) {
+  //     this._pointsModel.removePoint(oldData.id);
+  //     this._updatePoints();
+  //   } else {
+  //     const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+  //
+  //     if (isSuccess) {
+  //       pointController.render(newData, Mode.DEFAULT);
+  //     }
   //   }
   // }
+  //
+  // _onViewChange() {
+  //   this._showedPointsControllers.forEach((it) => it.setDefaultView());
+  // }
+
+  // Отрисовка дней путешествия
+  _renderTripDays() {
+    for (let i = 0; i < this._days.length; i++) {
+      this._tripDayComponent = new TripDayComponent(this._days[i]);
+      render(this._tripDaysComponent.getElement(), this._tripDayComponent);
+    }
+  }
 
   // // Отрисовка точек маршрута в днях путешествия
   // _renderDaysTripPoints() {
@@ -136,7 +135,7 @@
   //     this._renderPoints(currentTripDay, wayPoint);
   //   }
   // }
-
+  //
   // _renderPoints(container, points) {
   //   // const pointsContainerElement = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
   //   for (const point of points) {
@@ -146,56 +145,21 @@
   //   }
   // }
 
-  // _removePoints() {
-  //   this._tripDaysComponent.getElement().innerHTML = ``;
-  //   this._showedPointsControllers.forEach((pointController) => pointController.destroy());
-  //   this._showedPointsControllers = [];
-  // }
-  //
-  // _updatePoints() {
-  //   this._removePoints();
-  //   this._renderPoints(this._tripDaysComponent.getElement(), this._pointsModel.getPoints());
-  //
-  //   console.log(this._pointsModel.getPoints());
-  // }
-  //
-  // _onFilterChange() {
-  //   this._updatePoints();
-  // }
+  _removePoints() {
+    this._tripDaysComponent.getElement().innerHTML = ``;
+    this._showedPointsControllers.forEach((pointController) => pointController.destroy());
+    this._showedPointsControllers = [];
+  }
+
+  _updatePoints() {
+    this._removePoints();
+    this._renderPoints(this._tripDaysComponent.getElement(), this._pointsModel.getPoints());
+
+    // console.log(this._pointsModel.getPoints());
+  }
+
+  _onFilterChange() {
+    this._updatePoints();
+  }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // Отрисовка точки маршрута;
-// _renderPoints(container, points) {
-//
-//   const filteredPoints = this._pointsModel.getPoints();
-//   // console.log(filteredPoints);
-//
-//   for (const filteredPoint of filteredPoints) {
-//     for (const point of points) {
-//       if (filteredPoint.id === point.id) {
-//         const pointController = new PointController(container, this._onDataChange, this._onViewChange);
-//         pointController.render(point, Mode.DEFAULT);
-//         this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
-//       }
-//     }
-//   }
