@@ -122,8 +122,61 @@ const generateDestinationInfo = () => {
   };
 };
 
-const generateTripPoint = (dateCount) => {
-  const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
+// -----------------------------------------------------------------------------
+// Генерирует  повторяющиеся случайные даты (в миллисекундах);
+const getRandomDatesValues = () => {
+  const randomEventCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+  const randomTripCount = getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS);
+  const dates = [];
+
+  for (let j = 0; j <= randomTripCount; j++) {
+    dates.push(randomEventCount);
+  }
+  return dates;
+};
+
+// Генерирует массив точек маршрутов с повторяющейся датой отъезда (departure);
+const generatePoints = () => {
+  const datesVaulesList = getRandomDatesValues();
+
+  const tripPointsList = [];
+  for (let i = 0; i < datesVaulesList.length; i++) {
+    const point = {
+      id: String(new Date() + Math.random()),
+      type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
+      destination: getRandomArrayItem(DESTINATIONS),
+      offers: generateOffers(generateOfferKeys()),
+      destinationInfo: generateDestinationInfo(),
+      price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+      departure: new Date(datesVaulesList[i]),
+      arrival: new Date(datesVaulesList[i] + getRandom(DAY_MILLISECONDS_COUNT * 3)),
+      favorite: false,
+    };
+    tripPointsList.push(point);
+  }
+
+  return tripPointsList;
+};
+
+// Генерирует массив точек маршрутов для нескольких дней;
+const generateTripPoints = () => {
+  let allPoints = [];
+
+  for (let i = 0; i < TRIP_DAYS_COUNT; i++) {
+    allPoints = allPoints.concat(generatePoints());
+  }
+
+  return allPoints;
+};
+
+console.log(generateTripPoints());
+
+// -----------------------------------------------------------------------------
+
+const generateTripPoint = () => {
+  const randomEventCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+
+  // const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
   return {
     id: String(new Date() + Math.random()),
     type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
@@ -137,7 +190,7 @@ const generateTripPoint = (dateCount) => {
   };
 };
 
-const generateTripPoints = (dateCount) => {
+const generateTripPointsOld = (dateCount) => {
   const wayPointsList = [];
   for (let i = 0; i < getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS); i++) {
     wayPointsList.push(generateTripPoint(dateCount));
@@ -153,7 +206,7 @@ const generateRandomDay = () => {
 
   return {
     date: newDate,
-    wayPoints: generateTripPoints(dateCount),
+    wayPoints: generateTripPointsOld(dateCount),
   };
 };
 
