@@ -12,6 +12,7 @@ import FilterController from './controllers/filter.js';
 
 // Общие переменные
 const randomDaysList = generateRandomDays();
+console.log(randomDaysList);
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const mainElement = document.querySelector(`.page-body__page-main`);
