@@ -2,7 +2,7 @@ import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
-import {render} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 
@@ -27,7 +27,7 @@ export default class TripController {
 
     this._points = null;
     this._tripDayComponent = null;
-
+    this._creatingPoint = null;
     this._showedPointsControllers = [];
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -63,7 +63,28 @@ export default class TripController {
     });
   }
 
-  // Сортировка точек маршрута в зависимости от выбранного параметра
+  // Отрисовка новой формы редактирования (точки маршрута);-------------------
+  createPoint(button) {
+    if (this._creatingPoint) {
+      return;
+    }
+    // console.log(EmptyPoint);
+    // this._creatingPoint = new PointController(this._onDataChange, this._onViewChange);
+    // console.log(`New point`);
+    // console.log(this._creatingPoint);
+    // const newPoint = this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING, button);
+    // console.log(newPoint);
+    // render(this._tripDaysComponent.getElement(), this._creatingPoint, RenderPosition.AFTERBEGIN);
+  }
+
+  _onNewEventViewChange(button) {
+    button.setAttribute(`disabled`, `disabled`);
+    this._onViewChange();
+    this._onSortTypeChange(SortTypes.EVENT, button);
+  }
+  // -------------------------------------------------------------------------
+
+  // Сортировка точек маршрута в зависимости от выбранного параметра;
   _getSortedTrips(sortType) {
     switch (sortType) {
       case SortTypes.SORT_EVENT:
@@ -91,7 +112,7 @@ export default class TripController {
     }
   }
 
-  // Отрисовка точек маршрута в днях путешествия
+  // Отрисовка точек маршрута в днях путешествия;
   _renderPoints(points) {
     const days = getDays(points);
 
@@ -124,8 +145,10 @@ export default class TripController {
     }
   }
 
+  // Условия отрисовки (обновления) данных для точек маршрута;
   _onDataChange(pointController, oldData, newData) {
     if (oldData === EmptyPoint) {
+      this._creatingPoint = null;
       if (newData === null) {
         pointController.destroy();
         this._updatePoints();
@@ -164,4 +187,5 @@ export default class TripController {
   _onFilterChange() {
     this._updatePoints();
   }
+
 }

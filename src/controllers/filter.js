@@ -58,4 +58,9 @@ export default class FilterController {
   _onDataChange() {
     this.render();
   }
+
+  setDefaultView() {
+    this._activeFilterType = FilterType.EVERYTHING;
+    this.render();
+  }
 }

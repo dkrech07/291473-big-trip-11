@@ -49,9 +49,8 @@ tripController.render();
 
 newPointButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
-  console.log(`New point`);
-  // filterController.setDefaultView();
-  // tripController.createPoint(newEventButton);
+  filterController.setDefaultView();
+  tripController.createPoint(newPointButton);
 });
 
 // // Отрисовка информации о крайних точках маршрута в шапке;

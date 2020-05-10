@@ -169,20 +169,9 @@ const createFormTemplate = (currentPoint) => {
 
 // -----------------------------------------------------------------------------
 const parseFormData = (formData) => {
-
-  return {
-    type: null,
-    destination: null,
-    time: {
-      eventStartTime: null,
-      eventEndTime: null,
-    },
-    price: null,
-    isFavorite: null,
-    offers: null,
-  };
+  console.log(formData);
+// Здесь нужно распарсить данные из формы;
 };
-
 // -----------------------------------------------------------------------------
 
 export default class Form extends AbstractSmartComponent {
@@ -198,6 +187,7 @@ export default class Form extends AbstractSmartComponent {
     this._destinationClickHandner = null;
     this._startTimeClickHandler = null;
     this._endTimeClickHandler = null;
+    this._deleteButtonClickHandler = null;
 
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
@@ -209,6 +199,8 @@ export default class Form extends AbstractSmartComponent {
   // -----------------------------------------------------------------------------
 
   getData() {
+    console.log(`Нужно реализовать сохранение объекта модели`);
+
     const form = this.getElement();
     const formData = new FormData(form);
 
@@ -220,6 +212,15 @@ export default class Form extends AbstractSmartComponent {
       .addEventListener(`click`, handler);
 
     this._deleteButtonClickHandler = handler;
+  }
+
+  removeElement() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    super.removeElement();
   }
 
   // -----------------------------------------------------------------------------
