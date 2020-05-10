@@ -26,7 +26,8 @@ pointsModel.setPoints(pointsList);
 // Отрисовка пунктов меню: Table, Status;
 const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
-  render(tripSwitchElement, new MenuComponent(), RenderPosition.AFTEREND);
+  const menuComponent = new MenuComponent();
+  render(tripSwitchElement, menuComponent, RenderPosition.AFTEREND);
 };
 
 renderTripMenuOptions();
@@ -47,11 +48,13 @@ filterController.render();
 const tripController = new TripController(tripEventsElement, pointsModel);
 tripController.render();
 
-newPointButton.addEventListener(`click`, (evt) => {
+const newPointClickHandler = (evt) => {
   evt.preventDefault();
   filterController.setDefaultView();
-  tripController.createPoint(newPointButton);
-});
+  tripController.createPoint();
+};
+
+newPointButton.addEventListener(`click`, newPointClickHandler);
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();

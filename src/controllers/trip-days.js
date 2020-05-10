@@ -39,7 +39,7 @@ export default class TripController {
 
   render() {
     this._points = this._pointsModel.getPointsAll();
-    console.log(this._points);
+    console.log(this._points[0]);
     // Пороверка точек маршрута на наличие;
     const isAllPointsMissing = this._points.every((point) => point.length === 0);
 
@@ -64,24 +64,30 @@ export default class TripController {
   }
 
   // Отрисовка новой формы редактирования (точки маршрута);-------------------
-  createPoint(button) {
+  createPoint() {
     if (this._creatingPoint) {
       return;
     }
-    // console.log(EmptyPoint);
-    // this._creatingPoint = new PointController(this._onDataChange, this._onViewChange);
-    // console.log(`New point`);
-    // console.log(this._creatingPoint);
-    // const newPoint = this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING, button);
-    // console.log(newPoint);
-    // render(this._tripDaysComponent.getElement(), this._creatingPoint, RenderPosition.AFTERBEGIN);
+    console.log(`Создаем новую точку маршрута`);
+
+    const container = this._tripDaysComponent.getElement();
+
+    this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange);
+    this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
+
+    // const container = this._tripDaysComponent.getElement();
+    // this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange);
+    // this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
+    console.log(container);
+    // const newPoint = this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
+    // render(container, newPoint, RenderPosition.AFTERBEGIN);
   }
 
-  _onNewEventViewChange(button) {
-    button.setAttribute(`disabled`, `disabled`);
-    this._onViewChange();
-    this._onSortTypeChange(SortTypes.EVENT, button);
-  }
+  // _onNewEventViewChange(button) {
+  //   button.setAttribute(`disabled`, `disabled`);
+  //   this._onViewChange();
+  //   this._onSortTypeChange(SortTypes.EVENT, button);
+  // }
   // -------------------------------------------------------------------------
 
   // Сортировка точек маршрута в зависимости от выбранного параметра;

@@ -1,6 +1,6 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
-import {render, replace, remove} from '../utils/render.js';
+import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
 
@@ -11,22 +11,32 @@ export const Mode = {
 };
 
 export const EmptyPoint = {
-  // id: String(new Date() + Math.random()),
-  // type: `taxi`,
-  // destination: {
-  //   destinationDescription: ``,
-  //   destinationPhotos: [`http://picsum.photos/248/152?r=6`, `http://picsum.photos/248/152?r=6`],
-  // },
-  // offers: [{
-  //   type: `comfort`,
-  //   title: `Switch to comfort`,
-  //   price: 67}],
-  // destinationInfo: ``,
-  // price: 0,
-  // departure: new Date(),
-  // arrival: new Date(),
-  // favorite: false,
+  id: String(new Date() + Math.random()),
+  type: `Taxi`,
+  destination: ``,
+  destinationInfo: {
+    destinationDescription: ``,
+    destinationPhotos: [],
+  },
+  favorite: null,
+  offers: [{type: `comfort`, title: `Switch to comfort`, price: 67}],
+  price: 0,
+  departure: new Date(),
+  arrival: new Date(),
 };
+
+// id: String(new Date() + Math.random()),
+// type: `Taxi`,
+// destination: `Amsterdam`,
+// destinationInfo: {
+//   destinationDescription: `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum Cras aliquet varius magna, non porta ligula feugiat eget In rutrum ac purus sit amet tempus Aliquam erat volutpat`,
+//   destinationPhotos: [`http://picsum.photos/248/152?r=6", "http://picsum.photos/248/152?r=10`],
+// },
+// favorite: null,
+// offers: [{type: `comfort`, title: `Switch to comfort`, price: 67}],
+// price: 0,
+// departure: new Date(),
+// arrival: new Date(),
 
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
@@ -52,7 +62,12 @@ export default class PointController {
 
     // Отрисовка точки маршрута;
     if (!oldPointComponent) {
-      render(this._container, this._pointComponent);
+      render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
+    }
+
+    // Отрисовка форми редактирования для новой карточки;
+    if (mode === Mode.ADDING) {
+      render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
     }
 
     // Замена карточки пункта маршрута на форму;
@@ -90,6 +105,17 @@ export default class PointController {
     };
 
     this._pointComponent.setEventButtonClickHandler(tripRollUpClickHandler);
+
+    // this._formComponent.setSubmitHandler((evt) => {
+    //   evt.preventDefault();
+    //   const data = this._eventEditComponent.getData();
+    //   if (mode === Mode.ADDING) {
+    //     this._onDataChange(this, event, data, false, this._button);
+    //   } else {
+    //     this._onDataChange(this, event, data);
+    //   }
+    //   document.removeEventListener(`keydown`, this._onEscKeyDown);
+    // });
   }
 
   setDefaultView() {
