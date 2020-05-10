@@ -1,5 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
+import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import flatpickr from "flatpickr";
 
 import "flatpickr/dist/flatpickr.min.css";
@@ -72,8 +73,7 @@ const createFormTemplate = (currentPoint) => {
   };
 
   return (
-    `<li class="trip-events__item">
-      <form class="event  event--edit" action="#" method="post">
+    `<form class="trip-events__item event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -162,9 +162,24 @@ const createFormTemplate = (currentPoint) => {
             </div>
           </section>
         </section>
-      </form>
-    </li>`
+      </form>`
   );
+};
+
+// Проверяет какая форма была создана:
+// Если "вызвана" форма редактирования в точке маршрута: форма выводится в теге <li class="trip-events__item"></li>;
+// Если "вызвана" форма для создания новой точки маршрута: форма будет выведена без тега <li class="trip-events__item"></li> в качетсве контейнера;
+const checkFormMode = (currentPoint, mode) => {
+  console.log(mode);
+  if (mode === PointControllerMode.ADDING) {
+    return `${createFormTemplate(currentPoint)}`;
+  } else {
+    return (
+      `<li class="trip-events__item">
+        ${createFormTemplate(currentPoint)}
+      </li>`
+    );
+  }
 };
 
 // -----------------------------------------------------------------------------
@@ -175,10 +190,11 @@ const parseFormData = (formData) => {
 // -----------------------------------------------------------------------------
 
 export default class Form extends AbstractSmartComponent {
-  constructor(currentPoint) {
+  constructor(currentPoint, mode) {
     super();
 
     this._currentPoint = currentPoint;
+    this._mode = mode;
 
     this._currentPoint.favorite = null;
     this._saveFormClickHandler = null;
@@ -364,6 +380,6 @@ export default class Form extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFormTemplate(this._currentPoint);
+    return checkFormMode(this._currentPoint, this._mode);
   }
 }

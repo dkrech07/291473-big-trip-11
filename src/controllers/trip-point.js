@@ -51,14 +51,13 @@ export default class PointController {
   }
 
   render(point, mode) {
+    this._mode = mode; // Режим отрисовки точки маршрута (default, edit, adding);
     // Создание новой текущей точки маршурта;
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнереy;
     const oldPointComponent = this._pointComponent;
 
     this._pointComponent = new EventComponent(this._point);
-    this._formComponent = new FormComponent(this._point);
-
-    this._mode = mode; // Режим отрисовки точки маршрута (default, edit, adding);
+    this._formComponent = new FormComponent(this._point, this._mode);
 
     // Отрисовка точки маршрута;
     if (!oldPointComponent) {
@@ -67,6 +66,7 @@ export default class PointController {
 
     // Отрисовка форми редактирования для новой карточки;
     if (mode === Mode.ADDING) {
+      this._formComponent = new FormComponent(this._point, this._mode);
       render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
     }
 
