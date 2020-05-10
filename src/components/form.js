@@ -168,9 +168,8 @@ const createFormTemplate = (currentPoint) => {
 
 // Проверяет какая форма была создана:
 // Если "вызвана" форма редактирования в точке маршрута: форма выводится в теге <li class="trip-events__item"></li>;
-// Если "вызвана" форма для создания новой точки маршрута: форма будет выведена без тега <li class="trip-events__item"></li> в качетсве контейнера;
+// Если "вызвана" форма для создания новой точки маршрута: форма будет выведена без тега <li class="trip-events__item"></li> в качестве контейнера;
 const checkFormMode = (currentPoint, mode) => {
-  console.log(mode);
   if (mode === PointControllerMode.ADDING) {
     return `${createFormTemplate(currentPoint)}`;
   } else {

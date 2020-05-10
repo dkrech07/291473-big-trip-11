@@ -60,13 +60,12 @@ export default class PointController {
     this._formComponent = new FormComponent(this._point, this._mode);
 
     // Отрисовка точки маршрута;
-    if (!oldPointComponent) {
+    if (!oldPointComponent && mode === Mode.DEFAULT) {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     }
 
     // Отрисовка форми редактирования для новой карточки;
     if (mode === Mode.ADDING) {
-      this._formComponent = new FormComponent(this._point, this._mode);
       render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
     }
 
