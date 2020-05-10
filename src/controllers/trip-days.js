@@ -34,9 +34,9 @@ export default class TripController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
-    // this._onFilterChange = this._onFilterChange.bind(this);
-    //
-    // this._pointsModel.setFilterChangeHandler(this._onFilterChange);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._pointsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -106,5 +106,22 @@ export default class TripController {
 
   _onViewChange() {
     this._showedPointsControllers.forEach((it) => it.setDefaultView());
+  }
+
+  _removePoints() {
+    this._tripDaysComponent.getElement().innerHTML = ``;
+    this._showedPointsControllers.forEach((pointController) => pointController.destroy());
+    this._showedPointsControllers = [];
+  }
+
+  _updatePoints() {
+    this._removePoints();
+    this._renderPoints(this._pointsModel.getPoints());
+
+    // console.log(this._pointsModel.getPoints());
+  }
+
+  _onFilterChange() {
+    this._updatePoints();
   }
 }
