@@ -39,7 +39,7 @@ export default class TripController {
 
   render() {
     this._points = this._pointsModel.getPointsAll();
-    console.log(this._points[0]);
+
     // Пороверка точек маршрута на наличие;
     const isAllPointsMissing = this._points.every((point) => point.length === 0);
 
@@ -63,32 +63,19 @@ export default class TripController {
     });
   }
 
-  // Отрисовка новой формы редактирования (точки маршрута);-------------------
-  createPoint() {
+  // Отрисовка новой формы редактирования (точки маршрута);
+  createPoint(button) {
     if (this._creatingPoint) {
       return;
     }
-    console.log(`Создаем новую точку маршрута`);
+
+    this._getSortedTrips(SortTypes.SORT_EVENT);
+    button.setAttribute(`disabled`, `true`);
 
     const container = this._tripDaysComponent.getElement();
-
-    this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange);
+    this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange, button);
     this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
-
-    // const container = this._tripDaysComponent.getElement();
-    // this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange);
-    // this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
-    console.log(container);
-    // const newPoint = this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
-    // render(container, newPoint, RenderPosition.AFTERBEGIN);
   }
-
-  // _onNewEventViewChange(button) {
-  //   button.setAttribute(`disabled`, `disabled`);
-  //   this._onViewChange();
-  //   this._onSortTypeChange(SortTypes.EVENT, button);
-  // }
-  // -------------------------------------------------------------------------
 
   // Сортировка точек маршрута в зависимости от выбранного параметра;
   _getSortedTrips(sortType) {

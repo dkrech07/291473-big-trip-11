@@ -39,7 +39,7 @@ export const EmptyPoint = {
 // arrival: new Date(),
 
 export default class PointController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, button) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
     this._onDataChange = onDataChange; // Реализует сохранение данных формы (передает данные в модель);
     this._onViewChange = onViewChange; // Понадобятся чуть позже, после реализации удаления / добавления карточки точки маршрута
@@ -48,12 +48,16 @@ export default class PointController {
     this._pointComponent = null;
     this._formComponent = null;
     this._onEscKeyDown = null;
+
+    this._newPointButton = button;
   }
 
   render(point, mode) {
-    this._mode = mode; // Режим отрисовки точки маршрута (default, edit, adding);
+    // Режим отрисовки точки маршрута (default, edit, adding);
+    this._mode = mode;
+
     // Создание новой текущей точки маршурта;
-    this._point = point; // point - точка маршрута, которая будет отрисована в контейнереy;
+    this._point = point; // point - точка маршрута, которая будет отрисована в контейнер;
     const oldPointComponent = this._pointComponent;
 
     this._pointComponent = new EventComponent(this._point);
@@ -64,7 +68,7 @@ export default class PointController {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     }
 
-    // Отрисовка форми редактирования для новой карточки;
+    // Отрисовка формы редактирования для новой карточки;
     if (mode === Mode.ADDING) {
       render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
     }
@@ -91,6 +95,9 @@ export default class PointController {
     // Удаление формы (данных точки маршрута). Обработчик удаления точки маршрута;
     const deleteButtonClickHandler = () => {
       console.log(`Delete point`);
+      if (this._newPointButton.disabled) {
+        this._newPointButton.removeAttribute(`disabled`);
+      }
       this._onDataChange(this, point, null);
     };
 

@@ -51,7 +51,7 @@ tripController.render();
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
   filterController.setDefaultView();
-  tripController.createPoint();
+  tripController.createPoint(newPointButton);
 };
 
 newPointButton.addEventListener(`click`, newPointClickHandler);
