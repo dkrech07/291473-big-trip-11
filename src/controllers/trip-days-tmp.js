@@ -50,45 +50,45 @@
     // Отрисовка точек маршрута в днях путешествия
     this._renderDaysTripPoints();
 
-    // Сортировка точек маршрута в зависимости от выбранного параметра
-    const getSortedTrips = (sortType) => {
-
-      const renderSortPoints = (sortPointsList) => {
-        this._tripDayComponent = new TripsContainerComponent();
-        render(this._tripDaysComponent.getElement(), this._tripDayComponent);
-        this._renderPoints(this._tripDayComponent.getElement().querySelector(`.trip-events__list`), sortPointsList);
-      };
-
-      switch (sortType) {
-        case SortTypes.SORT_EVENT:
-          this._tripDaysComponent.getElement().innerHTML = ``;
-
-          this._renderTripDays();
-          this._renderDaysTripPoints();
-          break;
-
-        case SortTypes.SORT_TIME:
-          const tripPointsListTime = points.slice();
-          tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
-          this._tripDaysComponent.getElement().innerHTML = ``;
-
-          renderSortPoints(tripPointsListTime);
-          break;
-
-        case SortTypes.SORT_PRICE:
-          const tripPointsListPrice = points.slice();
-          tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
-          this._tripDaysComponent.getElement().innerHTML = ``;
-
-          renderSortPoints(tripPointsListPrice);
-          break;
-      }
-    };
-
-    // Обрботка клика по кнопкам меню сортировки
-    this._sortComponent.setSortTypeChangeHandler(() => {
-      getSortedTrips(this._sortComponent.getSortType());
-    });
+    // // Сортировка точек маршрута в зависимости от выбранного параметра
+    // const getSortedTrips = (sortType) => {
+    //
+    //   const renderSortPoints = (sortPointsList) => {
+    //     this._tripDayComponent = new TripsContainerComponent();
+    //     render(this._tripDaysComponent.getElement(), this._tripDayComponent);
+    //     this._renderPoints(this._tripDayComponent.getElement().querySelector(`.trip-events__list`), sortPointsList);
+    //   };
+    //
+    //   switch (sortType) {
+    //     case SortTypes.SORT_EVENT:
+    //       this._tripDaysComponent.getElement().innerHTML = ``;
+    //
+    //       this._renderTripDays();
+    //       this._renderDaysTripPoints();
+    //       break;
+    //
+    //     case SortTypes.SORT_TIME:
+    //       const tripPointsListTime = points.slice();
+    //       tripPointsListTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
+    //       this._tripDaysComponent.getElement().innerHTML = ``;
+    //
+    //       renderSortPoints(tripPointsListTime);
+    //       break;
+    //
+    //     case SortTypes.SORT_PRICE:
+    //       const tripPointsListPrice = points.slice();
+    //       tripPointsListPrice.sort((a, b) => a.price < b.price ? 1 : -1);
+    //       this._tripDaysComponent.getElement().innerHTML = ``;
+    //
+    //       renderSortPoints(tripPointsListPrice);
+    //       break;
+    //   }
+    // };
+    //
+    // // Обрботка клика по кнопкам меню сортировки
+    // this._sortComponent.setSortTypeChangeHandler(() => {
+    //   getSortedTrips(this._sortComponent.getSortType());
+    // });
   }
 
   // _onDataChange(pointController, oldData, newData) {
@@ -145,21 +145,21 @@
   //   }
   // }
 
-  _removePoints() {
-    this._tripDaysComponent.getElement().innerHTML = ``;
-    this._showedPointsControllers.forEach((pointController) => pointController.destroy());
-    this._showedPointsControllers = [];
-  }
-
-  _updatePoints() {
-    this._removePoints();
-    this._renderPoints(this._tripDaysComponent.getElement(), this._pointsModel.getPoints());
-
-    // console.log(this._pointsModel.getPoints());
-  }
-
-  _onFilterChange() {
-    this._updatePoints();
-  }
+  // _removePoints() {
+  //   this._tripDaysComponent.getElement().innerHTML = ``;
+  //   this._showedPointsControllers.forEach((pointController) => pointController.destroy());
+  //   this._showedPointsControllers = [];
+  // }
+  //
+  // _updatePoints() {
+  //   this._removePoints();
+  //   this._renderPoints(this._tripDaysComponent.getElement(), this._pointsModel.getPoints());
+  //
+  //   // console.log(this._pointsModel.getPoints());
+  // }
+  //
+  // _onFilterChange() {
+  //   this._updatePoints();
+  // }
 
 }
