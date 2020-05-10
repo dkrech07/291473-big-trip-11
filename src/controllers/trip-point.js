@@ -9,6 +9,8 @@ export const Mode = {
   EDIT: `edit`,
 };
 
+export const EmptyPoint = {};
+
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
@@ -60,6 +62,13 @@ export default class PointController {
     };
 
     this._pointComponent.setEventButtonClickHandler(tripRollUpClickHandler);
+
+    // Обработчик удаления точки маршрута; -------------------------
+    const deleteButtonClickHandler = () => {
+      console.log(`Delete point`);
+    };
+
+    this._formComponent.setDeleteButtonClickHandler(deleteButtonClickHandler);
   }
 
   setDefaultView() {

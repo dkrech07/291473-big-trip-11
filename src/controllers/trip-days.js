@@ -3,10 +3,8 @@ import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
 import {render} from '../utils/render.js';
-import PointController, {Mode} from '../controllers/trip-point.js';
+import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
-
-export const EmptyPoint = {};
 
 const getDays = (points) => {
   const daysList = [];
@@ -59,38 +57,38 @@ export default class TripController {
     // Отрисовка дней путешествия и точек маршрута;
     this._renderPoints(this._points);
 
-    // Сортировка точек маршрута в зависимости от выбранного параметра
-    const getSortedTrips = (sortType) => {
-      switch (sortType) {
-        case SortTypes.SORT_EVENT:
-          const pointsEvent = this._pointsModel.getPoints().slice();
-          this._tripDaysComponent.getElement().innerHTML = ``;
-
-          this._renderPoints(pointsEvent);
-          break;
-
-        case SortTypes.SORT_TIME:
-          const pointsTime = this._pointsModel.getPoints().slice();
-          pointsTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
-          this._tripDaysComponent.getElement().innerHTML = ``;
-
-          this._renderSortPoints(pointsTime);
-          break;
-
-        case SortTypes.SORT_PRICE:
-          const pointsPrice = this._pointsModel.getPoints().slice();
-          pointsPrice.sort((a, b) => a.price < b.price ? 1 : -1);
-          this._tripDaysComponent.getElement().innerHTML = ``;
-
-          this._renderSortPoints(pointsPrice);
-          break;
-      }
-    };
-
     // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {
-      getSortedTrips(this._sortComponent.getSortType());
+      this._getSortedTrips(this._sortComponent.getSortType());
     });
+  }
+
+  // Сортировка точек маршрута в зависимости от выбранного параметра
+  _getSortedTrips(sortType) {
+    switch (sortType) {
+      case SortTypes.SORT_EVENT:
+        const pointsEvent = this._pointsModel.getPointsAll().slice();
+        this._tripDaysComponent.getElement().innerHTML = ``;
+
+        this._renderPoints(pointsEvent);
+        break;
+
+      case SortTypes.SORT_TIME:
+        const pointsTime = this._pointsModel.getPointsAll().slice();
+        pointsTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
+        this._tripDaysComponent.getElement().innerHTML = ``;
+
+        this._renderSortPoints(pointsTime);
+        break;
+
+      case SortTypes.SORT_PRICE:
+        const pointsPrice = this._pointsModel.getPointsAll().slice();
+        pointsPrice.sort((a, b) => a.price < b.price ? 1 : -1);
+        this._tripDaysComponent.getElement().innerHTML = ``;
+
+        this._renderSortPoints(pointsPrice);
+        break;
+    }
   }
 
   // Отрисовка точек маршрута в днях путешествия
@@ -105,7 +103,7 @@ export default class TripController {
         if (point.departure.getTime() === day.getTime()) {
           const tripEventsListElement = this._tripDayComponent.getElement().querySelector(`.trip-events__list`);
           const pointController = new PointController(tripEventsListElement, this._onDataChange, this._onViewChange);
-          pointController.render(point, Mode.DEFAULT);
+          pointController.render(point, PointControllerMode.DEFAULT);
           this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
         }
       }
@@ -121,7 +119,7 @@ export default class TripController {
 
     for (const point of sortPointsList) {
       const pointController = new PointController(container, this._onDataChange, this._onViewChange);
-      pointController.render(point, Mode.DEFAULT);
+      pointController.render(point, PointControllerMode.DEFAULT);
       this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
     }
   }
@@ -133,7 +131,7 @@ export default class TripController {
         this._updatePoints();
       } else {
         this._pointsModel.addPoint(newData);
-        pointController.render(newData, Mode.DEFAULT);
+        pointController.render(newData, PointControllerMode.DEFAULT);
       }
     } else if (newData === null) {
       this._pointsModel.removePoint(oldData.id);
@@ -142,7 +140,7 @@ export default class TripController {
       const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
 
       if (isSuccess) {
-        pointController.render(newData, Mode.DEFAULT);
+        pointController.render(newData, PointControllerMode.DEFAULT);
       }
     }
   }
@@ -158,6 +156,7 @@ export default class TripController {
   }
 
   _updatePoints() {
+    this._getSortedTrips(SortTypes.SORT_EVENT);
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
   }

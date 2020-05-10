@@ -14,6 +14,8 @@ import FilterController from './controllers/filter.js';
 const randomPointsList = generateTripPoints();
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
+const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
+
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
@@ -44,6 +46,13 @@ filterController.render();
 // Отрисовка информации о днях путешествия;
 const tripController = new TripController(tripEventsElement, pointsModel);
 tripController.render();
+
+newPointButton.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  console.log(`New point`);
+  // filterController.setDefaultView();
+  // tripController.createPoint(newEventButton);
+});
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();

@@ -5,7 +5,7 @@ const MIN_DESCRIPTION = 1;
 const MAX_DESCRIPTION = 5;
 const MAX_PHOTOS = 10;
 const MIN_WAY_POINTS = 1;
-const MAX_WAY_POINTS = 5;
+const MAX_WAY_POINTS = 2;
 const TRIP_DAYS_COUNT = 5;
 const YEAR_DAYS_COUNT = 365;
 

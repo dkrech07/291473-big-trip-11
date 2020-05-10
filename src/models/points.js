@@ -13,7 +13,6 @@ export default class Points {
 
   getPoints() {
     return getPointsByFilter(this._points, this._activeFilterType);
-    console.log(this._activeFilterType);
   }
 
   getPointsAll() {

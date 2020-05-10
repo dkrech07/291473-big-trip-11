@@ -167,6 +167,24 @@ const createFormTemplate = (currentPoint) => {
   );
 };
 
+// -----------------------------------------------------------------------------
+const parseFormData = (formData) => {
+
+  return {
+    type: null,
+    destination: null,
+    time: {
+      eventStartTime: null,
+      eventEndTime: null,
+    },
+    price: null,
+    isFavorite: null,
+    offers: null,
+  };
+};
+
+// -----------------------------------------------------------------------------
+
 export default class Form extends AbstractSmartComponent {
   constructor(currentPoint) {
     super();
@@ -187,6 +205,24 @@ export default class Form extends AbstractSmartComponent {
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
+
+  // -----------------------------------------------------------------------------
+
+  getData() {
+    const form = this.getElement();
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
+  }
+
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, handler);
+
+    this._deleteButtonClickHandler = handler;
+  }
+
+  // -----------------------------------------------------------------------------
 
   setSaveFormClickHandler(handler) {
     this.getElement().querySelector(`form`)
@@ -236,6 +272,8 @@ export default class Form extends AbstractSmartComponent {
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
     this.setDestinationClickHandner(this._destinationClickHandner);
+
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler); // Добавил временно
 
     this._subscribeOnEvents();
   }
