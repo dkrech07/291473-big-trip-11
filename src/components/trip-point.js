@@ -71,7 +71,7 @@ export default class Event extends AbstractComponent {
     return createTripPointTemplate(this._point);
   }
 
-  setEventButtonClickHandler(handler) {
+  setPointRollupClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, handler);
   }

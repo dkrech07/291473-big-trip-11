@@ -313,6 +313,11 @@ export default class Form extends AbstractSmartComponent {
     this._endTimeClickHandler = handler;
   }
 
+  setFormRollupClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, handler);
+  }
+
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
