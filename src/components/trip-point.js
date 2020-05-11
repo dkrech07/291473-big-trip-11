@@ -65,6 +65,8 @@ export default class Event extends AbstractComponent {
     super();
 
     this._point = point;
+    this._pointRollupClickHandler = null;
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -74,5 +76,29 @@ export default class Event extends AbstractComponent {
   setPointRollupClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, handler);
+
+    this._pointRollupClickHandler = handler;
+  }
+
+  recoveryListeners() {
+    this.setPointRollupClickHandler(this._pointRollupClickHandler);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  reset() {
+    this.rerender();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, (evt) => {
+      console.log(evt.target);
+
+    });
   }
 }

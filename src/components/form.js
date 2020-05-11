@@ -402,6 +402,5 @@ export default class Form extends AbstractSmartComponent {
 
   getTemplate() {
     return createFormTemplate(this._currentPoint, this._mode);
-    // return checkFormMode(this._currentPoint, this._mode);
   }
 }
