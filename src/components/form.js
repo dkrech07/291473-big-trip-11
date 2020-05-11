@@ -201,12 +201,25 @@ const createFormTemplate = (currentPoint, mode) => {
 
 };
 
-// -----------------------------------------------------------------------------
-const parseFormData = (formData) => {
-  console.log(formData);
-// Здесь нужно распарсить данные из формы;
+// Поддерживаю сохранение данных формы;
+const parseFormData = (formData, form, point) => {
+
+  // formData из getData;
+  // form - текущая открытая форма;
+  // point - текущая точка маршрута;
+
+  return {
+    id: point.id,
+    type: point.type,
+    destination: point.destination,
+    destinationInfo: point.destinationInfo,
+    favorite: point.favorite,
+    offers: point.offers,
+    price: point.price,
+    departure: point.departure,
+    arrival: point.arrival,
+  };
 };
-// -----------------------------------------------------------------------------
 
 export default class Form extends AbstractSmartComponent {
   constructor(currentPoint, mode) {
@@ -231,15 +244,12 @@ export default class Form extends AbstractSmartComponent {
     this._applyFlatpickr();
   }
 
-  // -----------------------------------------------------------------------------
-
-  getData() {
-    console.log(`Нужно реализовать сохранение объекта модели`);
-
-    const form = this.getElement();
+  getData(point) {
+    const form = this.getElement().querySelector(`form`);
     const formData = new FormData(form);
 
-    return parseFormData(formData);
+    // console.log(parseFormData(formData, form, point));
+    return parseFormData(formData, form, point);
   }
 
   setDeleteButtonClickHandler(handler) {
@@ -258,9 +268,8 @@ export default class Form extends AbstractSmartComponent {
     super.removeElement();
   }
 
-  // -----------------------------------------------------------------------------
-
   setSaveFormClickHandler(handler) {
+    console.log(this.getElement().querySelector(`form`));
     this.getElement().querySelector(`form`)
     .addEventListener(`submit`, handler);
 
@@ -355,6 +364,7 @@ export default class Form extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
+    // console.log(element);
     // Хендлер клика по звездочке;
     if (element.querySelector(`#event-favorite-1`)) {
       element.querySelector(`#event-favorite-1`)
