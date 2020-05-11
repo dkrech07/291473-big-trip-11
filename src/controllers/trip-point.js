@@ -1,5 +1,6 @@
 import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
+import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 const ESC_KEYCODE = 27;
@@ -34,6 +35,7 @@ export default class PointController {
 
     this._pointComponent = null;
     this._formComponent = null;
+    this._formContainerComponent = null;
     this._onEscKeyDown = null;
 
     this._newPointButton = button;
@@ -49,6 +51,7 @@ export default class PointController {
 
     this._pointComponent = new EventComponent(this._point);
     this._formComponent = new FormComponent(this._point, this._mode);
+    this._formContainerComponent = new FormContainerComponent();
 
     // Отрисовка точки маршрута;
     if (!oldPointComponent && mode === Mode.DEFAULT) {
@@ -124,7 +127,12 @@ export default class PointController {
 
   _replacePointToEdit() {
     this._onViewChange();
-    replace(this._formComponent, this._pointComponent);
+    // Форма, которая выводится в точке маршрута, должна выводиться в теге <li></li>,
+    // поэтому вначане заменаю точку машрута на контейнер <li></li>, а уже в него
+    // добавляю форму;
+    replace(this._formContainerComponent, this._pointComponent);
+    render(this._formContainerComponent.getElement(), this._formComponent);
+
     this._mode = Mode.EDIT;
   }
 
@@ -132,7 +140,7 @@ export default class PointController {
     this._formComponent.reset();
 
     if (document.contains(this._formComponent.getElement())) {
-      replace(this._pointComponent, this._formComponent);
+      replace(this._pointComponent, this._formContainerComponent);
     }
 
     this._mode = Mode.DEFAULT;
