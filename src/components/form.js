@@ -7,7 +7,7 @@ import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
-const createFormTemplate = (currentPoint) => {
+const createFormTemplate = (currentPoint, mode) => {
   const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
@@ -72,7 +72,34 @@ const createFormTemplate = (currentPoint) => {
     return (check && `checked`) || ``;
   };
 
-  return (
+  // Проверяет режим добавления точки маршрута: либо выводит звездочку либо нет;
+  const getFavorite = () => {
+    if (mode !== PointControllerMode.ADDING) {
+      return (
+        `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${getCheckFavorite(favorite)}>
+        <label class="event__favorite-btn" for="event-favorite-1">
+        <span class="visually-hidden">Add to favorite</span>
+          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+          </svg>
+        </label>`
+      );
+    }
+    return ``;
+  };
+
+  const getDeleteOrCandel = () => {
+    if (mode !== PointControllerMode.ADDING) {
+      return (
+        `<button class="event__reset-btn" type="reset">Delete</button>`
+      );
+    }
+    return (
+      `<button class="event__reset-btn" type="reset">Cancel</button>`
+    );
+  };
+
+  const formMarkup = (
     `<form class="trip-events__item event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
@@ -126,15 +153,9 @@ const createFormTemplate = (currentPoint) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          ${getDeleteOrCandel()}
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${getCheckFavorite(favorite)}>
-          <label class="event__favorite-btn" for="event-favorite-1">
-            <span class="visually-hidden">Add to favorite</span>
-            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-            </svg>
-          </label>
+          ${getFavorite()}
 
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
@@ -164,21 +185,20 @@ const createFormTemplate = (currentPoint) => {
         </section>
       </form>`
   );
-};
 
-// Проверяет какая форма была создана:
-// Если "вызвана" форма редактирования в точке маршрута: форма выводится в теге <li class="trip-events__item"></li>;
-// Если "вызвана" форма для создания новой точки маршрута: форма будет выведена без тега <li class="trip-events__item"></li> в качестве контейнера;
-const checkFormMode = (currentPoint, mode) => {
+  // Проверяет какая форма была создана:
+  // Если "вызвана" форма редактирования в точке маршрута: форма выводится в теге <li class="trip-events__item"></li>;
+  // Если "вызвана" форма для создания новой точки маршрута: форма будет выведена без тега <li class="trip-events__item"></li> в качестве контейнера;
   if (mode === PointControllerMode.ADDING) {
-    return `${createFormTemplate(currentPoint)}`;
+    return `${formMarkup}`;
   } else {
     return (
       `<li class="trip-events__item">
-        ${createFormTemplate(currentPoint)}
+        ${formMarkup}
       </li>`
     );
   }
+
 };
 
 // -----------------------------------------------------------------------------
@@ -336,12 +356,15 @@ export default class Form extends AbstractSmartComponent {
     const element = this.getElement();
 
     // Хендлер клика по звездочке;
-    element.querySelector(`#event-favorite-1`)
-    .addEventListener(`click`, (evt) => {
-      this._currentPoint.favorite = evt.target.checked;
+    if (element.querySelector(`#event-favorite-1`)) {
+      element.querySelector(`#event-favorite-1`)
+      .addEventListener(`click`, (evt) => {
+        this._currentPoint.favorite = evt.target.checked;
 
-      this.rerender();
-    });
+        this.rerender();
+      });
+    }
+
 
     // Хендлер клика по типам точек маршрута;
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
@@ -379,6 +402,6 @@ export default class Form extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return checkFormMode(this._currentPoint, this._mode);
+    return createFormTemplate(this._currentPoint, this._mode);
   }
 }

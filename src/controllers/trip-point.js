@@ -92,10 +92,13 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
+    // Закрытие формы (новой точки маршрута);
+
+
     // Удаление формы (данных точки маршрута). Обработчик удаления точки маршрута;
     const deleteButtonClickHandler = () => {
       console.log(`Delete point`);
-      if (this._newPointButton.disabled) {
+      if (this._newPointButton) {
         this._newPointButton.removeAttribute(`disabled`);
       }
       this._onDataChange(this, point, null);

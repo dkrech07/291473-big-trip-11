@@ -1,11 +1,10 @@
-import TripInfoComponent from './components/trip-info.js';
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent from './components/menu.js';
 // import FiltersComponent from './components/filters.js';
 // import NoPointsComponent from './components/no-points.js';
-import {getPrice, correctMonthAndDayFormat} from './utils/common.js';
+import {getPrice} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
-import {generateRandomDays, generateTripPoints} from './mock/way-point.js';
+import {generateTripPoints} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import FilterController from './controllers/filter.js';
