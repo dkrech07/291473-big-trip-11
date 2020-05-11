@@ -67,10 +67,10 @@ export default class PointController {
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
 
+      this._replaceEditToPoint(tripRollUpClickHandler);
       const data = this._formComponent.getData(point);
       this._onDataChange(this, point, data);
 
-      this._replaceEditToPoint();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
@@ -84,7 +84,7 @@ export default class PointController {
 
     this._formComponent.setDeleteButtonClickHandler(deleteButtonClickHandler);
 
-    // Удаление обработчика нажатия на esc;
+    // Удаление формы по нажатию на esc;
     this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
         this._replaceEditToPoint();
@@ -103,19 +103,9 @@ export default class PointController {
     // Отрисовка формы редактирования для новой карточки;
     if (mode === Mode.ADDING) {
       render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
+      this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
       document.addEventListener(`keydown`, this._onEscKeyDown);
     }
-
-    // this._formComponent.setSubmitHandler((evt) => {
-    //   evt.preventDefault();
-    //   const data = this._eventEditComponent.getData();
-    //   if (mode === Mode.ADDING) {
-    //     this._onDataChange(this, event, data, false, this._button);
-    //   } else {
-    //     this._onDataChange(this, event, data);
-    //   }
-    //   document.removeEventListener(`keydown`, this._onEscKeyDown);
-    // });
   }
 
   setDefaultView() {
@@ -130,11 +120,12 @@ export default class PointController {
     this._mode = Mode.EDIT;
   }
 
-  _replaceEditToPoint() {
+  _replaceEditToPoint(tripRollUpClickHandler) {
     this._formComponent.reset();
 
     if (document.contains(this._formComponent.getElement())) {
       replace(this._pointComponent, this._formComponent);
+      this._pointComponent.setEventButtonClickHandler(tripRollUpClickHandler);
     }
 
     this._mode = Mode.DEFAULT;

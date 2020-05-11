@@ -269,16 +269,17 @@ export default class Form extends AbstractSmartComponent {
   }
 
   setSaveFormClickHandler(handler) {
-    console.log(this.getElement().querySelector(`form`));
     this.getElement().querySelector(`form`)
-    .addEventListener(`submit`, handler);
+      .addEventListener(`submit`, handler);
 
     this._saveFormClickHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
-    this.getElement().querySelector(`#event-favorite-1`)
-    .addEventListener(`click`, handler);
+    if (this.getElement().querySelector(`#event-favorite-1`)) {
+      this.getElement().querySelector(`#event-favorite-1`)
+      .addEventListener(`click`, handler);
+    }
 
     this._favoriteButtonClickHandler = handler;
   }
@@ -318,7 +319,7 @@ export default class Form extends AbstractSmartComponent {
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
     this.setDestinationClickHandner(this._destinationClickHandner);
 
-    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler); // Добавил временно
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
 
     this._subscribeOnEvents();
   }
@@ -364,7 +365,6 @@ export default class Form extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    // console.log(element);
     // Хендлер клика по звездочке;
     if (element.querySelector(`#event-favorite-1`)) {
       element.querySelector(`#event-favorite-1`)
@@ -374,7 +374,6 @@ export default class Form extends AbstractSmartComponent {
         this.rerender();
       });
     }
-
 
     // Хендлер клика по типам точек маршрута;
     element.querySelectorAll(`.event__type-input`).forEach((item) => {

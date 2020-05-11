@@ -2,7 +2,7 @@ import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 
@@ -89,7 +89,7 @@ export default class TripController {
 
       case SortTypes.SORT_TIME:
         const pointsTime = this._pointsModel.getPointsAll().slice();
-        pointsTime.sort((a, b) => a.arrival - a.departure < b.arrival - b.departure ? 1 : -1);
+        pointsTime.sort((a, b) => a.arrival - a.departure > b.arrival - b.departure ? 1 : -1);
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderSortPoints(pointsTime);
@@ -97,7 +97,7 @@ export default class TripController {
 
       case SortTypes.SORT_PRICE:
         const pointsPrice = this._pointsModel.getPointsAll().slice();
-        pointsPrice.sort((a, b) => a.price < b.price ? 1 : -1);
+        pointsPrice.sort((a, b) => a.price > b.price ? 1 : -1);
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderSortPoints(pointsPrice);
