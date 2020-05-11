@@ -55,12 +55,6 @@ export default class PointController {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     }
 
-    // Замена формы на карточку пункта маршрута;
-    const formRollupClickHandler = () => {
-      this._replaceEditToPoint(pointRollUpClickHandler);
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    };
-
     // Замена карточки пункта маршрута на форму;
     const pointRollUpClickHandler = () => {
       this._replacePointToEdit();
@@ -70,11 +64,18 @@ export default class PointController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };
 
+    // Замена формы на карточку пункта маршрута;
+    const formRollupClickHandler = () => {
+      this._replaceEditToPoint();
+      this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    };
+
     // Сохранение формы (данных точки маршрута). Замена формы на карточку пункта маршрута;
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
 
-      this._replaceEditToPoint(pointRollUpClickHandler);
+      this._replaceEditToPoint();
       const data = this._formComponent.getData(point);
       this._onDataChange(this, point, data);
 
@@ -127,12 +128,11 @@ export default class PointController {
     this._mode = Mode.EDIT;
   }
 
-  _replaceEditToPoint(pointRollUpClickHandler) {
+  _replaceEditToPoint() {
     this._formComponent.reset();
 
     if (document.contains(this._formComponent.getElement())) {
       replace(this._pointComponent, this._formComponent);
-      this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
     }
 
     this._mode = Mode.DEFAULT;
