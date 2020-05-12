@@ -96,9 +96,7 @@ export default class Event extends AbstractComponent {
     const element = this.getElement();
 
     element.querySelector(`.event__rollup-btn`)
-    .addEventListener(`click`, (evt) => {
-      console.log(evt.target);
-
+    .addEventListener(`click`, () => {
     });
   }
 }

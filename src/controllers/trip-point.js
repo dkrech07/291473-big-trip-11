@@ -48,7 +48,6 @@ export default class PointController {
     // Создание новой текущей точки маршурта;
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнер;
     const oldPointComponent = this._pointComponent;
-    const oldFormComponent = this._formComponent;
 
     this._pointComponent = new EventComponent(this._point);
     this._formComponent = new FormComponent(this._point, this._mode);
@@ -61,7 +60,32 @@ export default class PointController {
       replace(this._pointComponent, oldPointComponent);
     }
 
-    // Сохранение формы данных точки маршрута;
+    // Удаление формы редактиования точки маршрута по нажатию на ESC;
+    this._onEscKeyDown = (evt) => {
+      if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
+        this._replaceEditToPoint();
+        document.removeEventListener(`keydown`, this._onEscKeyDown);
+      }
+
+      if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
+        this._onDataChange(this, point, null);
+        this._newPointButton.removeAttribute(`disabled`);
+        document.removeEventListener(`keydown`, this._onEscKeyDown);
+      }
+    };
+
+    // Удаление формы редактирования точки маршрута;
+    const deleteButtonClickHandler = () => {
+      if (this._newPointButton) {
+        this._newPointButton.removeAttribute(`disabled`);
+      }
+      this._onDataChange(this, point, null);
+    };
+
+    // Отлавливаю клик по "Delete" на форме редактирования точки маршрута;
+    this._formComponent.setDeleteButtonClickHandler(deleteButtonClickHandler);
+
+    // Сохранение формы редактирования точки маршрута;
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
       this._replaceEditToPoint();
@@ -71,18 +95,41 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
+    // Замена формы на карточку пункта маршрута;
+    const formRollupClickHandler = () => {
+      this._replaceEditToPoint();
+      this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    };
+
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
     const pointRollUpClickHandler = () => {
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
+      this._formComponent.setFormRollupClickHandler(formRollupClickHandler);
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };
 
     // Отлавливаю клик по кнопке-rollUp на карточке точки маршрута;
     this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
 
+    // Отрисовка формы редактирования для новой карточки;
+    const newFormClickHandler = (evt) => {
+      evt.preventDefault();
 
+      this._replaceEditToPoint();
+      const data = this._formComponent.getData(point);
+      this._onDataChange(this, point, data);
+
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    };
+
+    if (mode === Mode.ADDING) {
+      render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
+      this._formComponent.setSaveFormClickHandler(newFormClickHandler);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+    }
   }
 
   setDefaultView() {
