@@ -81,6 +81,9 @@ export default class TripController {
   _getSortedTrips(sortType) {
     switch (sortType) {
       case SortTypes.SORT_EVENT:
+        const sortEventInput = document.querySelector(`#sort-event`);
+        sortEventInput.checked = true;
+
         const pointsEvent = this._pointsModel.getPointsAll().slice();
         this._tripDaysComponent.getElement().innerHTML = ``;
 
@@ -172,7 +175,7 @@ export default class TripController {
   }
 
   _updatePoints() {
-    // this._getSortedTrips(SortTypes.SORT_EVENT);
+    this._getSortedTrips(SortTypes.SORT_EVENT);
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
   }
