@@ -55,12 +55,13 @@ export default class PointController {
     this._formContainerComponent = new FormContainerComponent();
 
     // Отрисовка точки маршрута;
-    if (!oldPointComponent && !oldFormComponent && mode === Mode.DEFAULT) { // Если нет старой точки и старой формы и режим дефолт - рендери нову точку
+    if (!oldPointComponent && !oldFormComponent && mode === Mode.DEFAULT) { // Если нет старой точки и старой формы и режим дефолт - рендери новую точку
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     } else if (oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) { // Если есть старая точка и старая форма и режим дефолт - замени старую точку на новую
       replace(this._pointComponent, oldPointComponent);
-    } else if (!oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) { // Если нет старой точки, но есть новая форма и режим дефолт - выведи в консоль "ок"
+    } else if (!oldPointComponent && this._formComponent && mode === Mode.DEFAULT) { // Если нет старой точки, но есть новая форма и режим дефолт - выведи в консоль "ок"
       console.log(`ok`);
+      remove(this._formComponent.getElement());
     }
 
     // console.log(this._pointComponent);
