@@ -99,6 +99,18 @@ const createFormTemplate = (currentPoint, mode) => {
     );
   };
 
+  const getRollUpMarkUp = () => {
+    if (mode !== PointControllerMode.ADDING) {
+      return (
+        `<button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>`
+      );
+    } else {
+      return ``;
+    }
+  };
+
   return (
     `<form class="trip-events__item event event--edit" action="#" method="post">
         <header class="event__header">
@@ -157,9 +169,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
           ${getFavorite()}
 
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
+          ${getRollUpMarkUp()}
         </header>
 
         <section class="event__details">
@@ -300,8 +310,10 @@ export default class Form extends AbstractSmartComponent {
   }
 
   setFormRollupClickHandler(handler) {
-    this.getElement().querySelector(`.event__rollup-btn`)
+    if (this.getElement().querySelector(`.event__rollup-btn`)) {
+      this.getElement().querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, handler);
+    }
 
     this._formRollupClickHandler = handler;
   }
@@ -403,9 +415,11 @@ export default class Form extends AbstractSmartComponent {
       this._currentPoint.arrival = evt.target.value;
     });
 
-    element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
-      this.rerender();
-    });
+    if (this.getElement().querySelector(`.event__rollup-btn`)) {
+      element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+        this.rerender();
+      });
+    }
   }
 
   getTemplate() {
