@@ -48,17 +48,22 @@ export default class PointController {
     // Создание новой текущей точки маршурта;
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнер;
     const oldPointComponent = this._pointComponent;
+    const oldFormComponent = this._formComponent;
 
     this._pointComponent = new EventComponent(this._point);
     this._formComponent = new FormComponent(this._point, this._mode);
     this._formContainerComponent = new FormContainerComponent();
 
     // Отрисовка точки маршрута;
-    if (!oldPointComponent && mode === Mode.DEFAULT) {
+    if (!oldPointComponent && !oldFormComponent && mode === Mode.DEFAULT) { // Если нет старой точки и старой формы и режим дефолт - рендери нову точку
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
-    } else if (oldPointComponent && mode === Mode.DEFAULT) {
+    } else if (oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) { // Если есть старая точка и старая форма и режим дефолт - замени старую точку на новую
       replace(this._pointComponent, oldPointComponent);
+    } else if (!oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) { // Если нет старой точки, но есть новая форма и режим дефолт - выведи в консоль "ок"
+      console.log(`ok`);
     }
+
+    // console.log(this._pointComponent);
 
     // Удаление формы редактиования точки маршрута по нажатию на ESC;
     this._onEscKeyDown = (evt) => {
@@ -117,12 +122,12 @@ export default class PointController {
     // Отрисовка формы редактирования для новой карточки;
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
-
-      this._replaceEditToPoint();
+      // this._replaceEditToPoint();
       const data = this._formComponent.getData(point);
       this._onDataChange(this, point, data);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+
     };
 
     if (mode === Mode.ADDING) {
