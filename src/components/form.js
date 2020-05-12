@@ -222,6 +222,7 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeClickHandler = null;
     this._endTimeClickHandler = null;
     this._deleteButtonClickHandler = null;
+    this._formRollupClickHandler = null;
 
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
@@ -301,6 +302,8 @@ export default class Form extends AbstractSmartComponent {
   setFormRollupClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, handler);
+
+    this._formRollupClickHandler = handler;
   }
 
   recoveryListeners() {
@@ -310,6 +313,7 @@ export default class Form extends AbstractSmartComponent {
     this.setDestinationClickHandner(this._destinationClickHandner);
 
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
+    this.setFormRollupClickHandler(this._formRollupClickHandler);
 
     this._subscribeOnEvents();
   }
@@ -397,6 +401,10 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
+    });
+
+    element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+      this.rerender();
     });
   }
 
