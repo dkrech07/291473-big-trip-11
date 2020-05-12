@@ -48,6 +48,7 @@ export default class PointController {
     // Создание новой текущей точки маршурта;
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнер;
     const oldPointComponent = this._pointComponent;
+    const oldFormComponent = this._formComponent;
 
     this._pointComponent = new EventComponent(this._point);
     this._formComponent = new FormComponent(this._point, this._mode);
@@ -56,6 +57,8 @@ export default class PointController {
     // Отрисовка точки маршрута;
     if (!oldPointComponent && mode === Mode.DEFAULT) {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
+    } else if (oldPointComponent && mode === Mode.DEFAULT) {
+      replace(this._pointComponent, oldPointComponent);
     }
 
     // Сохранение формы данных точки маршрута;
@@ -64,7 +67,8 @@ export default class PointController {
       this._replaceEditToPoint();
       const data = this._formComponent.getData(point);
       this._onDataChange(this, point, data);
-      // document.removeEventListener(`keydown`, this._onEscKeyDown);
+
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);

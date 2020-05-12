@@ -172,7 +172,7 @@ export default class TripController {
   }
 
   _updatePoints() {
-    this._getSortedTrips(SortTypes.SORT_EVENT);
+    // this._getSortedTrips(SortTypes.SORT_EVENT);
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
   }
