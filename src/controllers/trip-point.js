@@ -47,6 +47,7 @@ export default class PointController {
 
     // Создание новой текущей точки маршурта;
     this._point = point; // point - точка маршрута, которая будет отрисована в контейнер;
+
     const oldPointComponent = this._pointComponent;
     const oldFormComponent = this._formComponent;
 

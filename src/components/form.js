@@ -208,12 +208,7 @@ const parseFormData = (formData, form, point) => {
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
 
-  const getNewDate = (input) => {
-    const dateInfo = input.trim().split(` `);
-    const date = dateInfo[0].split(`/`);
-    const time = dateInfo[1].split(`:`);
-    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-  };
+  const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const getFavorite = (favoriteType) => {
     if (favoriteType) {
@@ -222,13 +217,20 @@ const parseFormData = (formData, form, point) => {
     return false;
   };
 
+  const getNewDate = (input) => {
+    const dateInfo = input.trim().split(` `);
+    const date = dateInfo[0].split(`/`);
+    const time = dateInfo[1].split(`:`);
+    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+  };
+
   const formObject = {
     id: point.id,
     type: type[0],
     destination,
     destinationInfo: point.destinationInfo,
     favorite: getFavorite(favorite),
-    offers: point.offers,
+    offers: checkedOffers,
     price,
     departure: getNewDate(departure),
     arrival: getNewDate(arrival),
@@ -455,10 +457,39 @@ export default class Form extends AbstractSmartComponent {
 
     // Хендлер для клика по предложению;
     this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
-      item.addEventListener(`click`, (evt) => {
-        item.checked = true;
-        console.log(evt.target.checked);
-        console.log(item);
+      item.addEventListener(`change`, (evt) => {
+        let label = document.querySelector(`[for="${evt.target.id}"]`);
+
+        const labelTitle = label.querySelector(`.event__offer-title`).textContent;
+        // const labelPrice = label.querySelector(`.event__offer-price`).textContent;
+
+        this._currentPoint.offers.forEach((offer) => {
+          if (offer.title === labelTitle && !offer.isChecked) {
+            item.checked = true;
+            offer.isChecked = true;
+          } else if (offer.title === labelTitle && offer.isChecked) {
+            item.checked = false;
+            offer.isChecked = false;
+          }
+
+
+          // const getCheckFavorite = (check) => {
+          //   return (check && `checked`) || ``;
+          // };
+
+        });
+
+
+        // const userOffers = [];
+        // this._currentPoint.offers.filter(offer.title = labelTitle);
+        // console.log(this._currentPoint.offers);
+        // console.log(labelPrice);
+        // console.log(labelTitle);
+        // console.log(label);
+        // console.log(evt.target);
+        // item.checked = true;
+        // console.log(evt.target.checked);
+        // console.log(item);
       });
     });
   }
