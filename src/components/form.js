@@ -41,7 +41,7 @@ const createFormTemplate = (currentPoint, mode) => {
     return offers.map((offer) => {
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" checked>
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type} checked">
           <label class="event__offer-label" for="event-offer-${offer.type}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
@@ -200,21 +200,43 @@ const createFormTemplate = (currentPoint, mode) => {
 // Поддерживаю сохранение данных формы;
 const parseFormData = (formData, form, point) => {
 
-  // formData из getData;
-  // form - текущая открытая форма;
-  // point - текущая точка маршрута;
+  const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
+  const destination = formData.get(`event-destination`);
+  const price = parseInt(formData.get(`event-price`), 10);
+  const favorite = formData.get(`event-favorite`);
 
-  return {
-    id: point.id,
-    type: point.type,
-    destination: point.destination,
-    destinationInfo: point.destinationInfo,
-    favorite: point.favorite,
-    offers: point.offers,
-    price: point.price,
-    departure: point.departure,
-    arrival: point.arrival,
+  const departure = formData.get(`event-start-time`);
+  const arrival = formData.get(`event-end-time`);
+
+  const getFavorite = (favoriteType) => {
+    if (favoriteType) {
+      return true;
+    }
+    return false;
   };
+
+  const formObject = {
+    id: point.id,
+    type: type[0],
+    destination,
+    destinationInfo: point.destinationInfo,
+    favorite: getFavorite(favorite),
+    offers: point.offers,
+    price,
+    departure,
+    arrival,
+  };
+
+// console.log(formObject);
+// console.log(formObject.offers);
+  console.log(form);
+
+
+//   for (const offer of formObject.offers) {
+//     console.log(offer);
+//     offer.isChecked = formData.get(`event-offer-${offer.title.toLowerCase().split(` `).join(`-`)}`);
+//   }
+  return formObject;
 };
 
 export default class Form extends AbstractSmartComponent {
@@ -233,6 +255,7 @@ export default class Form extends AbstractSmartComponent {
     this._endTimeClickHandler = null;
     this._deleteButtonClickHandler = null;
     this._formRollupClickHandler = null;
+    this._formOfferClickHandler = null;
 
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
@@ -245,7 +268,6 @@ export default class Form extends AbstractSmartComponent {
     const form = this.getElement();
     const formData = new FormData(form);
 
-    // console.log(parseFormData(formData, form, point));
     return parseFormData(formData, form, point);
   }
 
@@ -269,6 +291,14 @@ export default class Form extends AbstractSmartComponent {
     this.getElement().addEventListener(`submit`, handler);
 
     this._saveFormClickHandler = handler;
+  }
+
+  setOfferClickHandler(handler) {
+    this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
+      item.addEventListener(`click`, handler);
+
+      this._formOfferClickHandler = handler;
+    });
   }
 
   setFavoriteButtonClickHandler(handler) {
@@ -326,6 +356,7 @@ export default class Form extends AbstractSmartComponent {
 
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
+    this.setOfferClickHandler(this._formOfferClickHandler);
 
     this._subscribeOnEvents();
   }
@@ -415,11 +446,27 @@ export default class Form extends AbstractSmartComponent {
       this._currentPoint.arrival = evt.target.value;
     });
 
+    // Хендлер для клика по кнопке rollUp в форме;
     if (this.getElement().querySelector(`.event__rollup-btn`)) {
       element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
         this.rerender();
       });
     }
+
+    // Хендлер для клика по предложению;
+    this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
+      item.addEventListener(`click`, (evt) => {
+        // evt.target.checked = true;
+        // console.log(element);
+        console.log(evt.target.checked);
+        // const checkboxOffer = evt.target.id;
+        // evt.target.checked = true;
+        // console.log(evt.target.id);
+        // console.log(this._currentPoint.offers);
+        // const offerElement = element.querySelector(checkboxOffer);
+        // console.log(checkboxOffer);
+      });
+    });
   }
 
   getTemplate() {

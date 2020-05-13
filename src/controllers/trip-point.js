@@ -59,12 +59,7 @@ export default class PointController {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     } else if (oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) { // Если есть старая точка и старая форма и режим дефолт - замени старую точку на новую
       replace(this._pointComponent, oldPointComponent);
-    } else if (!oldPointComponent && this._formComponent && mode === Mode.DEFAULT) { // Если нет старой точки, но есть новая форма и режим дефолт - выведи в консоль "ок"
-      console.log(`ok`);
-      remove(this._formComponent.getElement());
     }
-
-    // console.log(this._pointComponent);
 
     // Удаление формы редактиования точки маршрута по нажатию на ESC;
     this._onEscKeyDown = (evt) => {

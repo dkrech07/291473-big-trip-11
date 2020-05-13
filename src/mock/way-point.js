@@ -86,6 +86,7 @@ const generateOffer = (offerKey) => {
     type: offerKey,
     title: OFFERS[offerKey],
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+    isChecked: false,
   };
 };
 
