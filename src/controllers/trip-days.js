@@ -147,9 +147,6 @@ export default class TripController {
 
   // Условия отрисовки (обновления) данных для точек маршрута;
   _onDataChange(pointController, oldData, newData) {
-    // console.log(oldData);
-    // console.log(EmptyPoint);
-    // console.log(newData);
     if (oldData === EmptyPoint) {
       this._creatingPoint = null;
       if (newData === null) {
@@ -184,10 +181,10 @@ export default class TripController {
   }
 
   _updatePoints() {
-    const pointsList = this._pointsModel.getPoints().slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-    this._getSortedTrips(SortTypes.SORT_EVENT);
+    // const pointsList = this._pointsModel.getPoints().slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+    // this._getSortedTrips(SortTypes.SORT_EVENT);
     this._removePoints();
-    this._renderPoints(pointsList);
+    this._renderPoints(this._pointsModel.getPoints());
   }
 
   _onFilterChange() {

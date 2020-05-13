@@ -43,20 +43,11 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   // Выводит в форму цену поездки
-  const getTripPrice = () => {
-    let sumTripPrice = 0;
+  const checkedOffers = currentPoint.offers.filter((offer) => offer.isChecked === true);
 
-    for (const offer of offers) {
-      if (offer.isChecked) {
-        sumTripPrice += offer.price;
-      }
-    }
+  const getTripPrice = checkedOffers.reduce((prev, acc) => prev + acc.price, price);
 
-    return sumTripPrice;
-  };
-
-  // const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
-
+  console.log(getTripPrice);
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
     return offers.map((offer) => {
@@ -182,7 +173,7 @@ const createFormTemplate = (currentPoint, mode) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice()}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -231,8 +222,6 @@ const parseFormData = (formData, form, point) => {
 
   // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
-  const checkedOffers = point.offers;
-
   const getFavorite = (favoriteType) => {
     if (favoriteType) {
       return true;
@@ -253,7 +242,7 @@ const parseFormData = (formData, form, point) => {
     destination,
     destinationInfo: point.destinationInfo,
     favorite: getFavorite(favorite),
-    offers: checkedOffers,
+    offers: point.offers,
     price,
     departure: getNewDate(departure),
     arrival: getNewDate(arrival),
