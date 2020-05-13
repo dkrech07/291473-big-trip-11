@@ -11,7 +11,6 @@ import FilterController from './controllers/filter.js';
 
 // Общие переменные;
 const randomPointsList = generateTripPoints();
-console.log(randomPointsList);
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);

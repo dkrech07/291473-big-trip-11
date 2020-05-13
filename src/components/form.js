@@ -208,6 +208,16 @@ const parseFormData = (formData, form, point) => {
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
 
+  const departureInfo = formData.get(`event-start-time`).trim().split(` `);
+  const departureDate = departureInfo[0].split(`/`);
+  const departureTime = departureInfo[1].split(`:`);
+  const departureNewDate = new Date(departureDate[2], departureDate[1] - 1, departureDate[0], departureTime[0], departureTime[1])
+
+
+  console.log(departure);
+  console.log(departureNewDate);
+  // console.log(new Date());
+
   const getFavorite = (favoriteType) => {
     if (favoriteType) {
       return true;
@@ -223,17 +233,16 @@ const parseFormData = (formData, form, point) => {
     favorite: getFavorite(favorite),
     offers: point.offers,
     price,
-    departure,
-    arrival,
+    // departure,
+    // arrival,
+    departure: departureNewDate,
+    arrival: new Date(),
   };
 
-// console.log(formObject);
-// console.log(formObject.offers);
-  console.log(form);
+  // console.log(form);
 
 
 //   for (const offer of formObject.offers) {
-//     console.log(offer);
 //     offer.isChecked = formData.get(`event-offer-${offer.title.toLowerCase().split(` `).join(`-`)}`);
 //   }
   return formObject;
@@ -456,15 +465,7 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по предложению;
     this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
       item.addEventListener(`click`, (evt) => {
-        // evt.target.checked = true;
-        // console.log(element);
-        console.log(evt.target.checked);
-        // const checkboxOffer = evt.target.id;
-        // evt.target.checked = true;
-        // console.log(evt.target.id);
-        // console.log(this._currentPoint.offers);
-        // const offerElement = element.querySelector(checkboxOffer);
-        // console.log(checkboxOffer);
+        // console.log(evt.target.checked);
       });
     });
   }

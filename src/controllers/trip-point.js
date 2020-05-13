@@ -118,9 +118,10 @@ export default class PointController {
     // Отрисовка формы редактирования для новой карточки;
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
-      // this._replaceEditToPoint();
+      this._replaceEditToNewPoint();
       const data = this._formComponent.getData(point);
       this._onDataChange(this, point, data);
+      this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
 
@@ -154,6 +155,17 @@ export default class PointController {
     this._formComponent.reset();
     if (document.contains(this._formComponent.getElement())) {
       replace(this._pointComponent, this._formContainerComponent);
+    }
+
+    this._mode = Mode.DEFAULT;
+  }
+
+  _replaceEditToNewPoint() {
+    this._formComponent.reset();
+    if (document.contains(this._formComponent.getElement())) {
+      // replace(this._pointComponent, this._formComponent);
+      remove(this._formComponent);
+      // render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     }
 
     this._mode = Mode.DEFAULT;
