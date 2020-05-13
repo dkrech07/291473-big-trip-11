@@ -5,10 +5,12 @@ import TripsContainerComponent from '../components/trips-container.js';
 import {render} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
+import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
+import moment from "moment";
 
 const getDays = (points) => {
   const daysList = [];
-  const days = new Set(points.map((point) => point.departure.getTime()));
+  const days = new Set(points.map((point) => new Date(moment(point.departure).format(INPUT_YEAR_MONTH_DAY_FORMAT)).getTime()));
 
   for (const day of days) {
     daysList.push(new Date(day));
@@ -111,13 +113,15 @@ export default class TripController {
   // Отрисовка точек маршрута в днях путешествия;
   _renderPoints(points) {
     const days = getDays(points);
-
+    // console.log(days);
     for (const day of days) {
       this._tripDayComponent = new TripDayComponent(day);
       render(this._tripDaysComponent.getElement(), this._tripDayComponent);
 
       for (const point of points) {
-        if (point.departure.getTime() === day.getTime()) {
+        const pointDate = new Date(moment(point.departure).format(INPUT_YEAR_MONTH_DAY_FORMAT)).getTime();
+
+        if (pointDate === day.getTime()) {
           const tripEventsListElement = this._tripDayComponent.getElement().querySelector(`.trip-events__list`);
           const pointController = new PointController(tripEventsListElement, this._onDataChange, this._onViewChange);
           pointController.render(point, PointControllerMode.DEFAULT);
@@ -143,6 +147,9 @@ export default class TripController {
 
   // Условия отрисовки (обновления) данных для точек маршрута;
   _onDataChange(pointController, oldData, newData) {
+    // console.log(oldData);
+    // console.log(EmptyPoint);
+    // console.log(newData);
     if (oldData === EmptyPoint) {
       this._creatingPoint = null;
       if (newData === null) {
@@ -160,8 +167,8 @@ export default class TripController {
       const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
 
       if (isSuccess) {
-        pointController.render(newData, PointControllerMode.DEFAULT);
-        // this._updatePoints();
+        // pointController.render(newData, PointControllerMode.DEFAULT);
+        this._updatePoints();
       }
     }
   }
@@ -177,9 +184,10 @@ export default class TripController {
   }
 
   _updatePoints() {
+    const pointsList = this._pointsModel.getPoints().slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
     this._getSortedTrips(SortTypes.SORT_EVENT);
     this._removePoints();
-    this._renderPoints(this._pointsModel.getPoints());
+    this._renderPoints(pointsList);
   }
 
   _onFilterChange() {

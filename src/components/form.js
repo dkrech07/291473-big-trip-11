@@ -36,7 +36,7 @@ const createFormTemplate = (currentPoint, mode) => {
   // Выводит в форму цену поездки
   const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
 
-  // Выводит в форму список предложений
+  // Выводит в форму список типов петушествия;
   const createOffersMarkup = () => {
     return offers.map((offer) => {
       return (
@@ -214,12 +214,6 @@ const parseFormData = (formData, form, point) => {
     const time = dateInfo[1].split(`:`);
     return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
   };
-
-
-
-  console.log(departure);
-  console.log(arrival);
-  // console.log(new Date());
 
   const getFavorite = (favoriteType) => {
     if (favoriteType) {

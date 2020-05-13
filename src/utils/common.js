@@ -5,7 +5,7 @@ const INPUT_MONTH_YEAR_FORMAT = `MMM YY`;
 const INPUT_MONTH_DAY_FORMAT = `MMM DD`;
 const INPUT_YEAR_MONTH_DAY_FORMAT = `YYYY-MM-DD`;
 const INPUT_YEAR_MONTH_DAY_TIME_FORMAT = `YYYY-MM-DDTHH:MM`;
-const INPUT_TIME_FORMAT = `HH:MM`;
+const INPUT_TIME_FORMAT = `HH:mm`;
 
 // Корректировка формата времени: добавляет вначале ноль, если число однозначное;
 const correctFormat = (number) => {
@@ -99,5 +99,6 @@ export {
   correctDayFormat,
   correctTimeFormat,
   getPrice,
-  calculateTripTime
+  calculateTripTime,
+  INPUT_YEAR_MONTH_DAY_FORMAT,
 };
