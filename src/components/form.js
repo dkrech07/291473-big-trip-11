@@ -33,15 +33,24 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
+  // Передает в оффер параметр checked
+  const getCheckOffer = (offer) => {
+    if (offer.isChecked) {
+      return `checked`;
+    } else {
+      return ``;
+    }
+  };
+
   // Выводит в форму цену поездки
   const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
 
-  // Выводит в форму список типов петушествия;
+  // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
     return offers.map((offer) => {
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" ${getCheckOffer(offer)}>
           <label class="event__offer-label" for="event-offer-${offer.type}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
