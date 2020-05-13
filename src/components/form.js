@@ -43,7 +43,19 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   // Выводит в форму цену поездки
-  const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
+  const getTripPrice = () => {
+    let sumTripPrice = 0;
+
+    for (const offer of offers) {
+      if (offer.isChecked) {
+        sumTripPrice += offer.price;
+      }
+    }
+
+    return sumTripPrice;
+  };
+
+  // const getTripPrice = offers.reduce((prev, acc) => prev + acc.price, price);
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
@@ -170,7 +182,7 @@ const createFormTemplate = (currentPoint, mode) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice()}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -217,7 +229,9 @@ const parseFormData = (formData, form, point) => {
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
 
-  const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
+  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
+
+  const checkedOffers = point.offers;
 
   const getFavorite = (favoriteType) => {
     if (favoriteType) {
@@ -480,25 +494,8 @@ export default class Form extends AbstractSmartComponent {
             item.checked = false;
             offer.isChecked = false;
           }
-
-
-          // const getCheckFavorite = (check) => {
-          //   return (check && `checked`) || ``;
-          // };
-
         });
 
-
-        // const userOffers = [];
-        // this._currentPoint.offers.filter(offer.title = labelTitle);
-        // console.log(this._currentPoint.offers);
-        // console.log(labelPrice);
-        // console.log(labelTitle);
-        // console.log(label);
-        // console.log(evt.target);
-        // item.checked = true;
-        // console.log(evt.target.checked);
-        // console.log(item);
       });
     });
   }

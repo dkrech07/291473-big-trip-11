@@ -8,8 +8,10 @@ const createTripPointMarkup = (point) => {
 
   const pointImage = point.type.toLowerCase();
 
+  const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
+
   const createOffersMarkup = () => {
-    return offers.map((offer) => {
+    return checkedOffers.map((offer) => {
       return (
         `<li class="event__offer">
           <span class="event__offer-title">${offer.title}</span>
