@@ -208,14 +208,17 @@ const parseFormData = (formData, form, point) => {
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
 
-  const departureInfo = formData.get(`event-start-time`).trim().split(` `);
-  const departureDate = departureInfo[0].split(`/`);
-  const departureTime = departureInfo[1].split(`:`);
-  const departureNewDate = new Date(departureDate[2], departureDate[1] - 1, departureDate[0], departureTime[0], departureTime[1])
+  const getNewDate = (input) => {
+    const dateInfo = input.trim().split(` `);
+    const date = dateInfo[0].split(`/`);
+    const time = dateInfo[1].split(`:`);
+    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+  };
+
 
 
   console.log(departure);
-  console.log(departureNewDate);
+  console.log(arrival);
   // console.log(new Date());
 
   const getFavorite = (favoriteType) => {
@@ -233,10 +236,8 @@ const parseFormData = (formData, form, point) => {
     favorite: getFavorite(favorite),
     offers: point.offers,
     price,
-    // departure,
-    // arrival,
-    departure: departureNewDate,
-    arrival: new Date(),
+    departure: getNewDate(departure),
+    arrival: getNewDate(arrival),
   };
 
   // console.log(form);
@@ -336,14 +337,14 @@ export default class Form extends AbstractSmartComponent {
 
   setStartTimeClickHandler(handler) {
     this.getElement().querySelector(`input[name="event-start-time"]`)
-    .addEventListener(`focus`, handler);
+    .addEventListener(`change`, handler);
 
     this._startTimeClickHandler = handler;
   }
 
   setEndTimeClickHandler(handler) {
     this.getElement().querySelector(`input[name="event-end-time"]`)
-    .addEventListener(`focus`, handler);
+    .addEventListener(`change`, handler);
 
     this._endTimeClickHandler = handler;
   }
@@ -362,6 +363,9 @@ export default class Form extends AbstractSmartComponent {
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
     this.setDestinationClickHandner(this._destinationClickHandner);
+
+    this.setStartTimeClickHandler(this._startTimeClickHandler);
+    this.setEndTimeClickHandler(this._endTimeClickHandler);
 
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
@@ -446,12 +450,12 @@ export default class Form extends AbstractSmartComponent {
     });
 
     // Хендлер для клика по времени начала путешествия;
-    element.querySelector(`input[name="event-start-time"]`).addEventListener(`focus`, (evt) => {
+    element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
     });
 
     // Хендлер для клика по времени окончания путешествия;
-    element.querySelector(`input[name="event-end-time"]`).addEventListener(`focus`, (evt) => {
+    element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
     });
 
