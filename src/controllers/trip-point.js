@@ -14,7 +14,7 @@ export const Mode = {
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
   type: `Taxi`,
-  destination: ``,
+  destination: `Amsterdam`,
   destinationInfo: {
     destinationDescription: ``,
     destinationPhotos: [],
@@ -22,8 +22,8 @@ export const EmptyPoint = {
   favorite: null,
   offers: [{type: `comfort`, title: `Switch to comfort`, price: 67}],
   price: 0,
-  departure: new Date(),
-  arrival: new Date(),
+  departure: `05/05/2020 14:31`,
+  arrival: `05/05/2020 14:31`,
 };
 
 export default class PointController {
