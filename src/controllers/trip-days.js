@@ -150,8 +150,7 @@ export default class TripController {
         this._updatePoints();
       } else {
         this._pointsModel.addPoint(newData);
-        this._updatePoints()
-        console.log(this._pointsModel);
+        this._updatePoints();
         // pointController.render(newData, PointControllerMode.DEFAULT);
       }
     } else if (newData === null) {
@@ -162,6 +161,7 @@ export default class TripController {
 
       if (isSuccess) {
         pointController.render(newData, PointControllerMode.DEFAULT);
+        // this._updatePoints();
       }
     }
   }

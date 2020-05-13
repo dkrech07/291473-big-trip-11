@@ -41,7 +41,7 @@ const createFormTemplate = (currentPoint, mode) => {
     return offers.map((offer) => {
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type} checked">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}">
           <label class="event__offer-label" for="event-offer-${offer.type}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
@@ -240,12 +240,6 @@ const parseFormData = (formData, form, point) => {
     arrival: getNewDate(arrival),
   };
 
-  // console.log(form);
-
-
-//   for (const offer of formObject.offers) {
-//     offer.isChecked = formData.get(`event-offer-${offer.title.toLowerCase().split(` `).join(`-`)}`);
-//   }
   return formObject;
 };
 
@@ -445,7 +439,6 @@ export default class Form extends AbstractSmartComponent {
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       this._currentPoint.destination = evt.target.value;
       this._currentPoint.destinationInfo.destinationDescription = generateDescription();
-
       this.rerender();
     });
 
@@ -469,7 +462,9 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по предложению;
     this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
       item.addEventListener(`click`, (evt) => {
-        // console.log(evt.target.checked);
+        item.checked = true;
+        console.log(evt.target.checked);
+        console.log(item);
       });
     });
   }
