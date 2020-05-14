@@ -85,6 +85,17 @@ const createFormTemplate = (currentPoint, mode) => {
     );
   };
 
+  const destinationContainer = () => {
+    if (destination) {
+      return (
+        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescriptionMarkup()}`
+      );
+    } else {
+      return ``;
+    }
+  };
+
   const createPhotosMarkup = () => {
     return destinationInfo.destinationPhotos.map((photoUrl) => {
       return (
@@ -202,8 +213,7 @@ const createFormTemplate = (currentPoint, mode) => {
           ${createOffersContainer()}
 
           <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            ${createDescriptionMarkup()}
+          ${destinationContainer()}
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
