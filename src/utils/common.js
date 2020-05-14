@@ -62,21 +62,23 @@ const calculateTripTime = (departure, arrival) => {
 };
 
 // Получение цены путешествия (цена путешествия + цена предложений);
-const getPrice = (wayPoints) => {
-  let tripPrices = 0;
+const getPrice = (points) => {
+  console.log(points);
+
+  let pointsPrices = 0;
   let offersPrices = 0;
 
-  for (const wayPoint of wayPoints) {
-    const wayPointPrice = wayPoint.price;
-    const wayPointOffer = wayPoint.offers;
-    tripPrices += wayPointPrice;
-    for (const offer of wayPointOffer) {
-      const offerPrice = offer.price;
-      offersPrices += offerPrice;
+  for (const point of points) {
+    pointsPrices += point.price;
+
+    for (const offer of point.offers) {
+      if (offer.isChecked) {
+        offersPrices += offer.price;
+      }
     }
   }
 
-  return tripPrices + offersPrices;
+  return pointsPrices + offersPrices;
 };
 
 export {

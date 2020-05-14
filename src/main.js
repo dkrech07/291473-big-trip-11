@@ -32,12 +32,19 @@ const renderTripMenuOptions = () => {
 renderTripMenuOptions();
 
 // Отрисовка общей цены поездок в шапке (для всех точек маршрута);
-const renderTripCost = () => {
-  const tripCost = getPrice(randomPointsList);
-  render(tripMenuElement, new TripCostComponent(tripCost), RenderPosition.AFTERBEGIN);
+export const renderTripCost = (model) => {
+  const tripCost = getPrice(model);
+  const tripCostComponent = new TripCostComponent(tripCost);
+  const tripInfo = tripMenuElement.querySelector(`.trip-main__trip-info`);
+
+  if (tripInfo) {
+    tripInfo.remove();
+  }
+
+  render(tripMenuElement, tripCostComponent, RenderPosition.AFTERBEGIN);
 };
 
-renderTripCost();
+renderTripCost(pointsModel.getPoints());
 
 // Отрисовка отфильтрованных точек маршрута;
 const filterController = new FilterController(mainElement, pointsModel);
