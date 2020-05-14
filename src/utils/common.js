@@ -5,7 +5,7 @@ const INPUT_MONTH_YEAR_FORMAT = `MMM YY`;
 const INPUT_MONTH_DAY_FORMAT = `MMM DD`;
 const INPUT_YEAR_MONTH_DAY_FORMAT = `YYYY-MM-DD`;
 const INPUT_YEAR_MONTH_DAY_TIME_FORMAT = `YYYY-MM-DDTHH:MM`;
-const INPUT_TIME_FORMAT = `HH:MM`;
+const INPUT_TIME_FORMAT = `HH:mm`;
 
 // Корректировка формата времени: добавляет вначале ноль, если число однозначное;
 const correctFormat = (number) => {
@@ -62,21 +62,32 @@ const calculateTripTime = (departure, arrival) => {
 };
 
 // Получение цены путешествия (цена путешествия + цена предложений);
-const getPrice = (daysList) => {
+const getPrice = (wayPoints) => {
   let tripPrices = 0;
   let offersPrices = 0;
-  for (const day of daysList) {
-    const currentDay = day;
-    for (const wayPoint of currentDay.wayPoints) {
-      const wayPointPrice = wayPoint.price;
-      const wayPointOffer = wayPoint.offers;
-      tripPrices += wayPointPrice;
-      for (const offer of wayPointOffer) {
-        const offerPrice = offer.price;
-        offersPrices += offerPrice;
-      }
+  // for (const day of daysList) {
+  //   const currentDay = day;
+  //   for (const wayPoint of currentDay.wayPoints) {
+  //     const wayPointPrice = wayPoint.price;
+  //     const wayPointOffer = wayPoint.offers;
+  //     tripPrices += wayPointPrice;
+  //     for (const offer of wayPointOffer) {
+  //       const offerPrice = offer.price;
+  //       offersPrices += offerPrice;
+  //     }
+  //   }
+  // }
+
+  for (const wayPoint of wayPoints) {
+    const wayPointPrice = wayPoint.price;
+    const wayPointOffer = wayPoint.offers;
+    tripPrices += wayPointPrice;
+    for (const offer of wayPointOffer) {
+      const offerPrice = offer.price;
+      offersPrices += offerPrice;
     }
   }
+
   return tripPrices + offersPrices;
 };
 
@@ -88,5 +99,6 @@ export {
   correctDayFormat,
   correctTimeFormat,
   getPrice,
-  calculateTripTime
+  calculateTripTime,
+  INPUT_YEAR_MONTH_DAY_FORMAT,
 };

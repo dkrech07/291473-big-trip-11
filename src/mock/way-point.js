@@ -5,7 +5,7 @@ const MIN_DESCRIPTION = 1;
 const MAX_DESCRIPTION = 5;
 const MAX_PHOTOS = 10;
 const MIN_WAY_POINTS = 1;
-const MAX_WAY_POINTS = 5;
+const MAX_WAY_POINTS = 2;
 const TRIP_DAYS_COUNT = 5;
 const YEAR_DAYS_COUNT = 365;
 
@@ -86,6 +86,7 @@ const generateOffer = (offerKey) => {
     type: offerKey,
     title: OFFERS[offerKey],
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+    isChecked: false,
   };
 };
 
@@ -122,53 +123,106 @@ const generateDestinationInfo = () => {
   };
 };
 
-const generateTripPoint = (dateCount) => {
-  const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
-  return {
-    type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
-    destination: getRandomArrayItem(DESTINATIONS),
-    offers: generateOffers(generateOfferKeys()),
-    destinationInfo: generateDestinationInfo(),
-    price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
-    departure: new Date(randomEventCount),
-    arrival: new Date(randomEventCount + getRandom(DAY_MILLISECONDS_COUNT * 3)),
-    favorite: false,
-  };
+// -----------------------------------------------------------------------------
+// Генерирует  повторяющиеся случайные даты (в миллисекундах);
+const getRandomDatesValues = () => {
+  const randomEventCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+  const randomTripCount = getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS);
+  const dates = [];
+
+  for (let j = 0; j <= randomTripCount; j++) {
+    dates.push(randomEventCount);
+  }
+  return dates;
 };
 
-const generateTripPoints = (dateCount) => {
-  const wayPointsList = [];
-  for (let i = 0; i < getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS); i++) {
-    wayPointsList.push(generateTripPoint(dateCount));
+// Генерирует массив точек маршрутов с повторяющейся датой отъезда (departure);
+const generatePoints = () => {
+  const datesVaulesList = getRandomDatesValues();
+
+  const tripPointsList = [];
+  for (let i = 0; i < datesVaulesList.length; i++) {
+    const point = {
+      id: String(new Date() + Math.random()),
+      type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
+      destination: getRandomArrayItem(DESTINATIONS),
+      offers: generateOffers(generateOfferKeys()),
+      destinationInfo: generateDestinationInfo(),
+      price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+      departure: new Date(datesVaulesList[i]),
+      arrival: new Date(datesVaulesList[i] + getRandom(DAY_MILLISECONDS_COUNT * 3)),
+      favorite: false,
+    };
+    tripPointsList.push(point);
   }
 
-  return wayPointsList;
+  return tripPointsList;
 };
 
-const generateRandomDay = () => {
-  const dateCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+// Генерирует массив точек маршрутов для нескольких дней;
+const generateTripPoints = () => {
+  let allPoints = [];
 
-  const newDate = new Date(dateCount);
-
-  return {
-    date: newDate,
-    wayPoints: generateTripPoints(dateCount),
-  };
-};
-
-const generateRandomDays = () => {
-  const randomDays = [];
   for (let i = 0; i < TRIP_DAYS_COUNT; i++) {
-    randomDays.push(generateRandomDay());
+    allPoints = allPoints.concat(generatePoints());
   }
-  return randomDays;
+
+  return allPoints;
 };
+
+// -----------------------------------------------------------------------------
+//
+// const generateTripPoint = () => {
+//   const randomEventCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+//
+//   // const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
+//   return {
+//     id: String(new Date() + Math.random()),
+//     type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
+//     destination: getRandomArrayItem(DESTINATIONS),
+//     offers: generateOffers(generateOfferKeys()),
+//     destinationInfo: generateDestinationInfo(),
+//     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
+//     departure: new Date(randomEventCount),
+//     arrival: new Date(randomEventCount + getRandom(DAY_MILLISECONDS_COUNT * 3)),
+//     favorite: false,
+//   };
+// };
+//
+// const generateTripPointsOld = (dateCount) => {
+//   const wayPointsList = [];
+//   for (let i = 0; i < getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS); i++) {
+//     wayPointsList.push(generateTripPoint(dateCount));
+//   }
+//
+//   return wayPointsList;
+// };
+//
+// const generateRandomDay = () => {
+//   const dateCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
+//
+//   const newDate = new Date(dateCount);
+//
+//   return {
+//     date: newDate,
+//     wayPoints: generateTripPointsOld(dateCount),
+//   };
+// };
+//
+// const generateRandomDays = () => {
+//   const randomDays = [];
+//   for (let i = 0; i < TRIP_DAYS_COUNT; i++) {
+//     randomDays.push(generateRandomDay());
+//   }
+//   return randomDays;
+// };
 
 export {
   DESTINATIONS,
   TRIP_TYPES,
   STOP_TYPES,
-  generateRandomDays,
+  generateTripPoints,
+  // ----------------
   generateOffers,
   generateOfferKeys,
   generateDescription
