@@ -444,8 +444,18 @@ export default class Form extends AbstractSmartComponent {
 
     // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      this._currentPoint.destination = evt.target.value;
+      const destinationInput = element.querySelector(`.event__input--destination`);
+
+      evt.preventDefault();
+      const index = DESTINATIONS.findIndex((destination) => destination === evt.target.value);
+      if (index === -1) {
+        destinationInput.setCustomValidity(`Выберете пункт назначения из списка`);
+        return;
+      }
+
+      this._currentPoint.destination = DESTINATIONS[index];
       this._currentPoint.destinationInfo.destinationDescription = generateDescription();
+
       this.rerender();
     });
 
