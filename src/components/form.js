@@ -47,7 +47,6 @@ const createFormTemplate = (currentPoint, mode) => {
 
   const getTripPrice = checkedOffers.reduce((prev, acc) => prev + acc.price, price);
 
-  console.log(getTripPrice);
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
     return offers.map((offer) => {

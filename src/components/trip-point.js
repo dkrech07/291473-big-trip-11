@@ -2,7 +2,8 @@ import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../uti
 import AbstractComponent from "./abstract-component.js";
 
 const createTripPointMarkup = (point) => {
-  const {type, destination, offers, departure, arrival, price} = point;
+  const {type, destination, departure, arrival, price} = point;
+  // const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
 
