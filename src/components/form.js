@@ -46,9 +46,6 @@ const createFormTemplate = (currentPoint, mode) => {
     }
   };
 
-  // Выводит в форму цену поездки
-  // const checkedOffers = currentPoint.offers.filter((offer) => offer.isChecked === true); Этот код не нужен по ТЗ;
-  // const getTripPrice = checkedOffers.reduce((prev, acc) => prev + acc.price, price);
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
@@ -64,6 +61,21 @@ const createFormTemplate = (currentPoint, mode) => {
         </div>`
       );
     }).join(`\n`);
+  };
+
+  const createOffersContainer = () => {
+    if (offers.length) {
+      return (
+        `<section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+                ${createOffersMarkup()}
+          </div>
+        </section>`
+      );
+    } else {
+      return ``;
+    }
   };
 
   // Выводит в форму текст описания
@@ -187,14 +199,7 @@ const createFormTemplate = (currentPoint, mode) => {
         </header>
 
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-                ${createOffersMarkup()}
-            </div>
-
-          </section>
+          ${createOffersContainer()}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
