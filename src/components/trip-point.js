@@ -12,16 +12,22 @@ const createTripPointMarkup = (point) => {
   const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const createOffersMarkup = () => {
-    return checkedOffers.map((offer) => {
-      return (
-        `<li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-         </li>`
-      );
+    return checkedOffers.map((offer, index) => {
+      if (index < 3) {
+        return (
+          `<li class="event__offer">
+            <span class="event__offer-title">${offer.title}</span>
+            &plus;
+            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+           </li>`
+        );
+      } else {
+        return ``;
+      }
     }).join(`\n`);
   };
+
+  console.log(createOffersMarkup());
 
   return (
     `<div class="event">

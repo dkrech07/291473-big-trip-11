@@ -81,12 +81,20 @@ const generateOfferKeys = () => {
   return getUniqueList(offersKeys);
 };
 
+const generateRandoOffer = () => {
+  if (getRandom(MAX_WAY_POINTS) < 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const generateOffer = (offerKey) => {
   return {
     type: offerKey,
     title: OFFERS[offerKey],
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
-    isChecked: false,
+    isChecked: generateRandoOffer(),
   };
 };
 
