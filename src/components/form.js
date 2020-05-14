@@ -1,15 +1,18 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
-import flatpickr from "flatpickr";
+import flatpickr from 'flatpickr';
+import {encode} from 'he';
 
 import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint, mode) => {
-  const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
+  const {type, destination: notSanitizedDestination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
+
+  const destination = encode(notSanitizedDestination);
 
   // Выводит в форму список предложений
   const createTripTypesMarkup = (tripTypes) => {
@@ -172,7 +175,7 @@ const createFormTemplate = (currentPoint, mode) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}"  pattern="^[0-9]+$" title="Разрешено указывать только числовые значения">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -241,7 +244,7 @@ const parseFormData = (formData, form, point) => {
     destination,
     destinationInfo: point.destinationInfo,
     favorite: getFavorite(favorite),
-    offers: point.offers,
+    offers: point.offers.slice(),
     price,
     departure: getNewDate(departure),
     arrival: getNewDate(arrival),
