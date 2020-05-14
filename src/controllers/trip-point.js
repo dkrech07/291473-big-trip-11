@@ -2,6 +2,7 @@ import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import {generateOffers, generateOfferKeys} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
 
@@ -14,13 +15,13 @@ export const Mode = {
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
   type: `Taxi`,
-  destination: `Amsterdam`,
+  destination: ``,
   destinationInfo: {
     destinationDescription: ``,
     destinationPhotos: [],
   },
   favorite: null,
-  offers: [{type: `comfort`, title: `Switch to comfort`, price: 67}],
+  offers: generateOffers(generateOfferKeys()),
   price: 0,
   departure: `05/05/2020 14:31`,
   arrival: `05/05/2020 14:31`,
@@ -46,7 +47,7 @@ export default class PointController {
     this._mode = mode;
 
     // Создание новой текущей точки маршурта;
-    this._point = point; // point - точка маршрута, которая будет отрисована в контейнер;
+    this._point = Object.assign({}, point); // point - точка маршрута, которая будет отрисована в контейнер;
 
     const oldPointComponent = this._pointComponent;
     const oldFormComponent = this._formComponent;

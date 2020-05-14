@@ -9,10 +9,11 @@ import "flatpickr/dist/flatpickr.min.css";
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint, mode) => {
-  const {type, destination: notSanitizedDestination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
+  const {type, destination: notSanitizedDestination, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
   const destination = encode(notSanitizedDestination);
+  const price = encode(notSanitizedPrice.toString());
 
   // Выводит в форму список предложений
   const createTripTypesMarkup = (tripTypes) => {
@@ -46,9 +47,8 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   // Выводит в форму цену поездки
-  const checkedOffers = currentPoint.offers.filter((offer) => offer.isChecked === true);
-
-  const getTripPrice = checkedOffers.reduce((prev, acc) => prev + acc.price, price);
+  // const checkedOffers = currentPoint.offers.filter((offer) => offer.isChecked === true); Этот код не нужен по ТЗ;
+  // const getTripPrice = checkedOffers.reduce((prev, acc) => prev + acc.price, price);
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
@@ -175,7 +175,7 @@ const createFormTemplate = (currentPoint, mode) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}"  pattern="^[0-9]+$" title="Разрешено указывать только числовые значения">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}"  pattern="^[0-9]+$" title="Разрешено указывать только числовые значения">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
