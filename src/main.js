@@ -64,23 +64,23 @@ const newPointClickHandler = (evt) => {
 newPointButton.addEventListener(`click`, newPointClickHandler);
 
 // Генерирую статистику и скрываю ее;
-const statisticsComponent = new StatisticsComponent(pointsModel);
+const statisticsComponent = new StatisticsComponent({points: pointsModel});
 render(tripEventsElement, statisticsComponent, RenderPosition.AFTEREND);
-statisticsComponent.hideElement();
+statisticsComponent.hide();
 
 // Отлавливаю клик по Списку точек маршрута и Статистике (в menu.js);
 menuComponent.setOnChange((menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
       menuComponent.setActiveItem(MenuItem.TABLE);
-      statisticsComponent.hideElement();
-      tripController.showElement();
+      statisticsComponent.hide();
+      tripController.show();
       break;
     case MenuItem.STATISTICS:
       menuComponent.setActiveItem(MenuItem.STATISTICS);
       filterController.setDefaultView(); // скидываю фильтр к дефолту controllers/filer.js
-      tripController.hideElement();
-      statisticsComponent.showElement();
+      tripController.hide();
+      statisticsComponent.show();
       break;
   }
 });

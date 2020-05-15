@@ -193,11 +193,11 @@ export default class TripController {
     this._updatePoints();
   }
 
-  hideElement() {
+  hide() {
     this._container.classList.add(`visually-hidden`);
   }
 
-  showElement() {
+  show() {
     this._container.classList.remove(`visually-hidden`);
   }
 
