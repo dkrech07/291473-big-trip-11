@@ -68,7 +68,6 @@ const calculateTripTime = (departure, arrival) => {
 
 // Получение цены путешествия (цена путешествия + цена предложений);
 const getPrice = (points) => {
-  console.log(points);
 
   let pointsPrices = 0;
   let offersPrices = 0;
