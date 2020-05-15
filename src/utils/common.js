@@ -44,9 +44,14 @@ const correctTimeFormat = (time) => {
   return moment(time).format(INPUT_TIME_FORMAT);
 };
 
+const calculateTripDuration = (departure, arrival) => {
+  return moment.duration(moment(arrival).diff(moment(departure)));
+};
+
 // Расчет длительности путешествия;
 const calculateTripTime = (departure, arrival) => {
-  const duration = moment.duration(moment(arrival).diff(moment(departure)));
+
+  const duration = calculateTripDuration(departure, arrival);
 
   const durationMinutes = duration.minutes();
   const durationHours = duration.hours();
@@ -91,4 +96,5 @@ export {
   getPrice,
   calculateTripTime,
   INPUT_YEAR_MONTH_DAY_FORMAT,
+  calculateTripDuration,
 };
