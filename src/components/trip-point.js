@@ -1,5 +1,6 @@
 import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
+const DISPLAY_OFFERS_COUNT = 3;
 
 const createTripPointMarkup = (point) => {
   const {type, destination, departure, arrival, price} = point;
@@ -12,14 +13,18 @@ const createTripPointMarkup = (point) => {
   const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const createOffersMarkup = () => {
-    return checkedOffers.map((offer) => {
-      return (
-        `<li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-         </li>`
-      );
+    return checkedOffers.map((offer, index) => {
+      if (index < DISPLAY_OFFERS_COUNT) {
+        return (
+          `<li class="event__offer">
+            <span class="event__offer-title">${offer.title}</span>
+            &plus;
+            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+           </li>`
+        );
+      } else {
+        return ``;
+      }
     }).join(`\n`);
   };
 

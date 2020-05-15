@@ -1,5 +1,5 @@
 import TripCostComponent from './components/trip-cost.js';
-import MenuComponent from './components/menu.js';
+import MenuComponent, {MenuItem} from './components/menu.js';
 // import FiltersComponent from './components/filters.js';
 // import NoPointsComponent from './components/no-points.js';
 import {getPrice} from './utils/common.js';
@@ -8,6 +8,7 @@ import {generateTripPoints} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import FilterController from './controllers/filter.js';
+import StatisticsComponent from './components/statistics.js';
 
 // Общие переменные;
 const randomPointsList = generateTripPoints();
@@ -23,21 +24,28 @@ const pointsModel = new PointsModel();
 pointsModel.setPoints(pointsList);
 
 // Отрисовка пунктов меню: Table, Status;
+const menuComponent = new MenuComponent();
 const renderTripMenuOptions = () => {
   const tripSwitchElement = tripMenuElement.querySelector(`.trip-main__trip-controls h2:first-child`);
-  const menuComponent = new MenuComponent();
   render(tripSwitchElement, menuComponent, RenderPosition.AFTEREND);
 };
 
 renderTripMenuOptions();
 
 // Отрисовка общей цены поездок в шапке (для всех точек маршрута);
-const renderTripCost = () => {
-  const tripCost = getPrice(randomPointsList);
-  render(tripMenuElement, new TripCostComponent(tripCost), RenderPosition.AFTERBEGIN);
+export const renderTripCost = (model) => {
+  const tripCost = getPrice(model);
+  const tripCostComponent = new TripCostComponent(tripCost);
+  const tripInfo = tripMenuElement.querySelector(`.trip-main__trip-info`);
+
+  if (tripInfo) {
+    tripInfo.remove();
+  }
+
+  render(tripMenuElement, tripCostComponent, RenderPosition.AFTERBEGIN);
 };
 
-renderTripCost();
+renderTripCost(pointsModel.getPoints());
 
 // Отрисовка отфильтрованных точек маршрута;
 const filterController = new FilterController(mainElement, pointsModel);
@@ -54,6 +62,28 @@ const newPointClickHandler = (evt) => {
 };
 
 newPointButton.addEventListener(`click`, newPointClickHandler);
+
+// Генерирую статистику и скрываю ее;
+const statisticsComponent = new StatisticsComponent({points: pointsModel});
+render(tripEventsElement, statisticsComponent, RenderPosition.AFTEREND);
+statisticsComponent.hide();
+
+// Отлавливаю клик по Списку точек маршрута и Статистике (в menu.js);
+menuComponent.setOnChange((menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      menuComponent.setActiveItem(MenuItem.TABLE);
+      statisticsComponent.hide();
+      tripController.show();
+      break;
+    case MenuItem.STATISTICS:
+      menuComponent.setActiveItem(MenuItem.STATISTICS);
+      filterController.setDefaultView(); // скидываю фильтр к дефолту controllers/filer.js
+      tripController.hide();
+      statisticsComponent.show();
+      break;
+  }
+});
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();

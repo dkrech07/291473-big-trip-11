@@ -44,9 +44,14 @@ const correctTimeFormat = (time) => {
   return moment(time).format(INPUT_TIME_FORMAT);
 };
 
+const calculateTripDuration = (departure, arrival) => {
+  return moment.duration(moment(arrival).diff(moment(departure)));
+};
+
 // Расчет длительности путешествия;
 const calculateTripTime = (departure, arrival) => {
-  const duration = moment.duration(moment(arrival).diff(moment(departure)));
+
+  const duration = calculateTripDuration(departure, arrival);
 
   const durationMinutes = duration.minutes();
   const durationHours = duration.hours();
@@ -62,33 +67,22 @@ const calculateTripTime = (departure, arrival) => {
 };
 
 // Получение цены путешествия (цена путешествия + цена предложений);
-const getPrice = (wayPoints) => {
-  let tripPrices = 0;
-  let offersPrices = 0;
-  // for (const day of daysList) {
-  //   const currentDay = day;
-  //   for (const wayPoint of currentDay.wayPoints) {
-  //     const wayPointPrice = wayPoint.price;
-  //     const wayPointOffer = wayPoint.offers;
-  //     tripPrices += wayPointPrice;
-  //     for (const offer of wayPointOffer) {
-  //       const offerPrice = offer.price;
-  //       offersPrices += offerPrice;
-  //     }
-  //   }
-  // }
+const getPrice = (points) => {
 
-  for (const wayPoint of wayPoints) {
-    const wayPointPrice = wayPoint.price;
-    const wayPointOffer = wayPoint.offers;
-    tripPrices += wayPointPrice;
-    for (const offer of wayPointOffer) {
-      const offerPrice = offer.price;
-      offersPrices += offerPrice;
+  let pointsPrices = 0;
+  let offersPrices = 0;
+
+  for (const point of points) {
+    pointsPrices += point.price;
+
+    for (const offer of point.offers) {
+      if (offer.isChecked) {
+        offersPrices += offer.price;
+      }
     }
   }
 
-  return tripPrices + offersPrices;
+  return pointsPrices + offersPrices;
 };
 
 export {
@@ -101,4 +95,5 @@ export {
   getPrice,
   calculateTripTime,
   INPUT_YEAR_MONTH_DAY_FORMAT,
+  calculateTripDuration,
 };

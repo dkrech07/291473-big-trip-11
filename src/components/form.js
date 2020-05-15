@@ -1,15 +1,19 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
-import flatpickr from "flatpickr";
+import flatpickr from 'flatpickr';
+import {encode} from 'he';
 
 import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint, mode) => {
-  const {type, destination, destinationInfo, offers, price, departure, arrival, favorite} = currentPoint;
+  const {type, destination: notSanitizedDestination, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
+
+  const destination = encode(notSanitizedDestination);
+  const price = encode(notSanitizedPrice.toString());
 
   // Выводит в форму список предложений
   const createTripTypesMarkup = (tripTypes) => {
@@ -42,10 +46,6 @@ const createFormTemplate = (currentPoint, mode) => {
     }
   };
 
-  // Выводит в форму цену поездки
-  const checkedOffers = currentPoint.offers.filter((offer) => offer.isChecked === true);
-
-  const getTripPrice = checkedOffers.reduce((prev, acc) => prev + acc.price, price);
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
@@ -63,11 +63,37 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
+  const createOffersContainer = () => {
+    if (offers.length) {
+      return (
+        `<section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+                ${createOffersMarkup()}
+          </div>
+        </section>`
+      );
+    } else {
+      return ``;
+    }
+  };
+
   // Выводит в форму текст описания
   const createDescriptionMarkup = () => {
     return (
       `<p class="event__destination-description">${destinationInfo.destinationDescription}</p>`
     );
+  };
+
+  const destinationContainer = () => {
+    if (destination) {
+      return (
+        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescriptionMarkup()}`
+      );
+    } else {
+      return ``;
+    }
   };
 
   const createPhotosMarkup = () => {
@@ -172,7 +198,7 @@ const createFormTemplate = (currentPoint, mode) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getTripPrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}"  pattern="^[0-9]+$" title="Разрешено указывать только числовые значения">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -184,18 +210,10 @@ const createFormTemplate = (currentPoint, mode) => {
         </header>
 
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-                ${createOffersMarkup()}
-            </div>
-
-          </section>
+          ${createOffersContainer()}
 
           <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            ${createDescriptionMarkup()}
+          ${destinationContainer()}
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
@@ -241,7 +259,7 @@ const parseFormData = (formData, form, point) => {
     destination,
     destinationInfo: point.destinationInfo,
     favorite: getFavorite(favorite),
-    offers: point.offers,
+    offers: point.offers.slice(),
     price,
     departure: getNewDate(departure),
     arrival: getNewDate(arrival),
@@ -444,8 +462,18 @@ export default class Form extends AbstractSmartComponent {
 
     // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      this._currentPoint.destination = evt.target.value;
+      const destinationInput = element.querySelector(`.event__input--destination`);
+
+      evt.preventDefault();
+      const index = DESTINATIONS.findIndex((destination) => destination === evt.target.value);
+      if (index === -1) {
+        destinationInput.setCustomValidity(`Выберете пункт назначения из списка`);
+        return;
+      }
+
+      this._currentPoint.destination = DESTINATIONS[index];
       this._currentPoint.destinationInfo.destinationDescription = generateDescription();
+
       this.rerender();
     });
 

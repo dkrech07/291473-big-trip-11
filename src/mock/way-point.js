@@ -81,12 +81,20 @@ const generateOfferKeys = () => {
   return getUniqueList(offersKeys);
 };
 
+const generateRandoOffer = () => {
+  if (getRandom(MAX_WAY_POINTS) < 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const generateOffer = (offerKey) => {
   return {
     type: offerKey,
     title: OFFERS[offerKey],
     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
-    isChecked: false,
+    isChecked: generateRandoOffer(),
   };
 };
 
@@ -123,7 +131,6 @@ const generateDestinationInfo = () => {
   };
 };
 
-// -----------------------------------------------------------------------------
 // Генерирует  повторяющиеся случайные даты (в миллисекундах);
 const getRandomDatesValues = () => {
   const randomEventCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
@@ -169,53 +176,6 @@ const generateTripPoints = () => {
 
   return allPoints;
 };
-
-// -----------------------------------------------------------------------------
-//
-// const generateTripPoint = () => {
-//   const randomEventCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
-//
-//   // const randomEventCount = dateCount + getRandom(DAY_MILLISECONDS_COUNT);
-//   return {
-//     id: String(new Date() + Math.random()),
-//     type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
-//     destination: getRandomArrayItem(DESTINATIONS),
-//     offers: generateOffers(generateOfferKeys()),
-//     destinationInfo: generateDestinationInfo(),
-//     price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
-//     departure: new Date(randomEventCount),
-//     arrival: new Date(randomEventCount + getRandom(DAY_MILLISECONDS_COUNT * 3)),
-//     favorite: false,
-//   };
-// };
-//
-// const generateTripPointsOld = (dateCount) => {
-//   const wayPointsList = [];
-//   for (let i = 0; i < getRandomIntegerNumber(MIN_WAY_POINTS, MAX_WAY_POINTS); i++) {
-//     wayPointsList.push(generateTripPoint(dateCount));
-//   }
-//
-//   return wayPointsList;
-// };
-//
-// const generateRandomDay = () => {
-//   const dateCount = getRandomIntegerNumber(LAST_YEAR_MILLISECONDS_COUNT, NEXT_YEAR_MILLISECONDS_COUNT);
-//
-//   const newDate = new Date(dateCount);
-//
-//   return {
-//     date: newDate,
-//     wayPoints: generateTripPointsOld(dateCount),
-//   };
-// };
-//
-// const generateRandomDays = () => {
-//   const randomDays = [];
-//   for (let i = 0; i < TRIP_DAYS_COUNT; i++) {
-//     randomDays.push(generateRandomDay());
-//   }
-//   return randomDays;
-// };
 
 export {
   DESTINATIONS,
