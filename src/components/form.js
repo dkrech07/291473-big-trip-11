@@ -39,13 +39,12 @@ const createFormTemplate = (currentPoint, mode) => {
 
   // Передает в оффер параметр checked
   const getCheckOffer = (offer) => {
-    if (offer.isChecked) {
-      return `checked`;
-    } else {
+    if (!offer.isChecked) {
       return ``;
     }
-  };
 
+    return `checked`;
+  };
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
@@ -237,6 +236,9 @@ const parseFormData = (formData, form, point) => {
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
 
+  console.log(price);
+  // const price = formData.get(`event-price`);
+
   // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const getFavorite = (favoriteType) => {
@@ -285,6 +287,7 @@ export default class Form extends AbstractSmartComponent {
     this._deleteButtonClickHandler = null;
     this._formRollupClickHandler = null;
     this._formOfferClickHandler = null;
+    this._formPriceClickHandler = null;
 
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
@@ -377,6 +380,12 @@ export default class Form extends AbstractSmartComponent {
     this._formRollupClickHandler = handler;
   }
 
+  setFromPriceClickHandler(handler) {
+    this.getElement().querySelector(`.event__input--price`);
+
+    this._formPriceClickHandler = handler;
+  }
+
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
@@ -389,6 +398,7 @@ export default class Form extends AbstractSmartComponent {
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
     this.setOfferClickHandler(this._formOfferClickHandler);
+    this.setFromPriceClickHandler(this._formPriceClickHandler);
 
     this._subscribeOnEvents();
   }
@@ -500,7 +510,6 @@ export default class Form extends AbstractSmartComponent {
         let label = document.querySelector(`[for="${evt.target.id}"]`);
 
         const labelTitle = label.querySelector(`.event__offer-title`).textContent;
-        // const labelPrice = label.querySelector(`.event__offer-price`).textContent;
 
         this._currentPoint.offers.forEach((offer) => {
           if (offer.title === labelTitle && !offer.isChecked) {
@@ -513,6 +522,12 @@ export default class Form extends AbstractSmartComponent {
         });
 
       });
+    });
+
+    this.getElement().querySelector(`.event__input--price`)
+    .addEventListener(`change`, (evt) => {
+
+      this._currentPoint.price = evt.target.value;
     });
   }
 
