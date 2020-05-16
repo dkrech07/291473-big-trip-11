@@ -64,18 +64,18 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createOffersContainer = () => {
-    if (offers.length) {
-      return (
-        `<section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">
-                ${createOffersMarkup()}
-          </div>
-        </section>`
-      );
-    } else {
+    if (!offers.length) {
       return ``;
     }
+
+    return (
+      `<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+              ${createOffersMarkup()}
+        </div>
+      </section>`
+    );
   };
 
   // Выводит в форму текст описания

@@ -73,17 +73,14 @@ const chartCallback = (animation) => {
   }
 };
 
-const renderMoneyChart = (moneyCtx, points) => {
-  const pointTypes = getPointsType(points);
-  const pointsCosts = pointTypes.map((type) => calculateUniquePrice(points, type));
-
-  return new Chart(moneyCtx, {
+const chartContent = (ctx, pointTypes, pointParameters) => {
+  return new Chart(ctx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
       labels: pointTypes,
       datasets: [{
-        data: pointsCosts,
+        data: pointParameters,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`,
@@ -147,152 +144,25 @@ const renderMoneyChart = (moneyCtx, points) => {
   });
 };
 
+const renderMoneyChart = (moneyCtx, points) => {
+  const pointTypes = getPointsType(points);
+  const pointsCosts = pointTypes.map((type) => calculateUniquePrice(points, type));
+
+  chartContent(moneyCtx, pointTypes, pointsCosts);
+};
+
 const renderTransportChart = (transportCtx, points) => {
   const pointTypes = getPointsType(points).filter((point) => point !== `RESTAURANT` && point !== `CHECK-IN` && point !== `SIGHTSEEING`);
   const pointTypesCount = pointTypes.map((type) => calculateUniqueCost(points, type));
 
-  return new Chart(transportCtx, {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels: pointTypes,
-      datasets: [{
-        data: pointTypesCount,
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`,
-        minBarLength: 50,
-        barThickness: 44
-      }]
-    },
-    options: {
-      events: [`click`],
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13
-          },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `${val}x`
-        }
-      },
-      title: {
-        display: true,
-        text: `TRANSPORT`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          }
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          }
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      },
-      animation: {
-        onProgress: chartCallback
-      }
-    }
-  });
+  chartContent(transportCtx, pointTypes, pointTypesCount);
 };
 
 const renderTimeSpentChart = (timeSpentCtx, points) => {
   const pointTypes = getPointsType(points);
   const pointTypesTimeSpent = pointTypes.map((type) => calculateUniqueTimeSpent(points, type));
 
-  return new Chart(timeSpentCtx, {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels: pointTypes,
-      datasets: [{
-        data: pointTypesTimeSpent,
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`,
-        minBarLength: 50,
-        barThickness: 44
-      }]
-    },
-    options: {
-      events: [`click`],
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13
-          },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter: (val) => `${val}H`
-        }
-      },
-      title: {
-        display: true,
-        text: `TIME SPENT`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`,
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          }
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          }
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false,
-      },
-      animation: {
-        onProgress: chartCallback
-      }
-    }
-  });
+  chartContent(timeSpentCtx, pointTypes, pointTypesTimeSpent);
 };
 
 const createStatisticsTemplate = () => {
