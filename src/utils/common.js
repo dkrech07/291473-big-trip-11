@@ -85,6 +85,10 @@ const getPrice = (points) => {
   return pointsPrices + offersPrices;
 };
 
+const changeFirstLetter = (word) => {
+  return word[0].toUpperCase() + word.slice(1);
+};
+
 export {
   correctDateFormat,
   correctDateISOFormat,
@@ -96,4 +100,5 @@ export {
   calculateTripTime,
   INPUT_YEAR_MONTH_DAY_FORMAT,
   calculateTripDuration,
+  changeFirstLetter,
 };

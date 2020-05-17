@@ -1,4 +1,7 @@
 import API from './api.js';
+// import {createDestinationsMarkup} from './components/form.js';
+// import getEmptyPoint from './controllers/trip-point.js';
+
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
@@ -91,10 +94,23 @@ const api = new API(AUTORIZATION);
 
 api.getPoints()
   .then((points) => {
-    console.log(points);
+    // console.log(points);
     pointsModel.setPoints(points);
     tripController.render();
   });
+
+// api.getDestinations()
+//   .then((destinations) => {
+//     // console.log(destinations);
+//     createDestinationsMarkup(destinations);
+//     console.log(createDestinationsMarkup(destinations));
+//   });
+//
+// api.getOffers()
+//   .then((offers) => {
+//     console.log(offers);
+//     getEmptyPoint(offers);
+//   });
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();

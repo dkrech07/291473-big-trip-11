@@ -1,12 +1,31 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {changeFirstLetter} from '../utils/common.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
-
 import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
+
+// Выводит в форму список точек маршурта
+// export const createDestinationsMarkup = (destinationsList) => {
+//   return destinationsList.map((destinationItem) => {
+//     return (
+//       `<option value="${destinationItem.name}"></option>`
+//     );
+//   }).join(`\n`);
+// };
+
+// Выводит в форму список точек маршурта
+const createDestinationsMarkup = () => {
+  return DESTINATIONS.map((destinationItem) => {
+    return (
+      `<option value="${destinationItem}"></option>`
+    );
+  }).join(`\n`);
+};
+
 
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
@@ -31,13 +50,13 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   // Выводит в форму список точек маршурта
-  const createDestinationsMarkup = () => {
-    return DESTINATIONS.map((destinationItem) => {
-      return (
-        `<option value="${destinationItem}"></option>`
-      );
-    }).join(`\n`);
-  };
+  // const createDestinationsMarkup = () => {
+  //   return DESTINATIONS.map((destinationItem) => {
+  //     return (
+  //       `<option value="${destinationItem}"></option>`
+  //     );
+  //   }).join(`\n`);
+  // };
 
   // Передает в оффер параметр checked
   const getCheckOffer = (offer) => {
@@ -174,7 +193,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${type} to
+              ${changeFirstLetter(type)} to
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
@@ -457,7 +476,7 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер клика по типам точек маршрута;
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
       item.addEventListener(`change`, (evt) => {
-        this._currentPoint.type = evt.target.value[0].toUpperCase() + evt.target.value.slice(1);
+        this._currentPoint.type = changeFirstLetter(evt.target.value);
         this._currentPoint.offers = generateOffers(generateOfferKeys());
 
         this.rerender();
