@@ -134,8 +134,7 @@ export default class PointController {
       evt.preventDefault();
       this._replaceEditToNewPoint();
       const data = this._formComponent.getData(this._point);
-      this._onDataChange(this, this._point, data);
-
+      this._onDataChange(this, EmptyPoint, data);
       this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);

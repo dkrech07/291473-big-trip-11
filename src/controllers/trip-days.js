@@ -161,8 +161,11 @@ export default class TripController {
       this._pointsModel.removePoint(oldData.id);
       this._updatePoints();
     } else {
-      this._pointsModel.addPoint(newData);
-      this._updatePoints();
+
+      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+      if (isSuccess) {
+        this._updatePoints();
+      }
     }
   }
 
