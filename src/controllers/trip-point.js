@@ -27,9 +27,9 @@ export const EmptyPoint = {
   id: String(new Date() + Math.random()),
   type: `Taxi`,
   destinationInfo: {
-    destinationDescription: ``,
-    destinationName: getRandomArrayItem(DESTINATIONS),
-    destinationPhotos: [],
+    description: ``,
+    name: getRandomArrayItem(DESTINATIONS),
+    pictures: [],
   },
   favorite: null,
   offers: getUnCheckOffers(),

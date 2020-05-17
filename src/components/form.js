@@ -9,12 +9,12 @@ import "flatpickr/dist/flatpickr.min.css";
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint, mode) => {
-  const {type, destination: notSanitizedDestination, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
+  const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
   // const destination = encode(notSanitizedDestination);
 
-  const destination = encode(destinationInfo.destinationName);
+  const destination = encode(destinationInfo.name);
   const price = encode(notSanitizedPrice.toString());
 
   // Выводит в форму список предложений
@@ -82,7 +82,7 @@ const createFormTemplate = (currentPoint, mode) => {
   // Выводит в форму текст описания
   const createDescriptionMarkup = () => {
     return (
-      `<p class="event__destination-description">${destinationInfo.destinationDescription}</p>`
+      `<p class="event__destination-description">${destinationInfo.description}</p>`
     );
   };
 
@@ -98,9 +98,9 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createPhotosMarkup = () => {
-    return destinationInfo.destinationPhotos.map((photoUrl) => {
+    return destinationInfo.pictures.src.map((photoUrl) => {
       return (
-        `<img class="event__photo" src="${photoUrl}" alt="Event photo">`
+        `<img class="event__photo" src="${photoUrl}" alt="${destinationInfo.pictures.description}">`
       );
     }).join(`\n`);
   };
@@ -484,7 +484,7 @@ export default class Form extends AbstractSmartComponent {
       }
 
       this._currentPoint.destination = DESTINATIONS[index];
-      this._currentPoint.destinationInfo.destinationDescription = generateDescription();
+      this._currentPoint.destinationInfo.description = generateDescription();
 
       this.rerender();
     });

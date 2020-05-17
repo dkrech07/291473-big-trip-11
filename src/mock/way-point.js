@@ -122,9 +122,12 @@ const generatePhotos = () => {
 
 const generateDestinationInfo = () => {
   return {
-    destinationName: getRandomArrayItem(DESTINATIONS),
-    destinationDescription: generateDescription(),
-    destinationPhotos: generatePhotos(),
+    name: getRandomArrayItem(DESTINATIONS),
+    description: generateDescription(),
+    pictures: {
+      src: generatePhotos(),
+      description: generateDescription(),
+    }
   };
 };
 
