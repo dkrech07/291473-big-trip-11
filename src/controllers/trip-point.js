@@ -2,7 +2,7 @@ import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
-import {generateOffers, generateOfferKeys} from '../mock/way-point.js';
+import {generateOffers, generateOfferKeys, getRandomArrayItem, DESTINATIONS} from '../mock/way-point.js';
 
 const ESC_KEYCODE = 27;
 
@@ -26,9 +26,9 @@ const getUnCheckOffers = () => {
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
   type: `Taxi`,
-  destination: ``,
   destinationInfo: {
     destinationDescription: ``,
+    destinationName: getRandomArrayItem(DESTINATIONS),
     destinationPhotos: [],
   },
   favorite: null,

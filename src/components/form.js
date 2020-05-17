@@ -12,7 +12,9 @@ const createFormTemplate = (currentPoint, mode) => {
   const {type, destination: notSanitizedDestination, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
-  const destination = encode(notSanitizedDestination);
+  // const destination = encode(notSanitizedDestination);
+
+  const destination = encode(destinationInfo.destinationName);
   const price = encode(notSanitizedPrice.toString());
 
   // Выводит в форму список предложений

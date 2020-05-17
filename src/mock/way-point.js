@@ -122,6 +122,7 @@ const generatePhotos = () => {
 
 const generateDestinationInfo = () => {
   return {
+    destinationName: getRandomArrayItem(DESTINATIONS),
     destinationDescription: generateDescription(),
     destinationPhotos: generatePhotos(),
   };
@@ -148,7 +149,6 @@ const generatePoints = () => {
     const point = {
       id: String(new Date() + Math.random()),
       type: getRandomArrayItem(TRIP_TYPES.concat(STOP_TYPES)),
-      destination: getRandomArrayItem(DESTINATIONS),
       offers: generateOffers(generateOfferKeys()),
       destinationInfo: generateDestinationInfo(),
       price: getRandomIntegerNumber(MIN_PRICE, MAX_PRICE),
@@ -181,5 +181,6 @@ export {
   // ----------------
   generateOffers,
   generateOfferKeys,
-  generateDescription
+  generateDescription,
+  getRandomArrayItem,
 };

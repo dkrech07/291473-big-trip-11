@@ -1,4 +1,4 @@
-// import API from './api.js';
+import API from './api.js';
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
@@ -9,7 +9,7 @@ import PointsModel from './models/points.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
-// const AUTORIZATION = `Basic dsfsfe3redgdg`;
+const AUTORIZATION = `Basic dsfsfe3redgdg`;
 
 // Общие переменные;
 const randomPointsList = generateTripPoints();
@@ -87,13 +87,18 @@ menuComponent.setOnChange((menuItem) => {
 });
 
 // Получаю данные с сервера;
-// const api = new API(AUTORIZATION);
+const api = new API(AUTORIZATION);
 //
 // api.getPoints()
 // .then((points) => {
 //   pointsModel.setPoints(points);
 //   tripController.render();
 // });
+
+api.getPoints()
+  .then((points) => {
+    console.log(points);
+  });
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();
