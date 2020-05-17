@@ -156,17 +156,13 @@ export default class TripController {
       } else {
         this._pointsModel.addPoint(newData);
         this._updatePoints();
-        // pointController.render(newData, PointControllerMode.DEFAULT);
       }
     } else if (newData === null) {
       this._pointsModel.removePoint(oldData.id);
       this._updatePoints();
     } else {
-      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-      if (isSuccess) {
-        // pointController.render(newData, PointControllerMode.DEFAULT);
-        this._updatePoints();
-      }
+      this._pointsModel.addPoint(newData);
+      this._updatePoints();
     }
   }
 
