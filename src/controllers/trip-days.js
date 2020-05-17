@@ -68,9 +68,9 @@ export default class TripController {
 
   // Отрисовка новой формы редактирования (точки маршрута);
   createPoint(button) {
-    if (this._creatingPoint) {
-      return;
-    }
+    // if (this._creatingPoint) {
+    //   return;
+    // }
 
     this._getSortedTrips(SortTypes.SORT_EVENT);
     button.setAttribute(`disabled`, `true`);

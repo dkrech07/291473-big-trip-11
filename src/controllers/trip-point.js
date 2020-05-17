@@ -44,6 +44,7 @@ export default class PointController {
     this._onDataChange = onDataChange; // Реализует сохранение данных формы (передает данные в модель);
     this._onViewChange = onViewChange; // Понадобятся чуть позже, после реализации удаления / добавления карточки точки маршрута
     this._mode = Mode.DEFAULT;
+    this._point = null;
 
     this._pointComponent = null;
     this._formComponent = null;
@@ -82,7 +83,7 @@ export default class PointController {
       }
 
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
-        this._onDataChange(this, point, null);
+        this._onDataChange(this, this._point, null);
         this._newPointButton.removeAttribute(`disabled`);
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
@@ -93,7 +94,7 @@ export default class PointController {
       if (this._newPointButton) {
         this._newPointButton.removeAttribute(`disabled`);
       }
-      this._onDataChange(this, point, null);
+      this._onDataChange(this, this._point, null);
     };
 
     // Отлавливаю клик по "Delete" на форме редактирования точки маршрута;
@@ -103,8 +104,8 @@ export default class PointController {
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
       this._replaceEditToPoint();
-      const data = this._formComponent.getData(point);
-      this._onDataChange(this, point, data);
+      const data = this._formComponent.getData(this._point);
+      this._onDataChange(this, this._point, data);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -132,8 +133,8 @@ export default class PointController {
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
       this._replaceEditToNewPoint();
-      const data = this._formComponent.getData(point);
-      this._onDataChange(this, point, data);
+      const data = this._formComponent.getData(this._point);
+      this._onDataChange(this, this._point, data);
       this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
