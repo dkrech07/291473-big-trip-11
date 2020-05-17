@@ -12,6 +12,17 @@ export const Mode = {
   ADDING: `adding`,
 };
 
+const getUnCheckOffers = () => {
+  const offers = generateOffers(generateOfferKeys());
+  for (const offer of offers) {
+    if (offer.isChecked) {
+      offer.isChecked = false;
+    }
+  }
+
+  return offers;
+};
+
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
   type: `Taxi`,
@@ -21,7 +32,7 @@ export const EmptyPoint = {
     destinationPhotos: [],
   },
   favorite: null,
-  offers: generateOffers(generateOfferKeys()),
+  offers: getUnCheckOffers(),
   price: 0,
   departure: `05/05/2020 14:31`,
   arrival: `05/05/2020 14:31`,
