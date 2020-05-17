@@ -238,9 +238,7 @@ const parseFormData = (formData, form, point) => {
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
 
-  console.log(price);
   // const price = formData.get(`event-price`);
-
   // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const getFavorite = (favoriteType) => {

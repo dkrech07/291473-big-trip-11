@@ -88,16 +88,12 @@ menuComponent.setOnChange((menuItem) => {
 
 // Получаю данные с сервера;
 const api = new API(AUTORIZATION);
-//
-// api.getPoints()
-// .then((points) => {
-//   pointsModel.setPoints(points);
-//   tripController.render();
-// });
 
 api.getPoints()
   .then((points) => {
     console.log(points);
+    // pointsModel.setPoints(points);
+    // tripController.render();
   });
 
 // // Отрисовка информации о крайних точках маршрута в шапке;

@@ -163,7 +163,6 @@ export default class TripController {
       this._updatePoints();
     } else {
       const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-      console.log(newData);
       if (isSuccess) {
         // pointController.render(newData, PointControllerMode.DEFAULT);
         this._updatePoints();
