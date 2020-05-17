@@ -98,9 +98,9 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createPhotosMarkup = () => {
-    return destinationInfo.pictures.src.map((photoUrl) => {
+    return destinationInfo.pictures.map((picture) => {
       return (
-        `<img class="event__photo" src="${photoUrl}" alt="${destinationInfo.pictures.description}">`
+        `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
       );
     }).join(`\n`);
   };

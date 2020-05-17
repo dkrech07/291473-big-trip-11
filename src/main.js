@@ -12,7 +12,7 @@ import StatisticsComponent from './components/statistics.js';
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
 
 // Общие переменные;
-const randomPointsList = generateTripPoints();
+// const randomPointsList = generateTripPoints();
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
@@ -20,9 +20,9 @@ const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
-const pointsList = randomPointsList.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+// const pointsList = randomPointsList.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
 const pointsModel = new PointsModel();
-pointsModel.setPoints(pointsList);
+// pointsModel.setPoints(pointsList);
 
 // Отрисовка пунктов меню: Table, Status;
 const menuComponent = new MenuComponent();
@@ -54,7 +54,7 @@ filterController.render();
 
 // Отрисовка информации о днях путешествия;
 const tripController = new TripController(tripEventsElement, pointsModel);
-tripController.render();
+// tripController.render();
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
@@ -92,8 +92,8 @@ const api = new API(AUTORIZATION);
 api.getPoints()
   .then((points) => {
     console.log(points);
-    // pointsModel.setPoints(points);
-    // tripController.render();
+    pointsModel.setPoints(points);
+    tripController.render();
   });
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
