@@ -133,8 +133,8 @@ export default class PointController {
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
       this._replaceEditToNewPoint();
-      const data = this._formComponent.getData(point); // Точка не создается если заменить point на this.point
-      this._onDataChange(this, point, data); // Точка не создается если заменить point на this.point
+      const data = this._formComponent.getData(this._point); // Точка не создается если заменить point на this.point
+      this._onDataChange(this, this._point, data); // Точка не создается если заменить point на this.point
       this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);

@@ -3,17 +3,17 @@ import AbstractComponent from "./abstract-component.js";
 const DISPLAY_OFFERS_COUNT = 3;
 
 const createTripPointMarkup = (point) => {
-  const {type, destinationInfo, departure, arrival, price} = point;
+  const {type, destinationInfo, offers, departure, arrival, price} = point;
   // const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
 
   const pointImage = point.type.toLowerCase();
 
-  const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
+  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const createOffersMarkup = () => {
-    return checkedOffers.map((offer, index) => {
+    return offers.map((offer, index) => {
       if (index < DISPLAY_OFFERS_COUNT) {
         return (
           `<li class="event__offer">
