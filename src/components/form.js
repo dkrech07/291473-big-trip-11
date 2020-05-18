@@ -52,10 +52,12 @@ const createFormTemplate = (currentPoint, mode) => {
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
     return offers.map((offer) => {
+      const offerId = offer.title.toLowerCase();
+
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" ${getCheckOffer(offer)}>
-          <label class="event__offer-label" for="event-offer-${offer.type}-1">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerId}-1" type="checkbox" name="event-offer-${offer.title}" ${getCheckOffer(offer)}>
+          <label class="event__offer-label" for="event-offer-${offerId}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -459,7 +461,7 @@ export default class Form extends AbstractSmartComponent {
               return currentValue.type === evt.target.value;
             }
         );
-
+        console.log(currentOffers); // -------------------------------------------------
         this._currentPoint.offers = currentOffers.offers;
         this.rerender();
       });
