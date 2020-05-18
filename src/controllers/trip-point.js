@@ -3,6 +3,7 @@ import EventComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import {generateOffers, generateOfferKeys, getRandomArrayItem, DESTINATIONS} from '../mock/way-point.js';
+import OffersModel from '../models/offers.js';
 
 const ESC_KEYCODE = 27;
 
@@ -55,6 +56,13 @@ export default class PointController {
   }
 
   render(point, mode) {
+    // console.log(OffersModel.getOffers());
+    // const newOffers = OffersModel.getOffers().map((item) => {
+    //   return item.offers;
+    // });
+    //
+    // console.log(newOffers);
+
     // Режим отрисовки точки маршрута (default, edit, adding);
     this._mode = mode;
 

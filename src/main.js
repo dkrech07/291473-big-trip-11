@@ -10,6 +10,8 @@ import {RenderPosition, render} from './utils/render.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
+import OffersModel from './models/offers.js';
+
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
@@ -105,12 +107,11 @@ api.getDestinations()
     // console.log(destinations);
     DestinationsModel.setDestinations(destinations);
   });
-//
-// api.getOffers()
-//   .then((offers) => {
-//     console.log(offers);
-//     getEmptyPoint(offers);
-//   });
+
+api.getOffers()
+  .then((offers) => {
+    OffersModel.setOffers(offers);
+  });
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();

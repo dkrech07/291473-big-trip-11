@@ -3,6 +3,17 @@ import {changeFirstLetter} from '../utils/common.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
+import OffersModel from '../models/offers.js';
+
+// console.log(OffersModel.getOffers());
+// // Выводит в форму список точек маршурта
+// const createDestinationsMarkup = () => {
+//   return DestinationsModel.getDestinations().map((destinationItem) => {
+//     return (
+//       `<option value="${destinationItem.name}"></option>`
+//     );
+//   }).join(`\n`);
+// };
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -233,15 +244,10 @@ const createFormTemplate = (currentPoint, mode) => {
 const parseFormData = (formData, form, point) => {
 
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
-  const destination = formData.get(`event-destination`);
   const price = parseInt(formData.get(`event-price`), 10);
   const favorite = formData.get(`event-favorite`);
-
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
-
-  // const price = formData.get(`event-price`);
-  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const getFavorite = (favoriteType) => {
     if (favoriteType) {
@@ -259,14 +265,13 @@ const parseFormData = (formData, form, point) => {
 
   const formObject = {
     id: point.id,
-    type: type[0],
-    destination,
-    destinationInfo: point.destinationInfo,
     favorite: getFavorite(favorite),
-    offers: point.offers.slice(),
-    price,
     departure: getNewDate(departure),
     arrival: getNewDate(arrival),
+    price,
+    type: type[0],
+    offers: point.offers.slice(),
+    destinationInfo: point.destinationInfo,
   };
 
   return formObject;
@@ -460,8 +465,14 @@ export default class Form extends AbstractSmartComponent {
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
       item.addEventListener(`change`, (evt) => {
         this._currentPoint.type = changeFirstLetter(evt.target.value);
-        this._currentPoint.offers = generateOffers(generateOfferKeys());
 
+        const currentOffers = OffersModel.getOffers().find(
+            (currentValue) => {
+              return currentValue.type === evt.target.value;
+            }
+        );
+
+        this._currentPoint.offers = currentOffers.offers;
         this.rerender();
       });
     });
@@ -479,9 +490,16 @@ export default class Form extends AbstractSmartComponent {
       const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
         return destinationItem.name;
       });
+
       const destinationsDescriptions = DestinationsModel.getDestinations().map((destinationItem) => {
         return destinationItem.description;
       });
+
+      const currentPhotos = DestinationsModel.getDestinations().find(
+          (currentValue) => {
+            return currentValue.name === evt.target.value;
+          }
+      );
 
       evt.preventDefault();
       const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
@@ -491,9 +509,9 @@ export default class Form extends AbstractSmartComponent {
         return;
       }
 
-      this._currentPoint.destination = destinationsNames[index];
+      this._currentPoint.destinationInfo.name = destinationsNames[index];
       this._currentPoint.destinationInfo.description = destinationsDescriptions[index];
-
+      this._currentPoint.destinationInfo.pictures = currentPhotos.pictures;
       this.rerender();
     });
 
