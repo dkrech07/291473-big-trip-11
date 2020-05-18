@@ -9,6 +9,8 @@ export default class Points {
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+
+    this._destinations = [];
   }
 
   getPoints() {

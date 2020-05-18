@@ -28,7 +28,7 @@ export const EmptyPoint = {
   type: `Taxi`,
   destinationInfo: {
     description: ``,
-    name: getRandomArrayItem(DESTINATIONS),
+    name: ``,
     pictures: [],
   },
   favorite: null,

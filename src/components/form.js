@@ -2,30 +2,13 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 import {changeFirstLetter} from '../utils/common.js';
 import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
+import DestinationsModel from '../models/destinations.js';
+
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
 import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
-
-// Выводит в форму список точек маршурта
-// export const createDestinationsMarkup = (destinationsList) => {
-//   return destinationsList.map((destinationItem) => {
-//     return (
-//       `<option value="${destinationItem.name}"></option>`
-//     );
-//   }).join(`\n`);
-// };
-
-// Выводит в форму список точек маршурта
-const createDestinationsMarkup = () => {
-  return DESTINATIONS.map((destinationItem) => {
-    return (
-      `<option value="${destinationItem}"></option>`
-    );
-  }).join(`\n`);
-};
-
 
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
@@ -50,13 +33,13 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   // Выводит в форму список точек маршурта
-  // const createDestinationsMarkup = () => {
-  //   return DESTINATIONS.map((destinationItem) => {
-  //     return (
-  //       `<option value="${destinationItem}"></option>`
-  //     );
-  //   }).join(`\n`);
-  // };
+  const createDestinationsMarkup = () => {
+    return DestinationsModel.getDestinations().map((destinationItem) => {
+      return (
+        `<option value="${destinationItem.name}"></option>`
+      );
+    }).join(`\n`);
+  };
 
   // Передает в оффер параметр checked
   const getCheckOffer = (offer) => {
@@ -493,15 +476,23 @@ export default class Form extends AbstractSmartComponent {
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       const destinationInput = element.querySelector(`.event__input--destination`);
 
+      const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
+        return destinationItem.name;
+      });
+      const destinationsDescriptions = DestinationsModel.getDestinations().map((destinationItem) => {
+        return destinationItem.description;
+      });
+
       evt.preventDefault();
-      const index = DESTINATIONS.findIndex((destination) => destination === evt.target.value);
+      const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
+
       if (index === -1) {
         destinationInput.setCustomValidity(`Выберете пункт назначения из списка`);
         return;
       }
 
-      this._currentPoint.destination = DESTINATIONS[index];
-      this._currentPoint.destinationInfo.description = generateDescription();
+      this._currentPoint.destination = destinationsNames[index];
+      this._currentPoint.destinationInfo.description = destinationsDescriptions[index];
 
       this.rerender();
     });

@@ -6,9 +6,10 @@ import TripCostComponent from './components/trip-cost.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
-import {generateTripPoints} from './mock/way-point.js';
+// import {generateTripPoints} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
+import DestinationsModel from './models/destinations.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
@@ -99,12 +100,11 @@ api.getPoints()
     tripController.render();
   });
 
-// api.getDestinations()
-//   .then((destinations) => {
-//     // console.log(destinations);
-//     createDestinationsMarkup(destinations);
-//     console.log(createDestinationsMarkup(destinations));
-//   });
+api.getDestinations()
+  .then((destinations) => {
+    // console.log(destinations);
+    DestinationsModel.setDestinations(destinations);
+  });
 //
 // api.getOffers()
 //   .then((offers) => {
