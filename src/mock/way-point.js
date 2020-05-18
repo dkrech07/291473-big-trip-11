@@ -7,7 +7,6 @@ const STOP_TYPES = [
 ];
 
 export {
-
   TRIP_TYPES,
   STOP_TYPES,
 };

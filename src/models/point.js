@@ -8,9 +8,6 @@ export default class Point {
     this.type = data[`type`];
     this.offers = data[`offers`];
     this.destinationInfo = data[`destination`];
-
-    // this.description = data[`description`] || ``;
-    // this.dueDate = data[`due_date`] ? new Date(data[`due_date`]) : null;
   }
 
   static parsePoint(data) {

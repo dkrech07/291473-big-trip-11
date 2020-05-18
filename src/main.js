@@ -1,34 +1,25 @@
 import API from './api.js';
-// import {createDestinationsMarkup} from './components/form.js';
-// import getEmptyPoint from './controllers/trip-point.js';
-
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
-// import {generateTripPoints} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
 import OffersModel from './models/offers.js';
-
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
-const AUTORIZATION = `Basic dsfsfe3redgdg`;
-
 // Общие переменные;
-// const randomPointsList = generateTripPoints();
+const AUTORIZATION = `Basic dsfsfe3redgdg`;
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
-
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
-
-// const pointsList = randomPointsList.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
 const pointsModel = new PointsModel();
-// pointsModel.setPoints(pointsList);
+// const pointsList = randomPointsList.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+
 
 // Отрисовка пунктов меню: Table, Status;
 const menuComponent = new MenuComponent();
@@ -60,7 +51,6 @@ filterController.render();
 
 // Отрисовка информации о днях путешествия;
 const tripController = new TripController(tripEventsElement, pointsModel);
-// tripController.render();
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
@@ -97,14 +87,12 @@ const api = new API(AUTORIZATION);
 
 api.getPoints()
   .then((points) => {
-    // console.log(points);
     pointsModel.setPoints(points);
     tripController.render();
   });
 
 api.getDestinations()
   .then((destinations) => {
-    // console.log(destinations);
     DestinationsModel.setDestinations(destinations);
   });
 
