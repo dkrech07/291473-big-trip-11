@@ -13,16 +13,16 @@ export const Mode = {
   ADDING: `adding`,
 };
 
-const getUnCheckOffers = () => {
-  const offers = generateOffers(generateOfferKeys());
-  for (const offer of offers) {
-    if (offer.isChecked) {
-      offer.isChecked = false;
-    }
-  }
-
-  return offers;
-};
+// const getUnCheckOffers = () => {
+//   const offers = generateOffers(generateOfferKeys());
+//   for (const offer of offers) {
+//     if (offer.isChecked) {
+//       offer.isChecked = false;
+//     }
+//   }
+//
+//   return offers;
+// };
 
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
@@ -33,7 +33,7 @@ export const EmptyPoint = {
     pictures: [],
   },
   favorite: null,
-  offers: getUnCheckOffers(),
+  offers: [],
   price: 0,
   departure: `05/05/2020 14:31`,
   arrival: `05/05/2020 14:31`,
@@ -56,13 +56,6 @@ export default class PointController {
   }
 
   render(point, mode) {
-    // console.log(OffersModel.getOffers());
-    // const newOffers = OffersModel.getOffers().map((item) => {
-    //   return item.offers;
-    // });
-    //
-    // console.log(newOffers);
-
     // Режим отрисовки точки маршрута (default, edit, adding);
     this._mode = mode;
 

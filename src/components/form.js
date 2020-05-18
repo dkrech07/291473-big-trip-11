@@ -5,16 +5,6 @@ import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 
-// console.log(OffersModel.getOffers());
-// // Выводит в форму список точек маршурта
-// const createDestinationsMarkup = () => {
-//   return DestinationsModel.getDestinations().map((destinationItem) => {
-//     return (
-//       `<option value="${destinationItem.name}"></option>`
-//     );
-//   }).join(`\n`);
-// };
-
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
 import "flatpickr/dist/flatpickr.min.css";
@@ -24,8 +14,6 @@ const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
-
-  // const destination = encode(notSanitizedDestination);
 
   const destination = encode(destinationInfo.name);
   const price = encode(notSanitizedPrice.toString());
