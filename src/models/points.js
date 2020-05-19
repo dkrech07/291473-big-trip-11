@@ -1,7 +1,6 @@
 import {getPointsByFilter} from "../utils/filter.js";
 import {FilterType} from "../controllers/filter.js";
 
-
 export default class Points {
   constructor() {
     this._points = [];

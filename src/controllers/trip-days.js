@@ -152,8 +152,13 @@ export default class TripController {
         pointController.destroy();
         this._updatePoints();
       } else {
-        this._pointsModel.addPoint(newData);
-        this._updatePoints();
+        // this._pointsModel.addPoint(newData);
+        // this._updatePoints();
+        this._api.updatePoint(oldData.id, newData)
+        .then((pointsModel) => {
+          console.log(pointsModel);
+          this._pointsModel.updatePoint(oldData.id, pointsModel);
+        });
       }
     } else if (newData === null) {
       this._pointsModel.removePoint(oldData.id);
@@ -166,7 +171,7 @@ export default class TripController {
       // }
       this._api.updatePoint(oldData.id, newData)
       .then((pointsModel) => {
-        console.log(newData);
+        console.log(pointsModel);
         const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
 
         if (isSuccess) {

@@ -14,8 +14,8 @@ export default class Point {
     return {
       'id': this.id,
       'is_favorite': this.favorite,
-      'date_from': this.departure,
-      'date_to': this.arrival,
+      'date_from': this.departure.toISOString(),
+      'date_to': this.arrival.toISOString(),
       'base_price': this.price,
       'type': this.type,
       'offers': this.offers,

@@ -12,7 +12,8 @@ import StatisticsComponent from './components/statistics.js';
 
 // Получаю данные с сервера;
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
-const api = new API(AUTORIZATION);
+const END_POINT = `https://11.ecmascript.pages.academy/big-trip`
+const api = new API(END_POINT, AUTORIZATION);
 
 // Общие переменные;
 const headerElement = document.querySelector(`.page-header`);
