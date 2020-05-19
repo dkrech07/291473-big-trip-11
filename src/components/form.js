@@ -4,33 +4,13 @@ import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
+import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
 import "flatpickr/dist/flatpickr.min.css";
 
-const TRIP_TYPES = [
-  `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
-];
-
-const STOP_TYPES = [
-  `Check-in`, `Sightseeing`, `Restaurant`
-];
-
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
-
-// Изменяет текст плейсхолдера
-export const getPlaceholderMarkup = (tripType) => {
-  const pointTypesTo = TRIP_TYPES.filter((item) => {
-    return item === tripType;
-  });
-
-  if (pointTypesTo.length !== 0) {
-    return changeFirstLetter(tripType) + ` to`;
-  }
-
-  return changeFirstLetter(tripType) + ` in`;
-};
 
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
@@ -198,7 +178,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${getPlaceholderMarkup(type)}
+              ${getPlaceholderMarkup(type, TRIP_TYPES)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
