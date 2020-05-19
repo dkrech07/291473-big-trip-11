@@ -21,9 +21,10 @@ const getDays = (points) => {
 };
 
 export default class TripController {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, api) {
     this._container = container;
     this._pointsModel = pointsModel;
+    this._api = api;
 
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
@@ -41,6 +42,7 @@ export default class TripController {
   }
 
   render() {
+    console.log(this._api);
     this._points = this._pointsModel.getPointsAll();
 
     // Пороверка точек маршрута на наличие;
@@ -158,10 +160,18 @@ export default class TripController {
       this._updatePoints();
     } else {
 
-      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-      if (isSuccess) {
-        this._updatePoints();
-      }
+      // const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+      // if (isSuccess) {
+      //   this._updatePoints();
+      // }
+      this._api.updatePoint(oldData.id, newData)
+      .then((pointsModel) => {
+        const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
+
+        if (isSuccess) {
+          this._updatePoints();
+        }
+      });
     }
   }
 

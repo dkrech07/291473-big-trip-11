@@ -10,8 +10,11 @@ import OffersModel from './models/offers.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
-// Общие переменные;
+// Получаю данные с сервера;
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
+const api = new API(AUTORIZATION);
+
+// Общие переменные;
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
@@ -50,7 +53,7 @@ const filterController = new FilterController(mainElement, pointsModel);
 filterController.render();
 
 // Отрисовка информации о днях путешествия;
-const tripController = new TripController(tripEventsElement, pointsModel);
+const tripController = new TripController(tripEventsElement, pointsModel, api);
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
@@ -81,9 +84,6 @@ menuComponent.setOnChange((menuItem) => {
       break;
   }
 });
-
-// Получаю данные с сервера;
-const api = new API(AUTORIZATION);
 
 api.getPoints()
   .then((points) => {
