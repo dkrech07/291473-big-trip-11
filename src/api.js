@@ -37,14 +37,15 @@ const API = class {
   updatePoint(id, data) { // Еще в работе, нужно передать в onDataChange (как в лекции);
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
 
     return fetch(`https://11.ecmascript.pages.academy/big-trip/points/${id}`, {
       method: `PUT`,
-      body: JSON.stringify(data),
+      body: JSON.stringify(data.toRAW()),
       headers,
     })
       .then((response) => response.json())
-      .then(Point.parsePoints);
+      .then(Point.parsePoint);
   }
 };
 

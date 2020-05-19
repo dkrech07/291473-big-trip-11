@@ -10,11 +10,28 @@ export default class Point {
     this.destinationInfo = data[`destination`];
   }
 
+  toRAW() {
+    return {
+      'id': this.id,
+      'is_favorite': this.favorite,
+      'date_from': this.departure,
+      'date_to': this.arrival,
+      'base_price': this.price,
+      'type': this.type,
+      'offers': this.offers,
+      'destination': this.destinationInfo,
+    };
+  }
+
   static parsePoint(data) {
     return new Point(data);
   }
 
   static parsePoints(data) {
     return data.map(Point.parsePoint);
+  }
+
+  static clone(data) {
+    return new Point(data.toRAW());
   }
 }
