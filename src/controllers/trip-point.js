@@ -2,6 +2,7 @@ import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import PointModel from "../models/point.js";
 
 const ESC_KEYCODE = 27;
 
@@ -93,7 +94,9 @@ export default class PointController {
       evt.preventDefault();
       this._replaceEditToPoint();
       const data = this._formComponent.getData(this._point);
-      this._onDataChange(this, this._point, data);
+      const newData = PointModel.clone(data);
+      console.log(`point`, newData);
+      this._onDataChange(this, this._point, newData);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -122,7 +125,9 @@ export default class PointController {
       evt.preventDefault();
       this._replaceEditToNewPoint();
       const data = this._formComponent.getData(this._point);
-      this._onDataChange(this, EmptyPoint, data);
+      const newData = PointModel.clone(data);
+      console.log(`newPoint`, newData);
+      this._onDataChange(this, EmptyPoint, newData);
       this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);

@@ -38,6 +38,7 @@ const API = class {
   }
 
   createPoint(point) {
+    // console.log(`createPoint`, point);
     return this._load({
       url: `points`,
       method: Method.POST,
@@ -49,6 +50,7 @@ const API = class {
   }
 
   updatePoint(id, data) {
+    // console.log(`updatePoint`, data);
     return this._load({
       url: `points/${id}`,
       method: Method.PUT,

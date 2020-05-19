@@ -164,6 +164,7 @@ export default class TripController {
         this._api.createPoint(newData)
         .then((pointsModel) => {
           this._pointsModel.updatePoint(oldData.id, pointsModel);
+          this._updatePoints();
         });
       }
     } else if (newData === null) {

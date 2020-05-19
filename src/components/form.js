@@ -4,6 +4,7 @@ import {TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
+import PointModel from "../models/point.js";
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -253,18 +254,25 @@ const parseFormData = (formData, form, point) => {
     return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
   };
 
-  const formObject = {
-    id: point.id,
-    favorite: getFavorite(favorite),
-    departure: getNewDate(departure),
-    arrival: getNewDate(arrival),
-    price,
-    type: type[0],
-    offers: point.offers.slice(),
-    destinationInfo: point.destinationInfo,
-  };
+  return new PointModel({
+    // id: point.id,
+    // favorite: getFavorite(favorite),
+    // departure: getNewDate(departure),
+    // arrival: getNewDate(arrival),
+    // price,
+    // type: type[0],
+    // offers: point.offers.slice(),
+    // destinationInfo: point.destinationInfo,
 
-  return formObject;
+    'id': point.id,
+    'is_favorite': getFavorite(favorite),
+    'date_from': getNewDate(departure),
+    'date_to': getNewDate(arrival),
+    'base_price': price,
+    'type': type[0],
+    'offers': point.offers.slice(),
+    'destination': point.destinationInfo,
+  });
 };
 
 export default class Form extends AbstractSmartComponent {
