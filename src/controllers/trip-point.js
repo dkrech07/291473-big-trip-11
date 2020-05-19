@@ -95,7 +95,7 @@ export default class PointController {
       this._replaceEditToPoint();
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      console.log(`point`, newData);
+      // console.log(`point`, newData);
       this._onDataChange(this, this._point, newData);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
@@ -126,7 +126,7 @@ export default class PointController {
       this._replaceEditToNewPoint();
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      console.log(`newPoint`, newData);
+      // console.log(`newPoint`, newData);
       this._onDataChange(this, EmptyPoint, newData);
       this._newPointButton.removeAttribute(`disabled`);
 

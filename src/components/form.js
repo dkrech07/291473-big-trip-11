@@ -1,6 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {changeFirstLetter} from '../utils/common.js';
-import {TRIP_TYPES, STOP_TYPES} from '../mock/way-point.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
@@ -10,7 +9,28 @@ import flatpickr from 'flatpickr';
 import {encode} from 'he';
 import "flatpickr/dist/flatpickr.min.css";
 
+const TRIP_TYPES = [
+  `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
+];
+
+const STOP_TYPES = [
+  `Check-in`, `Sightseeing`, `Restaurant`
+];
+
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
+
+// Изменяет текст плейсхолдера
+export const getPlaceholderMarkup = (tripType) => {
+  const pointTypesTo = TRIP_TYPES.filter((item) => {
+    return item === tripType;
+  });
+
+  if (pointTypesTo.length !== 0) {
+    return changeFirstLetter(tripType) + ` to`;
+  }
+
+  return changeFirstLetter(tripType) + ` in`;
+};
 
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
@@ -178,7 +198,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${changeFirstLetter(type)} to
+              ${getPlaceholderMarkup(type)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
@@ -235,6 +255,7 @@ const createFormTemplate = (currentPoint, mode) => {
 const parseFormData = (formData, form, point) => {
 
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
+
   const price = parseInt(formData.get(`event-price`), 10);
   const favorite = formData.get(`event-favorite`);
   const departure = formData.get(`event-start-time`);
@@ -255,15 +276,6 @@ const parseFormData = (formData, form, point) => {
   };
 
   return new PointModel({
-    // id: point.id,
-    // favorite: getFavorite(favorite),
-    // departure: getNewDate(departure),
-    // arrival: getNewDate(arrival),
-    // price,
-    // type: type[0],
-    // offers: point.offers.slice(),
-    // destinationInfo: point.destinationInfo,
-
     'id': point.id,
     'is_favorite': getFavorite(favorite),
     'date_from': getNewDate(departure),
@@ -469,7 +481,7 @@ export default class Form extends AbstractSmartComponent {
               return currentValue.type === evt.target.value;
             }
         );
-        console.log(currentOffers); // -------------------------------------------------
+
         this._currentPoint.offers = currentOffers.offers;
         this.rerender();
       });

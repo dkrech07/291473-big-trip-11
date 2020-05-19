@@ -1,6 +1,7 @@
 import {correctDateISOFormat, correctTimeFormat, calculateTripTime, changeFirstLetter} from '../utils/common.js';
-import AbstractComponent from "./abstract-component.js";
+import AbstractComponent from './abstract-component.js';
 const DISPLAY_OFFERS_COUNT = 3;
+
 
 const createTripPointMarkup = (point) => {
   const {type, destinationInfo, offers, departure, arrival, price} = point;
@@ -33,7 +34,7 @@ const createTripPointMarkup = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${pointImage}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${changeFirstLetter(type)} to ${destinationInfo.name}</h3>
+      <h3 class="event__title">${changeFirstLetter(type)}  to ${destinationInfo.name}</h3>
 
       <div class="event__schedule">
         <p class="event__time">
