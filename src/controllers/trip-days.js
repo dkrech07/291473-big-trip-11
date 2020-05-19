@@ -146,17 +146,23 @@ export default class TripController {
 
   // Условия отрисовки (обновления) данных для точек маршрута;
   _onDataChange(pointController, oldData, newData) {
+
     if (oldData === EmptyPoint) {
       this._creatingPoint = null;
+
       if (newData === null) {
-        pointController.destroy();
-        this._updatePoints();
+        // pointController.destroy();
+        // this._updatePoints();
+        this._api.deletePoint(oldData.id)
+        .then(() => {
+          this._pointsModel.removePoint(oldData.id);
+          this._updatePoints();
+        });
       } else {
         // this._pointsModel.addPoint(newData);
         // this._updatePoints();
-        this._api.updatePoint(oldData.id, newData)
+        this._api.createPoint(newData)
         .then((pointsModel) => {
-          console.log(pointsModel);
           this._pointsModel.updatePoint(oldData.id, pointsModel);
         });
       }
@@ -164,14 +170,12 @@ export default class TripController {
       this._pointsModel.removePoint(oldData.id);
       this._updatePoints();
     } else {
-
       // const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
       // if (isSuccess) {
       //   this._updatePoints();
       // }
       this._api.updatePoint(oldData.id, newData)
       .then((pointsModel) => {
-        console.log(pointsModel);
         const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
 
         if (isSuccess) {
