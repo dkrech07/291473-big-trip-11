@@ -11,7 +11,7 @@ import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
 // Получаю данные с сервера;
-const AUTORIZATION = `Basic dsfsfe3redgdg2`;
+const AUTORIZATION = `Basic dsfsfe3redgdg3`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 const api = new API(END_POINT, AUTORIZATION);
 
@@ -87,6 +87,13 @@ menuComponent.setOnChange((menuItem) => {
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(points);
+    for (const point of points) {
+      if (point.offers.length > 0) {
+        for (const offer of point.offers) {
+          offer.isChecked = true;
+        }
+      }
+    }
     renderTripCost(pointsModel.getPoints(points));
     tripController.render();
   });
