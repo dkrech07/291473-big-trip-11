@@ -17,7 +17,7 @@ export default class Point {
       'date_from': this.departure,
       'date_to': this.arrival,
       'base_price': this.price,
-      'type': this.type,
+      'type': this.type.toLowerCase(),
       'offers': this.offers,
       'destination': this.destinationInfo,
     };

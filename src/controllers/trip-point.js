@@ -23,8 +23,8 @@ export const EmptyPoint = {
   favorite: null,
   offers: [],
   price: 0,
-  departure: `05/05/2020 14:31`,
-  arrival: `05/05/2020 14:31`,
+  departure: `15/05/2020 14:31`,
+  arrival: `15/05/2020 14:31`,
 };
 
 export default class PointController {

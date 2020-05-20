@@ -34,11 +34,16 @@ const createFormTemplate = (currentPoint, mode) => {
 
   // Выводит в форму список точек маршурта
   const createDestinationsMarkup = () => {
-    return DestinationsModel.getDestinations().map((destinationItem) => {
-      return (
-        `<option value="${destinationItem.name}"></option>`
-      );
-    }).join(`\n`);
+    const destinations = DestinationsModel.getDestinations();
+    if (destinations && destinations.length > 0) {
+      return DestinationsModel.getDestinations().map((destinationItem) => {
+        return (
+          `<option value="${destinationItem.name}"></option>`
+        );
+      }).join(`\n`);
+    }
+
+    return ``;
   };
 
   // Передает в оффер параметр checked
@@ -261,7 +266,7 @@ const parseFormData = (formData, form, point) => {
     'date_from': getNewDate(departure),
     'date_to': getNewDate(arrival),
     'base_price': price,
-    'type': type[0],
+    'type': type[0].toLowerCase(),
     'offers': point.offers.slice(),
     'destination': point.destinationInfo,
   });
