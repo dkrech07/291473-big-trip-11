@@ -22,8 +22,6 @@ const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 const pointsModel = new PointsModel();
-// const pointsList = randomPointsList.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-
 
 // Отрисовка пунктов меню: Table, Status;
 const menuComponent = new MenuComponent();
@@ -94,7 +92,9 @@ api.getPoints()
         }
       }
     }
-    renderTripCost(pointsModel.getPoints(points));
+
+    const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+    renderTripCost(pointsModel.getPoints(pointsOfDeparture));
     tripController.render();
   });
 

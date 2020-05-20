@@ -146,7 +146,6 @@ export default class TripController {
 
   // Условия отрисовки (обновления) данных для точек маршрута;
   _onDataChange(pointController, oldData, newData) {
-
     if (oldData === EmptyPoint) {
       this._creatingPoint = null;
       if (newData === null) {
@@ -154,7 +153,6 @@ export default class TripController {
         .then(() => {
           this._pointsModel.removePoint(oldData.id);
           this._updatePoints();
-          // pointController.destroy();
         });
       } else {
         console.log(`createPoint`, newData);
