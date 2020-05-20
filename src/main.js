@@ -47,8 +47,6 @@ export const renderTripCost = (model) => {
   render(tripMenuElement, tripCostComponent, RenderPosition.AFTERBEGIN);
 };
 
-renderTripCost(pointsModel.getPoints());
-
 // Отрисовка отфильтрованных точек маршрута;
 const filterController = new FilterController(mainElement, pointsModel);
 filterController.render();
@@ -89,6 +87,7 @@ menuComponent.setOnChange((menuItem) => {
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(points);
+    renderTripCost(pointsModel.getPoints(points));
     tripController.render();
   });
 
@@ -101,6 +100,7 @@ api.getOffers()
   .then((offers) => {
     OffersModel.setOffers(offers);
   });
+
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();
