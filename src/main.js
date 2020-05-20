@@ -11,7 +11,7 @@ import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
 // Получаю данные с сервера;
-const AUTORIZATION = `Basic dsfsfe3redgdg3`;
+const AUTORIZATION = `Basic dsfsfe3redgdg`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 const api = new API(END_POINT, AUTORIZATION);
 

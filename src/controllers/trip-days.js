@@ -45,19 +45,19 @@ export default class TripController {
     console.log(this._api);
     this._points = this._pointsModel.getPointsAll();
 
+    // Отрисовка меню сортировки;
+    render(this._container, this._sortComponent);
+
     // Пороверка точек маршрута на наличие;
     const isAllPointsMissing = this._points.every((point) => point.length === 0);
+
+    // Отрисовка "контейнера" для вывода всех дней путешествия;
+    render(this._container, this._tripDaysComponent);
 
     if (isAllPointsMissing) {
       render(this._container, new NoPointsComponent());
       return;
     }
-
-    // Отрисовка меню сортировки;
-    render(this._container, this._sortComponent);
-
-    // Отрисовка "контейнера" для вывода всех дней путешествия;
-    render(this._container, this._tripDaysComponent);
 
     // Отрисовка дней путешествия и точек маршрута;
     this._renderPoints(this._points);
