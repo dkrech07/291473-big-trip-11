@@ -160,7 +160,7 @@ export default class TripController {
         console.log(`createPoint`, newData);
         this._api.createPoint(newData)
         .then((pointsModel) => {
-          this._pointsModel.updatePoint(oldData.id, pointsModel);
+          this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
         });
       }
