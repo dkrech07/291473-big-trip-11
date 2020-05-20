@@ -83,11 +83,25 @@ export default class PointController {
       if (this._newPointButton) {
         this._newPointButton.removeAttribute(`disabled`);
       }
+
       this._onDataChange(this, this._point, null);
+    };
+
+    // Выход из формы создания точки маршрута;
+    const cancelButtonClickHandler = () => {
+      if (this._newPointButton) {
+        this._newPointButton.removeAttribute(`disabled`);
+      }
+
+      this._formComponent.reset();
+      remove(this._formComponent);
     };
 
     // Отлавливаю клик по "Delete" на форме редактирования точки маршрута;
     this._formComponent.setDeleteButtonClickHandler(deleteButtonClickHandler);
+
+    // Отлавливаю клик по "Cancel" на форме создания точки маршрута;
+    this._formComponent.setCancelButtonClickHandler(cancelButtonClickHandler);
 
     // Сохранение формы редактирования точки маршрута;
     const saveFormClickHandler = (evt) => {
@@ -123,10 +137,10 @@ export default class PointController {
     // Отрисовка формы редактирования для новой карточки;
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
+
       this._replaceEditToNewPoint();
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      // console.log(`newPoint`, newData);
       this._onDataChange(this, EmptyPoint, newData);
       this._newPointButton.removeAttribute(`disabled`);
 

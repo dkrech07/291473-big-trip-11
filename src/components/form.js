@@ -287,6 +287,7 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeClickHandler = null;
     this._endTimeClickHandler = null;
     this._deleteButtonClickHandler = null;
+    this._cancelButtonClickHandler = null;
     this._formRollupClickHandler = null;
     this._formOfferClickHandler = null;
     this._formPriceClickHandler = null;
@@ -306,10 +307,21 @@ export default class Form extends AbstractSmartComponent {
   }
 
   setDeleteButtonClickHandler(handler) {
-    this.getElement().querySelector(`.event__reset-btn`)
+    if (this.getElement().querySelector(`.event__reset-btn`).textContent === `Delete`) {
+      this.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, handler);
 
-    this._deleteButtonClickHandler = handler;
+      this._deleteButtonClickHandler = handler;
+    }
+  }
+
+  setCancelButtonClickHandler(handler) {
+    if (this.getElement().querySelector(`.event__reset-btn`).textContent === `Cancel`) {
+      this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, handler);
+
+      this._cancelButtonClickHandler = handler;
+    }
   }
 
   removeElement() {
@@ -398,6 +410,7 @@ export default class Form extends AbstractSmartComponent {
     this.setEndTimeClickHandler(this._endTimeClickHandler);
 
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
+    this.setCancelButtonClickHandler(this._cancelButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
     this.setOfferClickHandler(this._formOfferClickHandler);
     this.setFromPriceClickHandler(this._formPriceClickHandler);
