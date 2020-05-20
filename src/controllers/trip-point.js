@@ -72,8 +72,10 @@ export default class PointController {
       }
 
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
-        this._onDataChange(this, this._point, null);
         this._newPointButton.removeAttribute(`disabled`);
+
+        this._formComponent.reset();
+        remove(this._formComponent);
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
     };
@@ -95,6 +97,7 @@ export default class PointController {
 
       this._formComponent.reset();
       remove(this._formComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
     // Отлавливаю клик по "Delete" на форме редактирования точки маршрута;
