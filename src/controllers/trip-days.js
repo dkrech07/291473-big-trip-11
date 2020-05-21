@@ -2,17 +2,13 @@ import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
-import {render} from '../utils/render.js';
+import {render, remove} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
 import {renderTripCost} from '../main.js';
 import moment from "moment";
-
-const getPreloader = () => {
-  return (`<p class="board__no-tasks">Loading...</p>`);
-};
 
 const getDays = (points) => {
   const daysList = [];
@@ -39,6 +35,7 @@ export default class TripController {
     this._tripDayComponent = null;
     this._creatingPoint = null;
     this._showedPointsControllers = [];
+    this._noPointsComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -53,8 +50,8 @@ export default class TripController {
     // Отрисовка меню сортировки;
     render(this._container, this._sortComponent);
 
-    // Пороверка точек маршрута на наличие;
-    const isAllPointsMissing = this._points.every((point) => point.length === 0);
+    // // Пороверка точек маршрута на наличие;
+    // const isAllPointsMissing = this._points.every((point) => point.length === 0);
 
     // Отрисовка "контейнера" для вывода всех дней путешествия;
     render(this._container, this._tripDaysComponent);
@@ -62,20 +59,27 @@ export default class TripController {
     // Отрисовка прелоадера;
     render(this._container, this._preloaderComponent);
 
+    this._noPointsComponent = new NoPointsComponent();
+
+
+    // УТОЧНИТЬ МОЖНО ЛИ ТАК ДЕЛАТЬ
     this._api.getPoints()
       .then((points) => {
+        // Удаление прелоадера;
+        remove(this._preloaderComponent);
 
-        // Удаление прелоадера и отрисовка точек маршрута;
-        if (points) {
-          this._preloaderComponent.removeElement();
+        // Отрисовка точек маршрута, если они есть;
+        if (points.length > 0) {
           this._renderPoints(this._points);
-          return;
+
+          if (this._noPointsComponent) {
+            remove(this._noPointsComponent);
+          }
         }
 
-        // Сообщение о необходимости добавить точку маршрута;
-        if (isAllPointsMissing) {
-          render(this._container, new NoPointsComponent());
-          return;
+        // Сообщение о необходимости добавить точку маршрута, если точек нет;
+        if (points.length <= 0) {
+          render(this._container, this._noPointsComponent);
         }
       });
 
