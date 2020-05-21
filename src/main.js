@@ -1,27 +1,27 @@
+import API from './api.js';
 import TripCostComponent from './components/trip-cost.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
-// import FiltersComponent from './components/filters.js';
-// import NoPointsComponent from './components/no-points.js';
 import {getPrice} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
-import {generateTripPoints} from './mock/way-point.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
+import DestinationsModel from './models/destinations.js';
+import OffersModel from './models/offers.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 
+// Получаю данные с сервера;
+const AUTORIZATION = `Basic dsfsfe3redgdg`;
+const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+const api = new API(END_POINT, AUTORIZATION);
+
 // Общие переменные;
-const randomPointsList = generateTripPoints();
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
 const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
-
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
-
-const pointsList = randomPointsList.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
 const pointsModel = new PointsModel();
-pointsModel.setPoints(pointsList);
 
 // Отрисовка пунктов меню: Table, Status;
 const menuComponent = new MenuComponent();
@@ -45,15 +45,12 @@ export const renderTripCost = (model) => {
   render(tripMenuElement, tripCostComponent, RenderPosition.AFTERBEGIN);
 };
 
-renderTripCost(pointsModel.getPoints());
-
 // Отрисовка отфильтрованных точек маршрута;
 const filterController = new FilterController(mainElement, pointsModel);
 filterController.render();
 
 // Отрисовка информации о днях путешествия;
-const tripController = new TripController(tripEventsElement, pointsModel);
-tripController.render();
+const tripController = new TripController(tripEventsElement, pointsModel, api);
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
@@ -64,7 +61,7 @@ const newPointClickHandler = (evt) => {
 newPointButton.addEventListener(`click`, newPointClickHandler);
 
 // Генерирую статистику и скрываю ее;
-const statisticsComponent = new StatisticsComponent({points: pointsModel});
+const statisticsComponent = new StatisticsComponent(pointsModel);
 render(tripEventsElement, statisticsComponent, RenderPosition.AFTEREND);
 statisticsComponent.hide();
 
@@ -84,6 +81,33 @@ menuComponent.setOnChange((menuItem) => {
       break;
   }
 });
+
+api.getPoints()
+  .then((points) => {
+    pointsModel.setPoints(points);
+    for (const point of points) {
+      if (point.offers.length > 0) {
+        for (const offer of point.offers) {
+          offer.isChecked = true;
+        }
+      }
+    }
+
+    const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+    renderTripCost(pointsModel.getPoints(pointsOfDeparture));
+    tripController.render();
+  });
+
+api.getDestinations()
+  .then((destinations) => {
+    DestinationsModel.setDestinations(destinations);
+  });
+
+api.getOffers()
+  .then((offers) => {
+    OffersModel.setOffers(offers);
+  });
+
 
 // // Отрисовка информации о крайних точках маршрута в шапке;
 // renderTripInfo();

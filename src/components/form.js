@@ -1,18 +1,22 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {DESTINATIONS, TRIP_TYPES, STOP_TYPES, generateOffers, generateOfferKeys, generateDescription} from '../mock/way-point.js';
+import {changeFirstLetter} from '../utils/common.js';
 import {Mode as PointControllerMode} from '../controllers/trip-point.js';
+import DestinationsModel from '../models/destinations.js';
+import OffersModel from '../models/offers.js';
+import PointModel from "../models/point.js";
+import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
-
 import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint, mode) => {
-  const {type, destination: notSanitizedDestination, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
+  const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
 
-  const destination = encode(notSanitizedDestination);
+  const destination = encode(destinationInfo.name);
   const price = encode(notSanitizedPrice.toString());
 
   // Выводит в форму список предложений
@@ -30,30 +34,36 @@ const createFormTemplate = (currentPoint, mode) => {
 
   // Выводит в форму список точек маршурта
   const createDestinationsMarkup = () => {
-    return DESTINATIONS.map((destinationItem) => {
-      return (
-        `<option value="${destinationItem}"></option>`
-      );
-    }).join(`\n`);
+    const destinations = DestinationsModel.getDestinations();
+    if (destinations && destinations.length > 0) {
+      return DestinationsModel.getDestinations().map((destinationItem) => {
+        return (
+          `<option value="${destinationItem.name}"></option>`
+        );
+      }).join(`\n`);
+    }
+
+    return ``;
   };
 
   // Передает в оффер параметр checked
   const getCheckOffer = (offer) => {
-    if (offer.isChecked) {
-      return `checked`;
-    } else {
+    if (!offer.isChecked) {
       return ``;
     }
-  };
 
+    return `checked`;
+  };
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
     return offers.map((offer) => {
+      const offerTitleLowerCase = offer.title.toLowerCase();
+
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" ${getCheckOffer(offer)}>
-          <label class="event__offer-label" for="event-offer-${offer.type}-1">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offerTitleLowerCase}-1" type="checkbox" name="event-offer-${offer.title}" ${getCheckOffer(offer)}>
+          <label class="event__offer-label" for="event-offer-${offerTitleLowerCase}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -64,24 +74,24 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createOffersContainer = () => {
-    if (offers.length) {
-      return (
-        `<section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">
-                ${createOffersMarkup()}
-          </div>
-        </section>`
-      );
-    } else {
+    if (!offers.length) {
       return ``;
     }
+
+    return (
+      `<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+              ${createOffersMarkup()}
+        </div>
+      </section>`
+    );
   };
 
   // Выводит в форму текст описания
   const createDescriptionMarkup = () => {
     return (
-      `<p class="event__destination-description">${destinationInfo.destinationDescription}</p>`
+      `<p class="event__destination-description">${destinationInfo.description}</p>`
     );
   };
 
@@ -97,16 +107,24 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createPhotosMarkup = () => {
-    return destinationInfo.destinationPhotos.map((photoUrl) => {
+    return destinationInfo.pictures.map((picture) => {
       return (
-        `<img class="event__photo" src="${photoUrl}" alt="Event photo">`
+        `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
       );
     }).join(`\n`);
   };
 
-  // Проставляет для всех "звездочек" нективное состояние
-  const getCheckFavorite = (check) => {
-    return (check && `checked`) || ``;
+  // // Проставляет для всех "звездочек" нективное состояние
+  // const getCheckFavorite = (check) => {
+  //   return (check && `checked`) || ``;
+  // };
+
+  const getCheckFavorite = (isFavorite) => {
+    if (isFavorite) {
+      return `checked`;
+    }
+
+    return ``;
   };
 
   // Проверяет режим добавления точки маршрута: либо выводит звездочку либо нет;
@@ -173,7 +191,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${type} to
+              ${getPlaceholderMarkup(type, TRIP_TYPES)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
@@ -230,14 +248,11 @@ const createFormTemplate = (currentPoint, mode) => {
 const parseFormData = (formData, form, point) => {
 
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
-  const destination = formData.get(`event-destination`);
+
   const price = parseInt(formData.get(`event-price`), 10);
   const favorite = formData.get(`event-favorite`);
-
   const departure = formData.get(`event-start-time`);
   const arrival = formData.get(`event-end-time`);
-
-  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const getFavorite = (favoriteType) => {
     if (favoriteType) {
@@ -253,19 +268,16 @@ const parseFormData = (formData, form, point) => {
     return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
   };
 
-  const formObject = {
-    id: point.id,
-    type: type[0],
-    destination,
-    destinationInfo: point.destinationInfo,
-    favorite: getFavorite(favorite),
-    offers: point.offers.slice(),
-    price,
-    departure: getNewDate(departure),
-    arrival: getNewDate(arrival),
-  };
-
-  return formObject;
+  return new PointModel({
+    'id': point.id,
+    'is_favorite': getFavorite(favorite),
+    'date_from': getNewDate(departure),
+    'date_to': getNewDate(arrival),
+    'base_price': price,
+    'type': type[0].toLowerCase(),
+    'offers': point.offers.slice(),
+    'destination': point.destinationInfo,
+  });
 };
 
 export default class Form extends AbstractSmartComponent {
@@ -283,8 +295,10 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeClickHandler = null;
     this._endTimeClickHandler = null;
     this._deleteButtonClickHandler = null;
+    this._cancelButtonClickHandler = null;
     this._formRollupClickHandler = null;
     this._formOfferClickHandler = null;
+    this._formPriceClickHandler = null;
 
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
@@ -301,10 +315,21 @@ export default class Form extends AbstractSmartComponent {
   }
 
   setDeleteButtonClickHandler(handler) {
-    this.getElement().querySelector(`.event__reset-btn`)
+    if (this.getElement().querySelector(`.event__reset-btn`).textContent === `Delete`) {
+      this.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, handler);
 
-    this._deleteButtonClickHandler = handler;
+      this._deleteButtonClickHandler = handler;
+    }
+  }
+
+  setCancelButtonClickHandler(handler) {
+    if (this.getElement().querySelector(`.event__reset-btn`).textContent === `Cancel`) {
+      this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, handler);
+
+      this._cancelButtonClickHandler = handler;
+    }
   }
 
   removeElement() {
@@ -377,6 +402,12 @@ export default class Form extends AbstractSmartComponent {
     this._formRollupClickHandler = handler;
   }
 
+  setFromPriceClickHandler(handler) {
+    this.getElement().querySelector(`.event__input--price`);
+
+    this._formPriceClickHandler = handler;
+  }
+
   recoveryListeners() {
     this.setSaveFormClickHandler(this._saveFormClickHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
@@ -387,8 +418,10 @@ export default class Form extends AbstractSmartComponent {
     this.setEndTimeClickHandler(this._endTimeClickHandler);
 
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
+    this.setCancelButtonClickHandler(this._cancelButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
     this.setOfferClickHandler(this._formOfferClickHandler);
+    this.setFromPriceClickHandler(this._formPriceClickHandler);
 
     this._subscribeOnEvents();
   }
@@ -447,9 +480,15 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер клика по типам точек маршрута;
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
       item.addEventListener(`change`, (evt) => {
-        this._currentPoint.type = evt.target.value[0].toUpperCase() + evt.target.value.slice(1);
-        this._currentPoint.offers = generateOffers(generateOfferKeys());
+        this._currentPoint.type = changeFirstLetter(evt.target.value);
 
+        const currentOffers = OffersModel.getOffers().find(
+            (currentValue) => {
+              return currentValue.type === evt.target.value;
+            }
+        );
+
+        this._currentPoint.offers = currentOffers.offers;
         this.rerender();
       });
     });
@@ -464,16 +503,31 @@ export default class Form extends AbstractSmartComponent {
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       const destinationInput = element.querySelector(`.event__input--destination`);
 
+      const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
+        return destinationItem.name;
+      });
+
+      const destinationsDescriptions = DestinationsModel.getDestinations().map((destinationItem) => {
+        return destinationItem.description;
+      });
+
+      const currentPhotos = DestinationsModel.getDestinations().find(
+          (currentValue) => {
+            return currentValue.name === evt.target.value;
+          }
+      );
+
       evt.preventDefault();
-      const index = DESTINATIONS.findIndex((destination) => destination === evt.target.value);
+      const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
+
       if (index === -1) {
         destinationInput.setCustomValidity(`Выберете пункт назначения из списка`);
         return;
       }
 
-      this._currentPoint.destination = DESTINATIONS[index];
-      this._currentPoint.destinationInfo.destinationDescription = generateDescription();
-
+      this._currentPoint.destinationInfo.name = destinationsNames[index];
+      this._currentPoint.destinationInfo.description = destinationsDescriptions[index];
+      this._currentPoint.destinationInfo.pictures = currentPhotos.pictures;
       this.rerender();
     });
 
@@ -500,7 +554,6 @@ export default class Form extends AbstractSmartComponent {
         let label = document.querySelector(`[for="${evt.target.id}"]`);
 
         const labelTitle = label.querySelector(`.event__offer-title`).textContent;
-        // const labelPrice = label.querySelector(`.event__offer-price`).textContent;
 
         this._currentPoint.offers.forEach((offer) => {
           if (offer.title === labelTitle && !offer.isChecked) {
@@ -513,6 +566,12 @@ export default class Form extends AbstractSmartComponent {
         });
 
       });
+    });
+
+    this.getElement().querySelector(`.event__input--price`)
+    .addEventListener(`change`, (evt) => {
+
+      this._currentPoint.price = evt.target.value;
     });
   }
 

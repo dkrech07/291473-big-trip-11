@@ -1,20 +1,21 @@
 import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../utils/common.js';
-import AbstractComponent from "./abstract-component.js";
+import AbstractComponent from './abstract-component.js';
+import {getPlaceholderMarkup, TRIP_TYPES} from '../utils/common.js';
 const DISPLAY_OFFERS_COUNT = 3;
 
 const createTripPointMarkup = (point) => {
-  const {type, destination, departure, arrival, price} = point;
+  const {type, destinationInfo, offers, departure, arrival, price} = point;
   // const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
 
   const pointImage = point.type.toLowerCase();
 
-  const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
+  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
   const createOffersMarkup = () => {
-    return checkedOffers.map((offer, index) => {
-      if (index < DISPLAY_OFFERS_COUNT) {
+    return offers.map((offer, index) => {
+      if (index < DISPLAY_OFFERS_COUNT && offer.isChecked) {
         return (
           `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
@@ -33,7 +34,7 @@ const createTripPointMarkup = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${pointImage}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} to ${destination}</h3>
+      <h3 class="event__title">${getPlaceholderMarkup(type, TRIP_TYPES)} ${destinationInfo.name}</h3>
 
       <div class="event__schedule">
         <p class="event__time">

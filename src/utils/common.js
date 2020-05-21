@@ -7,6 +7,14 @@ const INPUT_YEAR_MONTH_DAY_FORMAT = `YYYY-MM-DD`;
 const INPUT_YEAR_MONTH_DAY_TIME_FORMAT = `YYYY-MM-DDTHH:MM`;
 const INPUT_TIME_FORMAT = `HH:mm`;
 
+const TRIP_TYPES = [
+  `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
+];
+
+const STOP_TYPES = [
+  `Check-in`, `Sightseeing`, `Restaurant`
+];
+
 // Корректировка формата времени: добавляет вначале ноль, если число однозначное;
 const correctFormat = (number) => {
   const date = number.toString();
@@ -85,6 +93,22 @@ const getPrice = (points) => {
   return pointsPrices + offersPrices;
 };
 
+const changeFirstLetter = (word) => {
+  return word[0].toUpperCase() + word.slice(1);
+};
+
+const getPlaceholderMarkup = (tripType, typesList) => {
+  const pointTypesTo = typesList.filter((item) => {
+    return item === changeFirstLetter(tripType);
+  });
+
+  if (pointTypesTo.length !== 0) {
+    return `${changeFirstLetter(tripType)} to`;
+  }
+
+  return `${changeFirstLetter(tripType)} in`;
+};
+
 export {
   correctDateFormat,
   correctDateISOFormat,
@@ -96,4 +120,8 @@ export {
   calculateTripTime,
   INPUT_YEAR_MONTH_DAY_FORMAT,
   calculateTripDuration,
+  changeFirstLetter,
+  getPlaceholderMarkup,
+  TRIP_TYPES,
+  STOP_TYPES,
 };

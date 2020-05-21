@@ -1,7 +1,6 @@
 import {getPointsByFilter} from "../utils/filter.js";
 import {FilterType} from "../controllers/filter.js";
 
-
 export default class Points {
   constructor() {
     this._points = [];
@@ -9,6 +8,8 @@ export default class Points {
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+
+    this._destinations = [];
   }
 
   getPoints() {
@@ -30,6 +31,7 @@ export default class Points {
   }
 
   updatePoint(id, point) {
+
     const index = this._points.findIndex((it) => it.id === id);
 
     if (index === -1) {

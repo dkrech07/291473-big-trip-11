@@ -2,9 +2,10 @@ import TripDayComponent from '../components/trip-day.js';
 import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
-import {render} from '../utils/render.js';
+import {render, remove} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
+import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
 import {renderTripCost} from '../main.js';
 import moment from "moment";
@@ -21,17 +22,20 @@ const getDays = (points) => {
 };
 
 export default class TripController {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, api) {
     this._container = container;
     this._pointsModel = pointsModel;
+    this._api = api;
 
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
+    this._preloaderComponent = new PreloaderComponent();
 
     this._points = null;
     this._tripDayComponent = null;
     this._creatingPoint = null;
     this._showedPointsControllers = [];
+    this._noPointsComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -43,22 +47,41 @@ export default class TripController {
   render() {
     this._points = this._pointsModel.getPointsAll();
 
-    // Пороверка точек маршрута на наличие;
-    const isAllPointsMissing = this._points.every((point) => point.length === 0);
-
-    if (isAllPointsMissing) {
-      render(this._container, new NoPointsComponent());
-      return;
-    }
-
     // Отрисовка меню сортировки;
     render(this._container, this._sortComponent);
+
+    // // Пороверка точек маршрута на наличие;
+    // const isAllPointsMissing = this._points.every((point) => point.length === 0);
 
     // Отрисовка "контейнера" для вывода всех дней путешествия;
     render(this._container, this._tripDaysComponent);
 
-    // Отрисовка дней путешествия и точек маршрута;
-    this._renderPoints(this._points);
+    // Отрисовка прелоадера;
+    render(this._container, this._preloaderComponent);
+
+    this._noPointsComponent = new NoPointsComponent();
+
+
+    // УТОЧНИТЬ МОЖНО ЛИ ТАК ДЕЛАТЬ
+    this._api.getPoints()
+      .then((points) => {
+        // Удаление прелоадера;
+        remove(this._preloaderComponent);
+
+        // Отрисовка точек маршрута, если они есть;
+        if (points.length > 0) {
+          this._renderPoints(this._points);
+
+          if (this._noPointsComponent) {
+            remove(this._noPointsComponent);
+          }
+        }
+
+        // Сообщение о необходимости добавить точку маршрута, если точек нет;
+        if (points.length <= 0) {
+          render(this._container, this._noPointsComponent);
+        }
+      });
 
     // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {
@@ -68,10 +91,6 @@ export default class TripController {
 
   // Отрисовка новой формы редактирования (точки маршрута);
   createPoint(button) {
-    if (this._creatingPoint) {
-      return;
-    }
-
     this._getSortedTrips(SortTypes.SORT_EVENT);
     button.setAttribute(`disabled`, `true`);
 
@@ -151,23 +170,35 @@ export default class TripController {
     if (oldData === EmptyPoint) {
       this._creatingPoint = null;
       if (newData === null) {
-        pointController.destroy();
-        this._updatePoints();
+        this._api.deletePoint(oldData.id)
+        .then(() => {
+          this._pointsModel.removePoint(oldData.id);
+          this._updatePoints();
+        });
       } else {
-        this._pointsModel.addPoint(newData);
-        this._updatePoints();
-        // pointController.render(newData, PointControllerMode.DEFAULT);
+
+        this._api.createPoint(newData)
+        .then((pointsModel) => {
+          this._pointsModel.addPoint(pointsModel);
+          this._updatePoints();
+        });
       }
     } else if (newData === null) {
-      this._pointsModel.removePoint(oldData.id);
-      this._updatePoints();
-    } else {
-      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-
-      if (isSuccess) {
-        // pointController.render(newData, PointControllerMode.DEFAULT);
+      this._api.deletePoint(oldData.id)
+      .then(() => {
+        this._pointsModel.removePoint(oldData.id);
         this._updatePoints();
-      }
+      });
+    } else {
+
+      this._api.updatePoint(oldData.id, newData)
+      .then((pointsModel) => {
+        const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
+
+        if (isSuccess) {
+          this._updatePoints();
+        }
+      });
     }
   }
 
