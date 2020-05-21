@@ -103,10 +103,10 @@ const getPlaceholderMarkup = (tripType, typesList) => {
   });
 
   if (pointTypesTo.length !== 0) {
-    return changeFirstLetter(tripType) + ` to`;
+    return `${changeFirstLetter(tripType)} to`;
   }
 
-  return changeFirstLetter(tripType) + ` in`;
+  return `${changeFirstLetter(tripType)} in`;
 };
 
 export {

@@ -105,6 +105,7 @@ api.getDestinations()
 
 api.getOffers()
   .then((offers) => {
+    console.log(offers);
     OffersModel.setOffers(offers);
   });
 

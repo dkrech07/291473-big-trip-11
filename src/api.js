@@ -15,7 +15,7 @@ const checkStatus = (response) => {
   }
 };
 
-const API = class {
+class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;

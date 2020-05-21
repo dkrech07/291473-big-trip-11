@@ -15,7 +15,7 @@ const createTripPointMarkup = (point) => {
 
   const createOffersMarkup = () => {
     return offers.map((offer, index) => {
-      if (index < DISPLAY_OFFERS_COUNT && offer.isChecked === true) {
+      if (index < DISPLAY_OFFERS_COUNT && offer.isChecked) {
         return (
           `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
