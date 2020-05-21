@@ -176,7 +176,7 @@ export default class TripController {
           this._updatePoints();
         });
       } else {
-        console.log(`createPoint`, newData);
+
         this._api.createPoint(newData)
         .then((pointsModel) => {
           this._pointsModel.addPoint(pointsModel);
@@ -190,7 +190,7 @@ export default class TripController {
         this._updatePoints();
       });
     } else {
-      console.log(`updatePoint`, newData);
+
       this._api.updatePoint(oldData.id, newData)
       .then((pointsModel) => {
         const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
