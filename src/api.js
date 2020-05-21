@@ -73,6 +73,6 @@ class API {
         throw err;
       });
   }
-};
+}
 
 export default API;
