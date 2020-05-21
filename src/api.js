@@ -38,7 +38,6 @@ const API = class {
   }
 
   createPoint(point) {
-    // console.log(`createPoint`, point);
     return this._load({
       url: `points`,
       method: Method.POST,

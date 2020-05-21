@@ -5,9 +5,14 @@ import TripsContainerComponent from '../components/trips-container.js';
 import {render} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
+import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
 import {renderTripCost} from '../main.js';
 import moment from "moment";
+
+const getPreloader = () => {
+  return (`<p class="board__no-tasks">Loading...</p>`);
+};
 
 const getDays = (points) => {
   const daysList = [];
@@ -28,6 +33,7 @@ export default class TripController {
 
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
+    this._preloaderComponent = new PreloaderComponent();
 
     this._points = null;
     this._tripDayComponent = null;
@@ -42,7 +48,6 @@ export default class TripController {
   }
 
   render() {
-    console.log(this._api);
     this._points = this._pointsModel.getPointsAll();
 
     // Отрисовка меню сортировки;
@@ -54,13 +59,25 @@ export default class TripController {
     // Отрисовка "контейнера" для вывода всех дней путешествия;
     render(this._container, this._tripDaysComponent);
 
-    if (isAllPointsMissing) {
-      render(this._container, new NoPointsComponent());
-      return;
-    }
+    // Отрисовка прелоадера;
+    render(this._container, this._preloaderComponent);
 
-    // Отрисовка дней путешествия и точек маршрута;
-    this._renderPoints(this._points);
+    this._api.getPoints()
+      .then((points) => {
+
+        // Удаление прелоадера и отрисовка точек маршрута;
+        if (points) {
+          this._preloaderComponent.removeElement();
+          this._renderPoints(this._points);
+          return;
+        }
+
+        // Сообщение о необходимости добавить точку маршрута;
+        if (isAllPointsMissing) {
+          render(this._container, new NoPointsComponent());
+          return;
+        }
+      });
 
     // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {

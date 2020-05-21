@@ -114,9 +114,17 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
-  // Проставляет для всех "звездочек" нективное состояние
-  const getCheckFavorite = (check) => {
-    return (check && `checked`) || ``;
+  // // Проставляет для всех "звездочек" нективное состояние
+  // const getCheckFavorite = (check) => {
+  //   return (check && `checked`) || ``;
+  // };
+
+  const getCheckFavorite = (isFavorite) => {
+    if (isFavorite) {
+      return `checked`;
+    }
+
+    return ``;
   };
 
   // Проверяет режим добавления точки маршрута: либо выводит звездочку либо нет;
