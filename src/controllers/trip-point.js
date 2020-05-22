@@ -67,7 +67,7 @@ export default class PointController {
     // Удаление формы редактиования точки маршрута по нажатию на ESC;
     this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
-        this._replaceEditToPoint();
+        this.replaceEditToPoint();
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
 
@@ -115,14 +115,14 @@ export default class PointController {
 
       this.renameSaveButton();
       this.disableFormElements();
-      this._replaceEditToPoint();
+      // this.replaceEditToPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
     // Замена формы на карточку пункта маршрута;
     const formRollupClickHandler = () => {
-      this._replaceEditToPoint();
+      this.replaceEditToPoint();
       this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -150,7 +150,7 @@ export default class PointController {
       this.renameSaveButton();
       this.disableFormElements();
       this._newPointButton.removeAttribute(`disabled`);
-      this._replaceEditToNewPoint();
+      // this.replaceEditToNewPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
 
@@ -165,7 +165,7 @@ export default class PointController {
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._replaceEditToPoint();
+      this.replaceEditToPoint();
     }
   }
 
@@ -180,7 +180,7 @@ export default class PointController {
     this._mode = Mode.EDIT;
   }
 
-  _replaceEditToPoint() {
+  replaceEditToPoint() {
     this._formComponent.reset();
     if (document.contains(this._formComponent.getElement())) {
       replace(this._pointComponent, this._formContainerComponent);
@@ -189,7 +189,7 @@ export default class PointController {
     this._mode = Mode.DEFAULT;
   }
 
-  _replaceEditToNewPoint() {
+  replaceEditToNewPoint() {
     this._formComponent.reset();
     if (document.contains(this._formComponent.getElement())) {
       // replace(this._pointComponent, this._formComponent);

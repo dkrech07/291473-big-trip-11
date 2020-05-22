@@ -165,31 +165,38 @@ export default class TripController {
       if (newData === null) {
         this._api.deletePoint(oldData.id)
         .then(() => {
-          this._pointsModel.removePoint(oldData.id);
-          this._updatePoints();
           this._showNoPoints();
           pointController.disableFormElements(false);
           pointController.renameDeleteButton(false);
+          pointController.destroy();
+
+          this._pointsModel.removePoint(oldData.id);
+          this._updatePoints();
         });
       } else {
 
         this._api.createPoint(newData)
         .then((pointsModel) => {
-          this._pointsModel.addPoint(pointsModel);
-          this._updatePoints();
           this._showNoPoints();
           pointController.disableFormElements(false);
           pointController.renameSaveButton(false);
+          pointController.replaceEditToNewPoint();
+
+          this._pointsModel.addPoint(pointsModel);
+          this._updatePoints();
         });
       }
     } else if (newData === null) {
       this._api.deletePoint(oldData.id)
       .then(() => {
-        this._pointsModel.removePoint(oldData.id);
-        this._updatePoints();
         this._showNoPoints();
         pointController.disableFormElements(false);
         pointController.renameDeleteButton(false);
+        pointController.destroy(oldData.id);
+        this._updatePoints();
+
+        this._pointsModel.removePoint(oldData.id);
+        this._updatePoints();
       });
     } else {
 
@@ -198,9 +205,11 @@ export default class TripController {
         const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
 
         if (isSuccess) {
-          this._updatePoints();
           pointController.disableFormElements(false);
           pointController.renameSaveButton(false);
+          pointController.replaceEditToPoint();
+
+          this._updatePoints();
         }
       });
     }
