@@ -172,6 +172,9 @@ export default class TripController {
 
           this._pointsModel.removePoint(oldData.id);
           this._updatePoints();
+        }).catch(() => {
+          pointController.renameDeleteButton(false);
+          pointController.shake();
         });
       } else {
 
@@ -184,6 +187,8 @@ export default class TripController {
 
           this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
+        }).catch(() => {
+          pointController.shake();
         });
       }
     } else if (newData === null) {
@@ -197,9 +202,11 @@ export default class TripController {
 
         this._pointsModel.removePoint(oldData.id);
         this._updatePoints();
+      }).catch(() => {
+        pointController.renameDeleteButton(false);
+        pointController.shake();
       });
     } else {
-
       this._api.updatePoint(oldData.id, newData)
       .then((pointsModel) => {
         const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
@@ -212,8 +219,7 @@ export default class TripController {
           this._updatePoints();
         }
       }).catch(() => {
-        console.log(`Ошибка при изменении карточки`);
-
+        pointController.renameDeleteButton(false);
         pointController.shake();
       });
     }

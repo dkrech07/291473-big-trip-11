@@ -51,7 +51,7 @@ class API {
   updatePoint(id, data) {
     // console.log(`updatePoint`, data);
     return this._load({
-      url: `points1/${id}`,
+      url: `points/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({"Content-Type": `application/json`})
