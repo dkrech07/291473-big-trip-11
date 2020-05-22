@@ -47,12 +47,14 @@ export default class TripController {
   render() {
     this._points = this._pointsModel.getPointsAll();
 
-    // Отрисовка меню сортировки;
-    render(this._container, this._sortComponent);
+    // Отрисовка "контейнера" для вывода всех дней путешествия;
+    render(this._container, this._tripDaysComponent);
+
+    // // Отрисовка меню сортировки;
+    // render(this._container, this._sortComponent);
 
     // // Пороверка точек маршрута на наличие;
     // const isAllPointsMissing = this._points.every((point) => point.length === 0);
-
 
     this._noPointsComponent = new NoPointsComponent();
 
@@ -61,13 +63,13 @@ export default class TripController {
         // Удаление прелоадера;
         remove(this._preloaderComponent);
 
-        // Отрисовка точек маршрута, если они есть;
         if (points.length > 0) {
-          this._renderPoints(this._points);
 
           if (this._noPointsComponent) {
             remove(this._noPointsComponent);
           }
+
+          this._renderPoints(this._points);
         } else {
           // Сообщение о необходимости добавить точку маршрута, если точек нет;
           render(this._container, this._noPointsComponent);
@@ -237,8 +239,12 @@ export default class TripController {
       });
   }
 
-  // Отрисовка "контейнера" для вывода всех дней путешествия;
+  // Отрисовка меню сортировки;
+  renderSortMenu() {
+    render(this._container, this._sortComponent);
+  }
+
   renderPreloader() {
-    render(this._container, this._tripDaysComponent);
+    render(this._container, this._preloaderComponent);
   }
 }
