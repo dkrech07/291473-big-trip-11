@@ -168,6 +168,8 @@ export default class TripController {
           this._pointsModel.removePoint(oldData.id);
           this._updatePoints();
           this._showNoPoints();
+          pointController.disableFormElements(false);
+          pointController.renameDeleteButton(false);
         });
       } else {
 
@@ -176,6 +178,8 @@ export default class TripController {
           this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
           this._showNoPoints();
+          pointController.disableFormElements(false);
+          pointController.renameSaveButton(false);
         });
       }
     } else if (newData === null) {
@@ -184,6 +188,8 @@ export default class TripController {
         this._pointsModel.removePoint(oldData.id);
         this._updatePoints();
         this._showNoPoints();
+        pointController.disableFormElements(false);
+        pointController.renameDeleteButton(false);
       });
     } else {
 
@@ -193,6 +199,8 @@ export default class TripController {
 
         if (isSuccess) {
           this._updatePoints();
+          pointController.disableFormElements(false);
+          pointController.renameSaveButton(false);
         }
       });
     }

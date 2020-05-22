@@ -82,10 +82,9 @@ export default class PointController {
 
     // Удаление формы редактирования точки маршрута;
     const deleteButtonClickHandler = () => {
-      // if (this._newPointButton) {
-      //   this._newPointButton.removeAttribute(`disabled`);
-      // }
 
+      this.renameDeleteButton();
+      this.disableFormElements();
       this._onDataChange(this, this._point, null);
     };
 
@@ -114,7 +113,8 @@ export default class PointController {
       const newData = PointModel.clone(data);
       this._onDataChange(this, this._point, newData);
 
-      this._disableFormElements();
+      this.renameSaveButton();
+      this.disableFormElements();
       this._replaceEditToPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
@@ -147,7 +147,8 @@ export default class PointController {
       const newData = PointModel.clone(data);
       this._onDataChange(this, EmptyPoint, newData);
 
-      this._disableFormElements();
+      this.renameSaveButton();
+      this.disableFormElements();
       this._newPointButton.removeAttribute(`disabled`);
       this._replaceEditToNewPoint();
 
@@ -199,7 +200,7 @@ export default class PointController {
     this._mode = Mode.DEFAULT;
   }
 
-  _disableFormElements(status = true) {
+  disableFormElements(status = true) {
     this._formComponent.getElement().querySelector(`.event__save-btn`).disabled = status;
     this._formComponent.getElement().querySelector(`.event__reset-btn`).disabled = status;
     this._formComponent.getElement().querySelector(`.event__type-toggle`).disabled = status;
@@ -221,6 +222,24 @@ export default class PointController {
       for (const offerElement of offerElements) {
         offerElement.disabled = status;
       }
+    }
+  }
+
+  renameSaveButton(status = true) {
+    const saveButton = this._formComponent.getElement().querySelector(`.event__save-btn`);
+    if (status) {
+      saveButton.textContent = `Saving...`;
+    } else {
+      saveButton.textContent = `Save`;
+    }
+  }
+
+  renameDeleteButton(status = true) {
+    const deleteButton = this._formComponent.getElement().querySelector(`.event__reset-btn`);
+    if (status) {
+      deleteButton.textContent = `Deleting...`;
+    } else {
+      deleteButton.textContent = `Delete`;
     }
   }
 
