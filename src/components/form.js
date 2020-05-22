@@ -287,7 +287,6 @@ export default class Form extends AbstractSmartComponent {
     this._currentPoint = currentPoint;
     this._mode = mode;
 
-    this._currentPoint.favorite = null;
     this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
     this._tripTypeClickHandner = null;

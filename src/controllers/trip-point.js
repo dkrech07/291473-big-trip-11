@@ -82,9 +82,9 @@ export default class PointController {
 
     // Удаление формы редактирования точки маршрута;
     const deleteButtonClickHandler = () => {
-      if (this._newPointButton) {
-        this._newPointButton.removeAttribute(`disabled`);
-      }
+      // if (this._newPointButton) {
+      //   this._newPointButton.removeAttribute(`disabled`);
+      // }
 
       this._onDataChange(this, this._point, null);
     };
@@ -109,11 +109,13 @@ export default class PointController {
     // Сохранение формы редактирования точки маршрута;
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
-      this._replaceEditToPoint();
+
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      // console.log(`point`, newData);
       this._onDataChange(this, this._point, newData);
+
+      this._disableFormElements();
+      this._replaceEditToPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -141,11 +143,13 @@ export default class PointController {
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
 
-      this._replaceEditToNewPoint();
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
       this._onDataChange(this, EmptyPoint, newData);
+
+      this._disableFormElements();
       this._newPointButton.removeAttribute(`disabled`);
+      this._replaceEditToNewPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
 
@@ -193,6 +197,31 @@ export default class PointController {
     }
 
     this._mode = Mode.DEFAULT;
+  }
+
+  _disableFormElements(status = true) {
+    this._formComponent.getElement().querySelector(`.event__save-btn`).disabled = status;
+    this._formComponent.getElement().querySelector(`.event__reset-btn`).disabled = status;
+    this._formComponent.getElement().querySelector(`.event__type-toggle`).disabled = status;
+
+    const favoriteButton = this._formComponent.getElement().querySelector(`#event-favorite-1`);
+    const rollUpButton = this._formComponent.getElement().querySelector(`.event__rollup-btn`);
+    if (favoriteButton && rollUpButton) {
+      favoriteButton.disabled = status;
+      rollUpButton.disabled = status;
+    }
+
+    const inputElements = this._formComponent.getElement().querySelectorAll(`.event__input`);
+    for (const inputElement of inputElements) {
+      inputElement.disabled = status;
+    }
+
+    const offerElements = this._formComponent.getElement().querySelectorAll(`.event__offer-selector .event__offer-checkbox`);
+    if (offerElements.length > 0) {
+      for (const offerElement of offerElements) {
+        offerElement.disabled = status;
+      }
+    }
   }
 
   destroy() {
