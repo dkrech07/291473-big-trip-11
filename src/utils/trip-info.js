@@ -3,6 +3,7 @@ import TripInfoComponent from '../components/trip-info.js';
 import {render, RenderPosition} from '../utils/render.js';
 import {correctMonthAndDayFormat} from '../utils/common.js';
 
+// Отрисовка информации о крайних точках маршрута в шапке;
 export const tripInfoContainer = new TripInfoContainerComponent();
 export const renderTripInfo = (points) => {
 
@@ -11,45 +12,41 @@ export const renderTripInfo = (points) => {
   const firstPointDestination = sortedList[0].destinationInfo.name;
   const firstDate = sortedList[0].departure;
 
-  if (sortedList.length > 1) {
+  if (sortedList.length === 1) {
     const tripInfo = `${firstPointDestination}`;
     const tripDate = `${correctMonthAndDayFormat(firstDate)}`;
 
     render(tripInfoContainer.getElement(), new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
   }
-//
-//   if (sortList.length === 2) {
-//     const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
-//     const lastDate = sortList[sortList.length - 1].date;
-//
-//     const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
-//     const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
-//
-//     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
-//   }
-//
-//   if (sortList.length === 3) {
-//     const secondPointDestination = sortList[1].wayPoints[0].destination;
-//     const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
-//     const lastDate = sortList[sortList.length - 1].date;
-//
-//     const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
-//     const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
-//
-//     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
-//   }
-//
-//   if (sortList.length > 3) {
-//     const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
-//     const lastDate = sortList[sortList.length - 1].date;
-//
-//     const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
-//     const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
-//
-//     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
-//   }
+
+  if (sortedList.length === 2) {
+    const lastPointDestination = sortedList[sortedList.length - 1].destinationInfo.name;
+    const lastDate = sortedList[sortedList.length - 1].departure;
+
+    const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
+
+    render(tripInfoContainer.getElement(), new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
+  }
+
+  if (sortedList.length === 3) {
+    const secondPointDestination = sortedList[1].destinationInfo.name;
+    const lastPointDestination = sortedList[sortedList.length - 1].destinationInfo.name;
+    const lastDate = sortedList[sortedList.length - 1].departure;
+
+    const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
+
+    render(tripInfoContainer.getElement(), new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
+  }
+
+  if (sortedList.length > 3) {
+    const lastPointDestination = sortedList[sortedList.length - 1].destinationInfo.name;
+    const lastDate = sortedList[sortedList.length - 1].departure;
+
+    const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
+
+    render(tripInfoContainer.getElement(), new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
+  }
 };
-//
-//
-// // // Отрисовка информации о крайних точках маршрута в шапке;
-// // renderTripInfo();
