@@ -1,14 +1,16 @@
 import API from './api.js';
-import TripCostComponent from './components/trip-cost.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
-import {RenderPosition, render} from './utils/render.js';
+import {RenderPosition, render, remove} from './utils/render.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
 import OffersModel from './models/offers.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
+
+import TripCostComponent from './components/trip-cost.js';
+import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 
 // Получаю данные с сервера;
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
@@ -36,13 +38,13 @@ renderTripMenuOptions();
 export const renderTripCost = (model) => {
   const tripCost = getPrice(model);
   const tripCostComponent = new TripCostComponent(tripCost);
-  const tripInfo = tripMenuElement.querySelector(`.trip-main__trip-info`);
 
-  if (tripInfo) {
-    tripInfo.remove();
+  render(tripInfoContainer.getElement(), tripCostComponent);
+  render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
+
+  if (tripCostComponent) {
+    remove(tripCostComponent);
   }
-
-  render(tripMenuElement, tripCostComponent, RenderPosition.AFTERBEGIN);
 };
 
 // Отрисовка отфильтрованных точек маршрута;
@@ -84,6 +86,8 @@ menuComponent.setOnChange((menuItem) => {
 
 api.getPoints()
   .then((points) => {
+    // Получаю точки для определения начальной и конечной точки маршрута;
+    renderTripInfo(points);
     // Отрисовка прелоадера;
     tripController.renderPreloader();
 

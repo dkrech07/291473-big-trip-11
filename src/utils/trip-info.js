@@ -1,17 +1,22 @@
-// // Отрисовка Начальной и конечной точки маршрута / начальной и конечной даты. Отрисовка общей цены.
-// const renderTripInfo = () => {
-//   const tripInfoElement = tripMenuElement.querySelector(`.trip-main__trip-info`);
-//   const sortList = randomDaysList.slice().sort((a, b) => a.date > b.date ? 1 : -1);
-//
-//   const firstPointDestination = sortList[0].wayPoints[0].destination;
-//   const firstDate = sortList[0].date;
-//
-//   if (sortList.length === 1) {
-//     const tripInfo = `${firstPointDestination}`;
-//     const tripDate = `${correctMonthAndDayFormat(firstDate)}`;
-//
-//     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
-//   }
+import TripInfoContainerComponent from '../components/trip-info-container.js';
+import TripInfoComponent from '../components/trip-info.js';
+import {render, RenderPosition} from '../utils/render.js';
+import {correctMonthAndDayFormat} from '../utils/common.js';
+
+export const tripInfoContainer = new TripInfoContainerComponent();
+export const renderTripInfo = (points) => {
+
+  const sortedList = points.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+
+  const firstPointDestination = sortedList[0].destinationInfo.name;
+  const firstDate = sortedList[0].departure;
+
+  if (sortedList.length > 1) {
+    const tripInfo = `${firstPointDestination}`;
+    const tripDate = `${correctMonthAndDayFormat(firstDate)}`;
+
+    render(tripInfoContainer.getElement(), new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
+  }
 //
 //   if (sortList.length === 2) {
 //     const lastPointDestination = sortList[sortList.length - 1].wayPoints[sortList[sortList.length - 1].wayPoints.length - 1].destination;
@@ -43,7 +48,7 @@
 //
 //     render(tripInfoElement, new TripInfoComponent(tripInfo, tripDate), RenderPosition.AFTERBEGIN);
 //   }
-// };
+};
 //
 //
 // // // Отрисовка информации о крайних точках маршрута в шапке;
