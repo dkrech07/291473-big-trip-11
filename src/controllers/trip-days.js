@@ -8,6 +8,7 @@ import NoPointsComponent from '../components/no-points.js';
 import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
 import {renderTripCost} from '../main.js';
+import {renderTripInfo} from '../utils/trip-info.js';
 import moment from "moment";
 
 const getDays = (points) => {
@@ -235,6 +236,8 @@ export default class TripController {
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
     renderTripCost(this._pointsModel.getPoints());
+    renderTripInfo(this._pointsModel.getPoints());
+    console.log(this._pointsModel.getPoints());
   }
 
   _onFilterChange() {

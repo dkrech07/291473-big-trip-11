@@ -88,6 +88,8 @@ api.getPoints()
   .then((points) => {
     // Получаю точки для определения начальной и конечной точки маршрута;
     renderTripInfo(points);
+    // Отрисовка меню сортировки;
+    tripController.renderSortMenu();
     // Отрисовка прелоадера;
     tripController.renderPreloader();
 
@@ -101,8 +103,6 @@ api.getPoints()
     }
 
     const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-    // Отрисовка меню сортировки;
-    tripController.renderSortMenu();
     renderTripCost(pointsModel.getPoints(pointsOfDeparture));
     tripController.render();
   });
