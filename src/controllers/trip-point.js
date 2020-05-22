@@ -5,6 +5,7 @@ import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import PointModel from "../models/point.js";
 
 const ESC_KEYCODE = 27;
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const Mode = {
   DEFAULT: `default`,
@@ -248,4 +249,18 @@ export default class PointController {
     remove(this._pointComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
+
+  shake() {
+    this._formComponent.getElement().classList.add(`red-wrapper`);
+    this._formComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._formComponent.getElement().style.animation = ``;
+
+      this.disableFormElements(false);
+      this.renameSaveButton(false);
+
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
 }

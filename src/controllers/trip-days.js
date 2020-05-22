@@ -211,6 +211,10 @@ export default class TripController {
 
           this._updatePoints();
         }
+      }).catch(() => {
+        console.log(`Ошибка при изменении карточки`);
+
+        pointController.shake();
       });
     }
   }
