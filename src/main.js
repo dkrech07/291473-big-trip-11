@@ -84,6 +84,9 @@ menuComponent.setOnChange((menuItem) => {
 
 api.getPoints()
   .then((points) => {
+    // Отрисовка прелоадера;
+    tripController.renderPreloader();
+
     pointsModel.setPoints(points);
     for (const point of points) {
       if (point.offers.length > 0) {

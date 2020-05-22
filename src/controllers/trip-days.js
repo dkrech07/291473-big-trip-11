@@ -53,16 +53,9 @@ export default class TripController {
     // // Пороверка точек маршрута на наличие;
     // const isAllPointsMissing = this._points.every((point) => point.length === 0);
 
-    // Отрисовка "контейнера" для вывода всех дней путешествия;
-    render(this._container, this._tripDaysComponent);
-
-    // Отрисовка прелоадера;
-    render(this._container, this._preloaderComponent);
 
     this._noPointsComponent = new NoPointsComponent();
 
-
-    // УТОЧНИТЬ МОЖНО ЛИ ТАК ДЕЛАТЬ
     this._api.getPoints()
       .then((points) => {
         // Удаление прелоадера;
@@ -75,10 +68,8 @@ export default class TripController {
           if (this._noPointsComponent) {
             remove(this._noPointsComponent);
           }
-        }
-
-        // Сообщение о необходимости добавить точку маршрута, если точек нет;
-        if (points.length <= 0) {
+        } else {
+          // Сообщение о необходимости добавить точку маршрута, если точек нет;
           render(this._container, this._noPointsComponent);
         }
       });
@@ -174,6 +165,7 @@ export default class TripController {
         .then(() => {
           this._pointsModel.removePoint(oldData.id);
           this._updatePoints();
+          this._showNoPoints();
         });
       } else {
 
@@ -181,6 +173,7 @@ export default class TripController {
         .then((pointsModel) => {
           this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
+          this._showNoPoints();
         });
       }
     } else if (newData === null) {
@@ -188,6 +181,7 @@ export default class TripController {
       .then(() => {
         this._pointsModel.removePoint(oldData.id);
         this._updatePoints();
+        this._showNoPoints();
       });
     } else {
 
@@ -232,4 +226,19 @@ export default class TripController {
     this._container.classList.remove(`visually-hidden`);
   }
 
+  _showNoPoints() {
+    this._api.getPoints()
+      .then((points) => {
+        if (points.length === 0) {
+          render(this._container, this._noPointsComponent);
+        } else {
+          remove(this._noPointsComponent);
+        }
+      });
+  }
+
+  // Отрисовка "контейнера" для вывода всех дней путешествия;
+  renderPreloader() {
+    render(this._container, this._tripDaysComponent);
+  }
 }
