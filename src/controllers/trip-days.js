@@ -53,8 +53,6 @@ export default class TripController {
     // // Пороверка точек маршрута на наличие;
     // const isAllPointsMissing = this._points.every((point) => point.length === 0);
 
-    // Отрисовка "контейнера" для вывода всех дней путешествия;
-    render(this._container, this._tripDaysComponent);
 
     this._noPointsComponent = new NoPointsComponent();
 
@@ -239,9 +237,8 @@ export default class TripController {
       });
   }
 
-
+  // Отрисовка "контейнера" для вывода всех дней путешествия;
   renderPreloader() {
-    // Сообщение о необходимости добавить точку маршрута, если точек нет;
-    render(this._container, this._noPointsComponent);
+    render(this._container, this._tripDaysComponent);
   }
 }
