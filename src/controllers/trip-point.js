@@ -116,7 +116,6 @@ export default class PointController {
 
       this.renameSaveButton();
       this.disableFormElements();
-      // this.replaceEditToPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -124,6 +123,7 @@ export default class PointController {
     // Замена формы на карточку пункта маршрута;
     const formRollupClickHandler = () => {
       this.replaceEditToPoint();
+
       this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
@@ -151,7 +151,6 @@ export default class PointController {
       this.renameSaveButton();
       this.disableFormElements();
       this._newPointButton.removeAttribute(`disabled`);
-      // this.replaceEditToNewPoint();
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
 
@@ -172,9 +171,6 @@ export default class PointController {
 
   _replacePointToEdit() {
     this._onViewChange();
-    // Форма, которая выводится в точке маршрута, должна выводиться в теге <li></li>,
-    // Поэтому вначане заменяю точку машрута на контейнер <li></li>, а уже в него
-    // добавляю форму;
     replace(this._formContainerComponent, this._pointComponent);
     render(this._formContainerComponent.getElement(), this._formComponent);
 
@@ -193,9 +189,7 @@ export default class PointController {
   replaceEditToNewPoint() {
     this._formComponent.reset();
     if (document.contains(this._formComponent.getElement())) {
-      // replace(this._pointComponent, this._formComponent);
       remove(this._formComponent);
-      // render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     }
 
     this._mode = Mode.DEFAULT;
@@ -259,7 +253,6 @@ export default class PointController {
 
       this.disableFormElements(false);
       this.renameSaveButton(false);
-
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 

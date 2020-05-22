@@ -97,6 +97,7 @@ api.getPoints()
     }
 
     const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+    // Отрисовка меню сортировки;
     tripController.renderSortMenu();
     renderTripCost(pointsModel.getPoints(pointsOfDeparture));
     tripController.render();

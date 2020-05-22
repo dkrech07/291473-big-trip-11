@@ -50,12 +50,6 @@ export default class TripController {
     // Отрисовка "контейнера" для вывода всех дней путешествия;
     render(this._container, this._tripDaysComponent);
 
-    // // Отрисовка меню сортировки;
-    // render(this._container, this._sortComponent);
-
-    // // Пороверка точек маршрута на наличие;
-    // const isAllPointsMissing = this._points.every((point) => point.length === 0);
-
     this._noPointsComponent = new NoPointsComponent();
 
     this._api.getPoints()
