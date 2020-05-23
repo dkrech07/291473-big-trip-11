@@ -1,29 +1,73 @@
+import Point from "../models/point";
+
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
 export default class Provider {
-  constructor(api) {
+  constructor(api, store) {
     this._api = api;
+    this._store = store;
   }
 
   getPoints() {
-    return this._api.getPoints();
+    if (isOnline()) {
+      return this._api.getPoints()
+      .then((points) => {
+        points.forEach((point) => this._store.setItem(point.id, point.toRAW()));
+
+        return points;
+      });
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    const storePoints = Object.values(this._store.getItems());
+
+    return Promise.resolve(Point.parsePoints(storePoints));
   }
 
   getDestinations() {
-    return this._api.getDestinations();
+    if (isOnline()) {
+      return this._api.getDestinations();
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   getOffers() {
-    return this._api.getOffers();
+    if (isOnline()) {
+      return this._api.getOffers();
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   createPoint(point) {
-    return this._api.createPoint(point);
+    if (isOnline()) {
+      return this._api.createPoint(point);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   updatePoint(id, data) {
-    return this._api.updatePoint(id, data);
+    if (isOnline()) {
+      return this._api.updatePoint(id, data);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   deletePoint(id) {
-    return this._api.deletePoint(id);
+    if (isOnline()) {
+      return this._api.deletePoint(id);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 }

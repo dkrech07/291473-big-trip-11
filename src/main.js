@@ -1,4 +1,5 @@
 import API from './api/index.js';
+import Store from "./api/store.js";
 import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
@@ -17,7 +18,8 @@ import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 const api = new API(END_POINT, AUTORIZATION);
-const apiWithProvider = new Provider(api);
+const store = new Store();
+const apiWithProvider = new Provider(api, store);
 
 // Общие переменные;
 const headerElement = document.querySelector(`.page-header`);
