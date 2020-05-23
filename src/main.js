@@ -127,6 +127,12 @@ apiWithProvider.getOffers()
     OffersModel.setOffers(offers);
   });
 
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
 
-// // Отрисовка информации о крайних точках маршрута в шапке;
-// renderTripInfo();
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
