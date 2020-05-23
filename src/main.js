@@ -39,12 +39,12 @@ export const renderTripCost = (model) => {
   const tripCost = getPrice(model);
   const tripCostComponent = new TripCostComponent(tripCost);
 
-  render(tripInfoContainer.getElement(), tripCostComponent);
-  render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
-
   if (tripCostComponent) {
     remove(tripCostComponent);
   }
+
+  render(tripInfoContainer.getElement(), tripCostComponent);
+  render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
 };
 
 // Отрисовка отфильтрованных точек маршрута;

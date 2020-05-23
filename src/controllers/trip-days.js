@@ -237,7 +237,6 @@ export default class TripController {
     this._renderPoints(this._pointsModel.getPoints());
     renderTripCost(this._pointsModel.getPoints());
     renderTripInfo(this._pointsModel.getPoints());
-    console.log(this._pointsModel.getPoints());
   }
 
   _onFilterChange() {
