@@ -6,6 +6,13 @@ import {correctMonthAndDayFormat} from '../utils/common.js';
 // Отрисовка информации о крайних точках маршрута в шапке;
 export const tripInfoContainer = new TripInfoContainerComponent();
 export const renderTripInfo = (points) => {
+
+  const tripInfoMainElement = document.querySelector(`.trip-info__main`);
+
+  if (tripInfoMainElement) {
+    tripInfoMainElement.remove();
+  }
+
   if (points.length > 0) {
 
     const sortedList = points.slice().sort((a, b) => a.date > b.date ? 1 : -1);
