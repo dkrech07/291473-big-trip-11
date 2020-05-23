@@ -55,11 +55,19 @@ export default class Provider {
 
   updatePoint(id, data) {
     if (isOnline()) {
-      return this._api.updatePoint(id, data);
+      return this._api.updatePoint(id, data)
+      .then((newPoint) => {
+        this._store.setItem(newPoint.id, newPoint.toRAW());
+
+        return newPoint;
+      });
     }
 
     // TODO: Реализовать логику при отсутствии интернета
-    return Promise.reject(`offline logic is not implemented`);
+    const localTask = Point.clone(Object.assign(data, {id}));
+    this._store.setItem(id, localTask.toRAW());
+
+    return Promise.resolve(localTask);
   }
 
   deletePoint(id) {
