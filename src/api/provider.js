@@ -15,7 +15,13 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getPoints()
       .then((points) => {
-        points.forEach((point) => this._store.setItem(point.id, point.toRAW()));
+        const items = points.reduce((acc, current) => {
+          return Object.assign({}, acc, {
+            [current.id]: current,
+          });
+        }, {});
+
+        this._store.setItems(items);
 
         return points;
       });
