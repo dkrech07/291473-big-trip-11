@@ -1,4 +1,5 @@
 import Point from "../models/point";
+import {nanoid} from "nanoid";
 
 const isOnline = () => {
   return window.navigator.onLine;
@@ -20,7 +21,7 @@ export default class Provider {
       });
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
+    // Логика при отсутствии интернета
     const storePoints = Object.values(this._store.getItems());
 
     return Promise.resolve(Point.parsePoints(storePoints));
@@ -31,7 +32,7 @@ export default class Provider {
       return this._api.getDestinations();
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
+    // Логика при отсутствии интернета
     return Promise.reject(`offline logic is not implemented`);
   }
 
@@ -40,17 +41,30 @@ export default class Provider {
       return this._api.getOffers();
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
+    // Логика при отсутствии интернета
     return Promise.reject(`offline logic is not implemented`);
   }
 
   createPoint(point) {
     if (isOnline()) {
-      return this._api.createPoint(point);
+      return this._api.createPoint(point)
+      // return this._api.createTask(task)
+        .then((newPoint) => {
+          this._store.setItem(newPoint.id, newPoint.toRAW());
+
+          return newPoint;
+        });
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
-    return Promise.reject(`offline logic is not implemented`);
+    // Логика при отсутствии интернета
+    // На случай локального создания данных мы должны сами создать `id`.
+    // Иначе наша модель будет не полной и это может привнести баги.
+    const localNewPointkId = nanoid();
+    const localNewPoint = Point.clone(Object.assign(point, {id: localNewPointkId}));
+
+    this._store.setItem(localNewPoint.id, localNewPoint.toRAW());
+
+    return Promise.resolve(localNewPoint);
   }
 
   updatePoint(id, data) {
@@ -63,7 +77,7 @@ export default class Provider {
       });
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
+    // Логика при отсутствии интернета
     const localTask = Point.clone(Object.assign(data, {id}));
     this._store.setItem(id, localTask.toRAW());
 

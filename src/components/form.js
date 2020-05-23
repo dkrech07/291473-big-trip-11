@@ -269,7 +269,7 @@ const parseFormData = (formData, form, point) => {
   };
 
   return new PointModel({
-    'id': point.id,
+    // 'id': point.id,
     'is_favorite': getFavorite(favorite),
     'date_from': getNewDate(departure),
     'date_to': getNewDate(arrival),
