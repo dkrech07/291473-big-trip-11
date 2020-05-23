@@ -17,8 +17,12 @@ import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 // Получаю данные с сервера;
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
 const api = new API(END_POINT, AUTORIZATION);
-const store = new Store();
+const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 
 // Общие переменные;
