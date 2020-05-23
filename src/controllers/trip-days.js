@@ -8,6 +8,7 @@ import NoPointsComponent from '../components/no-points.js';
 import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
 import {renderTripCost} from '../main.js';
+import {renderTripInfo} from '../utils/trip-info.js';
 import moment from "moment";
 
 const getDays = (points) => {
@@ -47,38 +48,25 @@ export default class TripController {
   render() {
     this._points = this._pointsModel.getPointsAll();
 
-    // Отрисовка меню сортировки;
-    render(this._container, this._sortComponent);
-
-    // // Пороверка точек маршрута на наличие;
-    // const isAllPointsMissing = this._points.every((point) => point.length === 0);
-
     // Отрисовка "контейнера" для вывода всех дней путешествия;
     render(this._container, this._tripDaysComponent);
 
-    // Отрисовка прелоадера;
-    render(this._container, this._preloaderComponent);
-
     this._noPointsComponent = new NoPointsComponent();
 
-
-    // УТОЧНИТЬ МОЖНО ЛИ ТАК ДЕЛАТЬ
     this._api.getPoints()
       .then((points) => {
         // Удаление прелоадера;
         remove(this._preloaderComponent);
 
-        // Отрисовка точек маршрута, если они есть;
         if (points.length > 0) {
-          this._renderPoints(this._points);
 
           if (this._noPointsComponent) {
             remove(this._noPointsComponent);
           }
-        }
 
-        // Сообщение о необходимости добавить точку маршрута, если точек нет;
-        if (points.length <= 0) {
+          this._renderPoints(this._points);
+        } else {
+          // Сообщение о необходимости добавить точку маршрута, если точек нет;
           render(this._container, this._noPointsComponent);
         }
       });
@@ -172,32 +160,62 @@ export default class TripController {
       if (newData === null) {
         this._api.deletePoint(oldData.id)
         .then(() => {
+          this._showNoPoints();
+          pointController.disableFormElements(false);
+          pointController.renameDeleteButton(false);
+          pointController.destroy();
+
           this._pointsModel.removePoint(oldData.id);
           this._updatePoints();
+        }).catch(() => {
+          pointController.renameDeleteButton(false);
+          pointController.shake();
         });
       } else {
 
         this._api.createPoint(newData)
         .then((pointsModel) => {
+          this._showNoPoints();
+          pointController.disableFormElements(false);
+          pointController.renameSaveButton(false);
+          pointController.replaceEditToNewPoint();
+
           this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
+        }).catch(() => {
+          pointController.shake();
         });
       }
     } else if (newData === null) {
       this._api.deletePoint(oldData.id)
       .then(() => {
+        this._showNoPoints();
+        pointController.disableFormElements(false);
+        pointController.renameDeleteButton(false);
+        pointController.destroy(oldData.id);
+        this._updatePoints();
+
         this._pointsModel.removePoint(oldData.id);
         this._updatePoints();
+      }).catch(() => {
+        pointController.renameDeleteButton(false);
+        pointController.shake();
       });
     } else {
-
       this._api.updatePoint(oldData.id, newData)
       .then((pointsModel) => {
         const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
 
         if (isSuccess) {
+          pointController.disableFormElements(false);
+          pointController.renameSaveButton(false);
+          pointController.replaceEditToPoint();
+
           this._updatePoints();
         }
+      }).catch(() => {
+        pointController.renameDeleteButton(false);
+        pointController.shake();
       });
     }
   }
@@ -218,6 +236,7 @@ export default class TripController {
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
     renderTripCost(this._pointsModel.getPoints());
+    renderTripInfo(this._pointsModel.getPoints());
   }
 
   _onFilterChange() {
@@ -232,4 +251,23 @@ export default class TripController {
     this._container.classList.remove(`visually-hidden`);
   }
 
+  _showNoPoints() {
+    this._api.getPoints()
+      .then((points) => {
+        if (points.length === 0) {
+          render(this._container, this._noPointsComponent);
+        } else {
+          remove(this._noPointsComponent);
+        }
+      });
+  }
+
+  // Отрисовка меню сортировки;
+  renderSortMenu() {
+    render(this._container, this._sortComponent);
+  }
+
+  renderPreloader() {
+    render(this._container, this._preloaderComponent);
+  }
 }
