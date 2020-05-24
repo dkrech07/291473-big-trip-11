@@ -5,7 +5,7 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
-const getSyncedTasks = (items) => {
+const getSyncedPoints = (items) => {
   return items.filter(({success}) => success)
     .map(({payload}) => payload.point);
 };
@@ -60,6 +60,7 @@ export default class Provider {
   }
 
   createPoint(point) {
+
     if (isOnline()) {
       return this._api.createPoint(point)
         .then((newPoint) => {
@@ -72,9 +73,8 @@ export default class Provider {
     // Логика при отсутствии интернета;
     // На случай локального создания данных мы должны сами создать `id`;
     // Иначе наша модель будет не полной и это может привнести баги;
-    const localNewPointkId = nanoid();
-    const localNewPoint = Point.clone(Object.assign(point, {id: localNewPointkId}));
-
+    const localNewPointId = nanoid();
+    const localNewPoint = Point.clone(Object.assign(point, {id: localNewPointId}));
     this._store.setItem(localNewPoint.id, localNewPoint.toRAW());
 
     return Promise.resolve(localNewPoint);
@@ -91,10 +91,10 @@ export default class Provider {
     }
 
     // Логика при отсутствии интернета;
-    const localTask = Point.clone(Object.assign(data, {id}));
-    this._store.setItem(id, localTask.toRAW());
+    const localPoint = Point.clone(Object.assign(data, {id}));
+    this._store.setItem(id, localPoint.toRAW());
 
-    return Promise.resolve(localTask);
+    return Promise.resolve(localPoint);
   }
 
   deletePoint(id) {
@@ -105,7 +105,6 @@ export default class Provider {
 
     // TODO: Реализовать логику при отсутствии интернета;
     this._store.removeItem(id);
-
     return Promise.resolve();
   }
 
@@ -116,13 +115,12 @@ export default class Provider {
       return this._api.sync(storePoints)
       .then((response) => {
         // Забираем из ответа синхронизированные точки;
-        const createdPoints = getSyncedTasks(response.created);
-        const updatedPoints = getSyncedTasks(response.updated);
+        const createdPoints = getSyncedPoints(response.created);
+        const updatedPoints = getSyncedPoints(response.updated);
 
         // Добавляем синхронизированные точки в хранилище;
         // Хранилище должно быть актуальным в любой момент;
         const items = createStoreStructure([...createdPoints, ...updatedPoints]);
-
         this._store.setItems(items);
       });
     }
