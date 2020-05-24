@@ -15,7 +15,7 @@ export const renderTripInfo = (points) => {
 
   if (points.length > 0) {
 
-    const sortedList = points.slice().sort((a, b) => a.date > b.date ? 1 : -1);
+    const sortedList = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
 
     const firstPointDestination = sortedList[0].destinationInfo.name;
     const firstDate = sortedList[0].departure;
@@ -29,7 +29,7 @@ export const renderTripInfo = (points) => {
 
     if (sortedList.length === 2) {
       const lastPointDestination = sortedList[sortedList.length - 1].destinationInfo.name;
-      const lastDate = sortedList[sortedList.length - 1].departure;
+      const lastDate = sortedList[sortedList.length - 1].arrival;
 
       const tripInfo = `${firstPointDestination} — ${lastPointDestination}`;
       const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
@@ -40,7 +40,7 @@ export const renderTripInfo = (points) => {
     if (sortedList.length === 3) {
       const secondPointDestination = sortedList[1].destinationInfo.name;
       const lastPointDestination = sortedList[sortedList.length - 1].destinationInfo.name;
-      const lastDate = sortedList[sortedList.length - 1].departure;
+      const lastDate = sortedList[sortedList.length - 1].arrival;
 
       const tripInfo = `${firstPointDestination} — ${secondPointDestination} — ${lastPointDestination}`;
       const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
@@ -50,7 +50,7 @@ export const renderTripInfo = (points) => {
 
     if (sortedList.length > 3) {
       const lastPointDestination = sortedList[sortedList.length - 1].destinationInfo.name;
-      const lastDate = sortedList[sortedList.length - 1].departure;
+      const lastDate = sortedList[sortedList.length - 1].arrival;
 
       const tripInfo = `${firstPointDestination} ... ${lastPointDestination}`;
       const tripDate = `${correctMonthAndDayFormat(firstDate)} — ${correctMonthAndDayFormat(lastDate)}`;
