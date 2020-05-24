@@ -12,7 +12,7 @@ export default class Point {
 
   toRAW() {
     return {
-      'id': this.id,
+      'id': this.id.toString(),
       'is_favorite': this.favorite,
       'date_from': this.departure,
       'date_to': this.arrival,

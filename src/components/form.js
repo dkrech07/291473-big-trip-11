@@ -246,7 +246,6 @@ const createFormTemplate = (currentPoint, mode) => {
 
 // Поддерживаю сохранение данных формы;
 const parseFormData = (formData, form, point) => {
-
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
 
   const price = parseInt(formData.get(`event-price`), 10);

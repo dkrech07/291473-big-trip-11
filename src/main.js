@@ -1,7 +1,9 @@
-import API from './api.js';
+import API from './api/index.js';
+import Store from "./api/store.js";
+import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
-import {RenderPosition, render, remove} from './utils/render.js';
+import {RenderPosition, render} from './utils/render.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
@@ -15,7 +17,13 @@ import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 // Получаю данные с сервера;
 const AUTORIZATION = `Basic dsfsfe3redgdg`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+// const STORE_PREFIX = `big-trip-localstorage`;
+// const STORE_VER = `v1`;
+// const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
 const api = new API(END_POINT, AUTORIZATION);
+const store = new Store(window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 // Общие переменные;
 const headerElement = document.querySelector(`.page-header`);
@@ -39,8 +47,10 @@ export const renderTripCost = (model) => {
   const tripCost = getPrice(model);
   const tripCostComponent = new TripCostComponent(tripCost);
 
-  if (tripCostComponent) {
-    remove(tripCostComponent);
+  const tripInfoCostElement = document.querySelector(`.trip-info__cost`);
+
+  if (tripInfoCostElement) {
+    tripInfoCostElement.remove();
   }
 
   render(tripInfoContainer.getElement(), tripCostComponent);
@@ -52,7 +62,7 @@ const filterController = new FilterController(mainElement, pointsModel);
 filterController.render();
 
 // Отрисовка информации о днях путешествия;
-const tripController = new TripController(tripEventsElement, pointsModel, api);
+const tripController = new TripController(tripEventsElement, pointsModel, apiWithProvider);
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
@@ -84,7 +94,7 @@ menuComponent.setOnChange((menuItem) => {
   }
 });
 
-api.getPoints()
+apiWithProvider.getPoints()
   .then((points) => {
     // Получаю точки для определения начальной и конечной точки маршрута;
     renderTripInfo(points);
@@ -107,16 +117,31 @@ api.getPoints()
     tripController.render();
   });
 
-api.getDestinations()
+apiWithProvider.getDestinations()
   .then((destinations) => {
     DestinationsModel.setDestinations(destinations);
   });
 
-api.getOffers()
+apiWithProvider.getOffers()
   .then((offers) => {
     OffersModel.setOffers(offers);
   });
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+      .then(() => {
+        // Действие, в случае успешной регистрации ServiceWorker
+      }).catch(() => {
+        // Действие, в случае ошибки при регистрации ServiceWorker
+      });
+});
 
-// // Отрисовка информации о крайних точках маршрута в шапке;
-// renderTripInfo();
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
