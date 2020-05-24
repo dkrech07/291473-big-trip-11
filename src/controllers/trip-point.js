@@ -68,16 +68,16 @@ export default class PointController {
     // Удаление формы редактиования точки маршрута по нажатию на ESC;
     this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
+        this._resetForm();
+
         this.replaceEditToPoint();
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
 
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
-        this._newPointButton.removeAttribute(`disabled`);
-
-        this._formComponent.reset();
+        this._resetForm();
         remove(this._formComponent);
-        document.removeEventListener(`keydown`, this._onEscKeyDown);
+        this._newPointButton.removeAttribute(`disabled`);
       }
     };
 
@@ -153,7 +153,6 @@ export default class PointController {
       this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
-
     };
 
     if (mode === Mode.ADDING) {
@@ -254,6 +253,30 @@ export default class PointController {
       this.disableFormElements(false);
       this.renameSaveButton(false);
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  _resetForm() {
+    this._formComponent.getElement().reset();
+
+    const favoriteButton = this._formComponent.getElement().querySelector(`#event-favorite-1`);
+
+    if (favoriteButton) {
+      favoriteButton.checked = false;
+    }
+
+    const inputElements = this._formComponent.getElement().querySelectorAll(`.event__input`);
+    for (const inputElement of inputElements) {
+      inputElement.value = ``;
+    }
+
+    const offerElements = this._formComponent.getElement().querySelectorAll(`.event__offer-selector .event__offer-checkbox`);
+    if (offerElements.length > 0) {
+      for (const offerElement of offerElements) {
+        offerElement.checked = false;
+      }
+    }
+
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
 }
