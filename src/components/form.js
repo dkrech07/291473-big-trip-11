@@ -246,7 +246,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
 // Поддерживаю сохранение данных формы;
 const parseFormData = (formData, form, point) => {
-
+  console.log(point.id);
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
 
   const price = parseInt(formData.get(`event-price`), 10);
@@ -269,7 +269,7 @@ const parseFormData = (formData, form, point) => {
   };
 
   return new PointModel({
-    // 'id': point.id,
+    'id': point.id,
     'is_favorite': getFavorite(favorite),
     'date_from': getNewDate(departure),
     'date_to': getNewDate(arrival),

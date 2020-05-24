@@ -65,7 +65,7 @@ export default class Provider {
       return this._api.createPoint(point)
         .then((newPoint) => {
           this._store.setItem(newPoint.id, newPoint.toRAW());
-
+          console.log(`id с сервера: `, newPoint.id);
           return newPoint;
         });
     }
@@ -75,7 +75,14 @@ export default class Provider {
     // Иначе наша модель будет не полной и это может привнести баги;
     const localNewPointId = nanoid();
     const localNewPoint = Point.clone(Object.assign(point, {id: localNewPointId}));
+    const localNewPointTest = Object.assign(point, {id: localNewPointId});
     this._store.setItem(localNewPoint.id, localNewPoint.toRAW());
+
+    console.log(`localNewPointTest`, localNewPointTest);
+    console.log(`localNewPoint`, localNewPoint);
+    console.log(`Nanoid`, nanoid());
+    // console.log(`localNewPointId`, localNewPointId);
+    // console.log(`localNewPoint.id`, localNewPoint.id);
 
     return Promise.resolve(localNewPoint);
   }
