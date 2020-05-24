@@ -5,27 +5,31 @@ const DISPLAY_OFFERS_COUNT = 3;
 
 const createTripPointMarkup = (point) => {
   const {type, destinationInfo, offers, departure, arrival, price} = point;
-  // const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
 
   const pointImage = point.type.toLowerCase();
 
-  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
-
   const createOffersMarkup = () => {
-    return offers.map((offer, index) => {
-      if (index < DISPLAY_OFFERS_COUNT && offer.isChecked) {
-        return (
-          `<li class="event__offer">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-           </li>`
-        );
-      } else {
-        return ``;
+
+    const getCheckedOffers = () => {
+      const checkedOffers = offers.filter((offer) => offer.isChecked);
+
+      if (checkedOffers.length > DISPLAY_OFFERS_COUNT) {
+        checkedOffers.length = DISPLAY_OFFERS_COUNT;
       }
+      return checkedOffers;
+    };
+
+    return getCheckedOffers().map((offer) => {
+
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+         </li>`
+      );
     }).join(`\n`);
   };
 
