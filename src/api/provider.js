@@ -41,24 +41,6 @@ export default class Provider {
     return Promise.resolve(Point.parsePoints(storePoints));
   }
 
-  getDestinations() {
-    if (isOnline()) {
-      return this._api.getDestinations();
-    }
-
-    // Логика при отсутствии интернета;
-    return Promise.reject(`offline logic is not implemented`);
-  }
-
-  getOffers() {
-    if (isOnline()) {
-      return this._api.getOffers();
-    }
-
-    // Логика при отсутствии интернета;
-    return Promise.reject(`offline logic is not implemented`);
-  }
-
   createPoint(point) {
 
     if (isOnline()) {
@@ -133,5 +115,47 @@ export default class Provider {
     }
 
     return Promise.reject(new Error(`Sync data failed`));
+  }
+
+  // getDestinations() {
+  //   if (isOnline()) {
+  //     return this._api.getDestinations();
+  //   }
+  //
+  //   // Логика при отсутствии интернета;
+  //   return Promise.reject(`offline logic is not implemented`);
+  // }
+
+  getDestinations() {
+    if (isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._store.setDestinations(destinations);
+
+          return destinations;
+        });
+    }
+    return Promise.resolve(this._store.getDestinations());
+  }
+
+  // getOffers() {
+  //   if (isOnline()) {
+  //     return this._api.getOffers();
+  //   }
+  //
+  //   // Логика при отсутствии интернета;
+  //   return Promise.resolve(this._store.getOffers());
+  // }
+
+  getOffers() {
+    if (isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          this._store.setOffers(offers);
+
+          return offers;
+        });
+    }
+    return Promise.resolve(this._store.getOffers());
   }
 }
