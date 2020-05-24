@@ -1,6 +1,19 @@
 import Point from "../models/point";
 import {nanoid} from "nanoid";
 
+const STORE_POINT_PREFIX = `bigtrip-points-localstorage`;
+const STORE_POINT_VER = `v1`;
+const STORE_OFFERS_PREFIX = `bigtrip-offers-localstorage`;
+const STORE_OFFERS_VER = `v1`;
+const STORE_DESTINATIONS_PREFIX = `bigtrip-destinations-localstorage`;
+const STORE_DESTINATIONS_VER = `v1`;
+
+export const StorageName = {
+  POINTS: `${STORE_POINT_PREFIX}-${STORE_POINT_VER}`,
+  OFFERS: `${STORE_OFFERS_PREFIX}-${STORE_OFFERS_VER}`,
+  DESTIONATIONS: `${STORE_DESTINATIONS_PREFIX}-${STORE_DESTINATIONS_VER}`
+};
+
 const isOnline = () => {
   return window.navigator.onLine;
 };
@@ -10,10 +23,12 @@ const getSyncedPoints = (items) => {
     .map(({payload}) => payload.point);
 };
 
-const createStoreStructure = (items) => {
-  return items.reduce((acc, current) => {
+const createStoreStructure = (items, isPointsStructure = true) => {
+  return items.reduce((acc, current, index) => {
+    const key = isPointsStructure ? current.id : index;
+
     return Object.assign({}, acc, {
-      [current.id]: current,
+      [key]: current,
     });
   }, {});
 };
@@ -27,59 +42,46 @@ export default class Provider {
   getPoints() {
     if (isOnline()) {
       return this._api.getPoints()
-      .then((points) => {
-        const items = createStoreStructure(points.map((point) => point.toRAW()));
-        this._store.setItems(items);
+        .then((points) => {
+          const items = createStoreStructure(points.map((point) => point.toRAW()));
 
-        return points;
-      });
+          this._store.setItems(items);
+
+          return points;
+        });
     }
 
-    // Логика при отсутствии интернета;
     const storePoints = Object.values(this._store.getItems());
-
     return Promise.resolve(Point.parsePoints(storePoints));
   }
 
   createPoint(point) {
-
     if (isOnline()) {
       return this._api.createPoint(point)
         .then((newPoint) => {
           this._store.setItem(newPoint.id, newPoint.toRAW());
-          console.log(`id с сервера: `, newPoint.id);
+
           return newPoint;
         });
     }
 
-    // Логика при отсутствии интернета;
-    // На случай локального создания данных мы должны сами создать `id`;
-    // Иначе наша модель будет не полной и это может привнести баги;
     const localNewPointId = nanoid();
     const localNewPoint = Point.clone(Object.assign(point, {id: localNewPointId}));
-    const localNewPointTest = Object.assign(point, {id: localNewPointId});
+
     this._store.setItem(localNewPoint.id, localNewPoint.toRAW());
-
-    console.log(`localNewPointTest`, localNewPointTest);
-    console.log(`localNewPoint`, localNewPoint);
-    console.log(`Nanoid`, nanoid());
-    // console.log(`localNewPointId`, localNewPointId);
-    // console.log(`localNewPoint.id`, localNewPoint.id);
-
     return Promise.resolve(localNewPoint);
   }
 
   updatePoint(id, data) {
     if (isOnline()) {
       return this._api.updatePoint(id, data)
-      .then((newPoint) => {
-        this._store.setItem(newPoint.id, newPoint.toRAW());
+        .then((newPoint) => {
+          this._store.setItem(newPoint.id, newPoint.toRAW());
 
-        return newPoint;
-      });
+          return newPoint;
+        });
     }
 
-    // Логика при отсутствии интернета;
     const localPoint = Point.clone(Object.assign(data, {id}));
     this._store.setItem(id, localPoint.toRAW());
 
@@ -92,7 +94,6 @@ export default class Provider {
         .then(() => this._store.removeItem(id));
     }
 
-    // TODO: Реализовать логику при отсутствии интернета;
     this._store.removeItem(id);
     return Promise.resolve();
   }
@@ -102,60 +103,50 @@ export default class Provider {
       const storePoints = Object.values(this._store.getItems());
 
       return this._api.sync(storePoints)
-      .then((response) => {
-        // Забираем из ответа синхронизированные точки;
-        const createdPoints = getSyncedPoints(response.created);
-        const updatedPoints = getSyncedPoints(response.updated);
+        .then((response) => {
+          const createdPoints = getSyncedPoints(response.created);
+          const updatedPoints = getSyncedPoints(response.updated);
 
-        // Добавляем синхронизированные точки в хранилище;
-        // Хранилище должно быть актуальным в любой момент;
-        const items = createStoreStructure([...createdPoints, ...updatedPoints]);
-        this._store.setItems(items);
-      });
+          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
+
+          this._store.setItems(items);
+        });
     }
 
-    return Promise.reject(new Error(`Sync data failed`));
+    return Promise.reject(`Sync data failed`);
   }
-
-  // getDestinations() {
-  //   if (isOnline()) {
-  //     return this._api.getDestinations();
-  //   }
-  //
-  //   // Логика при отсутствии интернета;
-  //   return Promise.reject(`offline logic is not implemented`);
-  // }
 
   getDestinations() {
     if (isOnline()) {
       return this._api.getDestinations()
         .then((destinations) => {
-          this._store.setDestinations(destinations);
+          const items = createStoreStructure(destinations, false);
+
+          this._store.setItems(items, StorageName.DESTIONATIONS);
 
           return destinations;
         });
     }
-    return Promise.resolve(this._store.getDestinations());
-  }
 
-  // getOffers() {
-  //   if (isOnline()) {
-  //     return this._api.getOffers();
-  //   }
-  //
-  //   // Логика при отсутствии интернета;
-  //   return Promise.resolve(this._store.getOffers());
-  // }
+    const storeDestinations = Object.values(this._store.getItems(StorageName.DESTIONATIONS));
+
+    return Promise.resolve(storeDestinations);
+  }
 
   getOffers() {
     if (isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          this._store.setOffers(offers);
+          const items = createStoreStructure(offers, false);
+
+          this._store.setItems(items, StorageName.OFFERS);
 
           return offers;
         });
     }
-    return Promise.resolve(this._store.getOffers());
+
+    const storeOffers = Object.values(this._store.getItems(StorageName.OFFERS));
+
+    return Promise.resolve(storeOffers);
   }
 }

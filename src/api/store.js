@@ -1,72 +1,45 @@
+import {StorageName} from './provider.js';
+
 export default class Store {
-  constructor(key, storage) {
+  constructor(storage) {
     this._storage = storage;
-    this._storeKey = key;
-    this._storeOffersKey = `offers`;
-    this._storeDestinationsKey = `destinations`;
   }
 
-  getItems() {
+  getItems(storageKey = StorageName.POINTS) {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
+      return JSON.parse(this._storage.getItem(storageKey)) || {};
     } catch (err) {
       return {};
     }
   }
 
-  setItems(items) {
+  setItems(items, storageKey = StorageName.POINTS) {
     this._storage.setItem(
-        this._storeKey,
+        storageKey,
         JSON.stringify(items)
     );
   }
 
-  setItem(key, value) {
-    const store = this.getItems();
+  setItem(itemKey, value, storageKey = StorageName.POINTS) {
+    const store = this.getItems(storageKey);
 
     this._storage.setItem(
-        this._storeKey,
+        storageKey,
         JSON.stringify(
             Object.assign({}, store, {
-              [key]: value
+              [itemKey]: value
             })
         )
     );
   }
 
-  removeItem(key) {
-    const store = this.getItems();
+  removeItem(itemKey, storageKey = StorageName.POINTS) {
+    const store = this.getItems(storageKey);
 
-    delete store[key];
-
+    delete store[itemKey];
     this._storage.setItem(
-        this._storeKey,
+        storageKey,
         JSON.stringify(store)
     );
   }
-
-  getOffers() {
-    try {
-      return JSON.parse(this._storage.getItem(this._storeOffersKey)) || {};
-    } catch (err) {
-      return {};
-    }
-  }
-
-  setOffers(offers) {
-    this._storage.setItem(this._storeOffersKey, JSON.stringify(offers));
-  }
-
-  getDestinations() {
-    try {
-      return JSON.parse(this._storage.getItem(this._storeDestinationsKey)) || {};
-    } catch (err) {
-      return {};
-    }
-  }
-
-  setDestinations(destinations) {
-    this._storage.setItem(this._storeDestinationsKey, JSON.stringify(destinations));
-  }
-
 }
