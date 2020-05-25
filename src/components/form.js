@@ -462,6 +462,14 @@ export default class Form extends AbstractSmartComponent {
     });
   }
 
+  _checkDates() {
+    if (this._currentPoint.departure > this._currentPoint.arrival) {
+      document.querySelector(`.event__save-btn`).disabled = true;
+    } else {
+      document.querySelector(`.event__save-btn`).disabled = false;
+    }
+  }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
@@ -532,18 +540,14 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
+      this._checkDates();
     });
 
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
+      this._checkDates();
 
-      if (this._currentPoint.departure > this._currentPoint.arrival) {
-        this._currentPoint.arrival = this._currentPoint.arrival - this._currentPoint.departure;
-        document.querySelector(`.event__save-btn`).disabled = true;
-      } else {
-        document.querySelector(`.event__save-btn`).disabled = false;
-      }
     });
 
     // Хендлер для клика по кнопке rollUp в форме;
