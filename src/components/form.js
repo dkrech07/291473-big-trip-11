@@ -537,6 +537,13 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
+
+      if (this._currentPoint.departure > this._currentPoint.arrival) {
+        this._currentPoint.arrival = this._currentPoint.arrival - this._currentPoint.departure;
+        document.querySelector(`.event__save-btn`).disabled = true;
+      } else {
+        document.querySelector(`.event__save-btn`).disabled = false;
+      }
     });
 
     // Хендлер для клика по кнопке rollUp в форме;
