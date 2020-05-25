@@ -129,7 +129,18 @@ export default class PointController {
     };
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
-    const pointRollUpClickHandler = () => {
+    const pointRollUpClickHandler = () => { // -------------------------------------------------------Форма редактирования текущей точки;
+      // console.log(`Редактирование точки`, this._formComponent.getElement());
+      const oldForm = document.querySelector(`.trip-days > .event--edit`);
+      const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
+      if (oldForm) {
+        newPointButton.removeAttribute(`disabled`);
+        oldForm.remove();
+      }
+
+      // console.log(newPointButton);
+      // console.log(`Нашел форму создания, надо удалить`, oldForm);
+
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
@@ -141,8 +152,11 @@ export default class PointController {
     this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
 
     // Отрисовка формы редактирования для новой карточки;
-    const newFormClickHandler = (evt) => {
+    const newFormClickHandler = (evt) => { // -------------------------------------------------------Форма создания новой точки;
       evt.preventDefault();
+
+      const oldForm = document.querySelector(`.trip-days .event--edit`);
+      console.log(`Нашел форму редактирования, надо удалить`, oldForm);
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
