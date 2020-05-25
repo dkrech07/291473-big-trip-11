@@ -129,6 +129,13 @@ export default class PointController {
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
     const pointRollUpClickHandler = () => {
+      const oldForm = document.querySelector(`.trip-days > .event--edit`);
+      const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
+      if (oldForm) {
+        oldForm.remove();
+        newPointButton.removeAttribute(`disabled`);
+      }
+
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
