@@ -132,8 +132,8 @@ export default class PointController {
       const oldForm = document.querySelector(`.trip-days > .event--edit`);
       const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
       if (oldForm) {
-        oldForm.remove();
         newPointButton.removeAttribute(`disabled`);
+        oldForm.remove();
       }
 
       this._replacePointToEdit();
