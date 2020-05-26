@@ -89,6 +89,8 @@ export default class TripController {
 
   // Сортировка точек маршрута в зависимости от выбранного параметра;
   _getSortedTrips(sortType) {
+    document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
+
     switch (sortType) {
       case SortTypes.SORT_EVENT:
         const sortEventInput = document.querySelector(`#sort-event`);
