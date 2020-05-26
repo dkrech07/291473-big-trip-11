@@ -4,7 +4,7 @@ import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
-import {getPlaceholderMarkup, correctDateAndTimeFormat, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -80,11 +80,11 @@ const createFormTemplate = (currentPoint, mode) => {
 
     return (
       `<section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">
-                ${createOffersMarkup()}
-          </div>
-        </section>`
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+              ${createOffersMarkup()}
+        </div>
+      </section>`
     );
   };
 
@@ -95,13 +95,11 @@ const createFormTemplate = (currentPoint, mode) => {
     );
   };
 
-  const createDestinationContainer = () => {
+  const destinationContainer = () => {
     if (destination) {
       return (
-        `<section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        ${createDescriptionMarkup()}
-        <section>`
+        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescriptionMarkup()}`
       );
     } else {
       return ``;
@@ -116,34 +114,10 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
-  const createPhotosContainer = () => {
-    if (destinationInfo.pictures.length) {
-      return (
-        `<div class="event__photos-container">
-            <div class="event__photos-tape">
-            ${createPhotosMarkup()}
-            </div>
-          </div>`
-      );
-    }
-
-    return ``;
-  };
-
-  const getAllDetails = () => {
-    if (createDestinationContainer() || createPhotosMarkup() || createPhotosContainer()) {
-      return (
-        `<section class="event__details">
-          ${createOffersContainer()}
-
-          ${createDestinationContainer()}
-
-          ${createPhotosContainer()}
-        </section>`
-      );
-    }
-    return ``;
-  };
+  // // Проставляет для всех "звездочек" нективное состояние
+  // const getCheckFavorite = (check) => {
+  //   return (check && `checked`) || ``;
+  // };
 
   const getCheckFavorite = (isFavorite) => {
     if (isFavorite) {
@@ -253,7 +227,19 @@ const createFormTemplate = (currentPoint, mode) => {
           ${getRollUpMarkUp()}
         </header>
 
-        ${getAllDetails()}
+        <section class="event__details">
+          ${createOffersContainer()}
+
+          <section class="event__section  event__section--destination">
+          ${destinationContainer()}
+
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+              ${createPhotosMarkup()}
+              </div>
+            </div>
+          </section>
+        </section>
       </form>`
   );
 };
@@ -274,24 +260,18 @@ const parseFormData = (formData, form, point) => {
     return false;
   };
 
-  // console.log(`departure`, new Date(departure));
-  // console.log(`arrival`, arrival);
-  //
-  // const getNewDate = (input) => {
-  //   const dateInfo = input.trim().split(` `);
-  //   const date = dateInfo[0].split(`/`);
-  //   const time = dateInfo[1].split(`:`);
-  //   return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-  // };
-  //
-  // console.log(`date_from`, getNewDate(departure));
-  // console.log(`date_to`, getNewDate(arrival));
+  const getNewDate = (input) => {
+    const dateInfo = input.trim().split(` `);
+    const date = dateInfo[0].split(`/`);
+    const time = dateInfo[1].split(`:`);
+    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+  };
 
   return new PointModel({
     'id': point.id,
     'is_favorite': getFavorite(favorite),
-    'date_from': departure,
-    'date_to': arrival,
+    'date_from': getNewDate(departure),
+    'date_to': getNewDate(arrival),
     'base_price': price,
     'type': type[0].toLowerCase(),
     'offers': point.offers.slice(),
@@ -552,24 +532,11 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
-
-      if (evt.target.value > correctDateAndTimeFormat(this._currentPoint.arrival)) {
-        document.querySelector(`.event__save-btn`).disabled = true;
-      } else {
-        document.querySelector(`.event__save-btn`).disabled = false;
-      }
     });
 
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
-
-      if (correctDateAndTimeFormat(this._currentPoint.departure) > evt.target.value) {
-        document.querySelector(`.event__save-btn`).disabled = true;
-      } else {
-        document.querySelector(`.event__save-btn`).disabled = false;
-      }
-
     });
 
     // Хендлер для клика по кнопке rollUp в форме;

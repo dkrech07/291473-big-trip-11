@@ -24,8 +24,8 @@ export const EmptyPoint = {
   favorite: null,
   offers: [],
   price: 0,
-  departure: new Date(),
-  arrival: new Date(),
+  departure: `15/05/2020 14:31`,
+  arrival: `15/05/2020 14:31`,
 };
 
 export default class PointController {
@@ -129,17 +129,18 @@ export default class PointController {
     };
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
-    const pointRollUpClickHandler = () => { // ------------------------------------------------------- Редактирование текущей точки;
-      // Удаляю форму создания точки, если она есть;
-      const newPointForm = document.querySelector(`.trip-days > .event--edit`);
+    const pointRollUpClickHandler = () => { // -------------------------------------------------------Форма редактирования текущей точки;
+      // console.log(`Редактирование точки`, this._formComponent.getElement());
+      const oldForm = document.querySelector(`.trip-days > .event--edit`);
       const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
-
-      if (newPointForm) {
+      if (oldForm) {
         newPointButton.removeAttribute(`disabled`);
-        newPointForm.remove();
+        oldForm.remove();
       }
 
-      // Заменяю форму редактирования точки на точку;
+      // console.log(newPointButton);
+      // console.log(`Нашел форму создания, надо удалить`, oldForm);
+
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
@@ -151,9 +152,11 @@ export default class PointController {
     this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
 
     // Отрисовка формы редактирования для новой карточки;
-    const newFormClickHandler = (evt) => {
-
+    const newFormClickHandler = (evt) => { // -------------------------------------------------------Форма создания новой точки;
       evt.preventDefault();
+
+      const oldForm = document.querySelector(`.trip-days .event--edit`);
+      console.log(`Нашел форму редактирования, надо удалить`, oldForm);
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
@@ -161,20 +164,13 @@ export default class PointController {
 
       this.renameSaveButton();
       this.disableFormElements();
-      // this._newPointButton.removeAttribute(`disabled`);
+      this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
 
     };
 
-    if (mode === Mode.ADDING) { // ------------------------------------------------------- Создание новой точки;
-      // const oldForm = document.querySelector(`.trip-events__item .event--edit`);
-      // console.log(oldForm);
-      // if (oldForm) {
-      //   oldForm.remove();
-      // }
-      console.log(this._formComponent.getElement());
-
+    if (mode === Mode.ADDING) {
       render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
       this._formComponent.setSaveFormClickHandler(newFormClickHandler);
       document.addEventListener(`keydown`, this._onEscKeyDown);

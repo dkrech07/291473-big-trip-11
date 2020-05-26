@@ -53,7 +53,6 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._pointsModel.setFilter(filterType);
     this._activeFilterType = filterType;
-    document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
   }
 
   _onDataChange() {
