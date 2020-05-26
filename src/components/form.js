@@ -80,11 +80,11 @@ const createFormTemplate = (currentPoint, mode) => {
 
     return (
       `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-              ${createOffersMarkup()}
-        </div>
-      </section>`
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+                ${createOffersMarkup()}
+          </div>
+        </section>`
     );
   };
 
@@ -95,11 +95,13 @@ const createFormTemplate = (currentPoint, mode) => {
     );
   };
 
-  const destinationContainer = () => {
+  const createDestinationContainer = () => {
     if (destination) {
       return (
-        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        ${createDescriptionMarkup()}`
+        `<section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescriptionMarkup()}
+        <section>`
       );
     } else {
       return ``;
@@ -112,6 +114,35 @@ const createFormTemplate = (currentPoint, mode) => {
         `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
       );
     }).join(`\n`);
+  };
+
+  const createPhotosContainer = () => {
+    if (destinationInfo.pictures.length) {
+      return (
+        `<div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${createPhotosMarkup()}
+            </div>
+          </div>`
+      );
+    }
+
+    return ``;
+  };
+
+  const getAllDetails = () => {
+    if (createDestinationContainer() || createPhotosMarkup() || createPhotosContainer()) {
+      return (
+        `<section class="event__details">
+          ${createOffersContainer()}
+
+          ${createDestinationContainer()}
+
+          ${createPhotosContainer()}
+        </section>`
+      );
+    }
+    return ``;
   };
 
   // // Проставляет для всех "звездочек" нективное состояние
@@ -227,19 +258,7 @@ const createFormTemplate = (currentPoint, mode) => {
           ${getRollUpMarkUp()}
         </header>
 
-        <section class="event__details">
-          ${createOffersContainer()}
-
-          <section class="event__section  event__section--destination">
-          ${destinationContainer()}
-
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-              ${createPhotosMarkup()}
-              </div>
-            </div>
-          </section>
-        </section>
+        ${getAllDetails()}
       </form>`
   );
 };
