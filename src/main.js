@@ -68,6 +68,10 @@ const newPointClickHandler = (evt) => {
   evt.preventDefault();
   filterController.setDefaultView();
   tripController.createPoint(newPointButton);
+
+  menuComponent.setActiveItem(MenuItem.TABLE);
+  statisticsComponent.hide();
+  tripController.show();
 };
 
 newPointButton.addEventListener(`click`, newPointClickHandler);
@@ -90,6 +94,7 @@ menuComponent.setOnChange((menuItem) => {
       filterController.setDefaultView(); // скидываю фильтр к дефолту controllers/filer.js
       tripController.hide();
       statisticsComponent.show();
+      document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
       break;
   }
 });
