@@ -188,6 +188,7 @@ export default class TripController {
 
           this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
+
         }).catch(() => {
           pointController.shake();
         });

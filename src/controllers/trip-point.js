@@ -68,16 +68,16 @@ export default class PointController {
     // Удаление формы редактиования точки маршрута по нажатию на ESC;
     this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
-        this._resetForm();
-
         this.replaceEditToPoint();
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
 
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
-        this._resetForm();
-        remove(this._formComponent);
         this._newPointButton.removeAttribute(`disabled`);
+
+        this._formComponent.reset();
+        remove(this._formComponent);
+        document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
     };
 
@@ -95,8 +95,9 @@ export default class PointController {
         this._newPointButton.removeAttribute(`disabled`);
       }
 
-      this._resetForm();
+      this._formComponent.reset();
       remove(this._formComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
     // Отлавливаю клик по "Delete" на форме редактирования точки маршрута;
@@ -128,14 +129,17 @@ export default class PointController {
     };
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
-    const pointRollUpClickHandler = () => {
-      const oldForm = document.querySelector(`.trip-days > .event--edit`);
+    const pointRollUpClickHandler = () => { // ------------------------------------------------------- Редактирование текущей точки;
+      // Удаляю форму создания точки, если она есть;
+      const newPointForm = document.querySelector(`.trip-days > .event--edit`);
       const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
-      if (oldForm) {
+
+      if (newPointForm) {
         newPointButton.removeAttribute(`disabled`);
-        oldForm.remove();
+        newPointForm.remove();
       }
 
+      // Заменяю форму редактирования точки на точку;
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
@@ -148,6 +152,7 @@ export default class PointController {
 
     // Отрисовка формы редактирования для новой карточки;
     const newFormClickHandler = (evt) => {
+
       evt.preventDefault();
 
       const data = this._formComponent.getData(this._point);
@@ -156,12 +161,20 @@ export default class PointController {
 
       this.renameSaveButton();
       this.disableFormElements();
-      this._newPointButton.removeAttribute(`disabled`);
+      // this._newPointButton.removeAttribute(`disabled`);
 
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+
     };
 
-    if (mode === Mode.ADDING) {
+    if (mode === Mode.ADDING) { // ------------------------------------------------------- Создание новой точки;
+      // const oldForm = document.querySelector(`.trip-events__item .event--edit`);
+      // console.log(oldForm);
+      // if (oldForm) {
+      //   oldForm.remove();
+      // }
+      console.log(this._formComponent.getElement());
+
       render(this._container, this._formComponent, RenderPosition.AFTERBEGIN);
       this._formComponent.setSaveFormClickHandler(newFormClickHandler);
       document.addEventListener(`keydown`, this._onEscKeyDown);
@@ -259,30 +272,6 @@ export default class PointController {
       this.disableFormElements(false);
       this.renameSaveButton(false);
     }, SHAKE_ANIMATION_TIMEOUT);
-  }
-
-  _resetForm() {
-    this._formComponent.getElement().reset();
-
-    const favoriteButton = this._formComponent.getElement().querySelector(`#event-favorite-1`);
-
-    if (favoriteButton) {
-      favoriteButton.checked = false;
-    }
-
-    const inputElements = this._formComponent.getElement().querySelectorAll(`.event__input`);
-    for (const inputElement of inputElements) {
-      inputElement.value = ``;
-    }
-
-    const offerElements = this._formComponent.getElement().querySelectorAll(`.event__offer-selector .event__offer-checkbox`);
-    if (offerElements.length > 0) {
-      for (const offerElement of offerElements) {
-        offerElement.checked = false;
-      }
-    }
-
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
 }
