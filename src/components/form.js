@@ -79,12 +79,14 @@ const createFormTemplate = (currentPoint, mode) => {
     }
 
     return (
-      `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-              ${createOffersMarkup()}
-        </div>
-      </section>`
+      `<section class="event__details">
+        <section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+                ${createOffersMarkup()}
+          </div>
+        </section>
+      </stction>`
     );
   };
 
@@ -95,11 +97,13 @@ const createFormTemplate = (currentPoint, mode) => {
     );
   };
 
-  const destinationContainer = () => {
+  const createDestinationContainer = () => {
     if (destination) {
       return (
-        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        ${createDescriptionMarkup()}`
+        `<section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescriptionMarkup()}
+        <section>`
       );
     } else {
       return ``;
@@ -114,10 +118,19 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
-  // // Проставляет для всех "звездочек" нективное состояние
-  // const getCheckFavorite = (check) => {
-  //   return (check && `checked`) || ``;
-  // };
+  const createPhotosContainer = () => {
+    if (destinationInfo.pictures.length) {
+      return (
+        `<div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${createPhotosMarkup()}
+            </div>
+          </div>`
+      );
+    }
+
+    return ``;
+  };
 
   const getCheckFavorite = (isFavorite) => {
     if (isFavorite) {
@@ -226,20 +239,11 @@ const createFormTemplate = (currentPoint, mode) => {
 
           ${getRollUpMarkUp()}
         </header>
-
-        <section class="event__details">
           ${createOffersContainer()}
 
-          <section class="event__section  event__section--destination">
-          ${destinationContainer()}
+          ${createDestinationContainer()}
 
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-              ${createPhotosMarkup()}
-              </div>
-            </div>
-          </section>
-        </section>
+          ${createPhotosContainer()}
       </form>`
   );
 };
