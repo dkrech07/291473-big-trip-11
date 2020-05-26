@@ -274,18 +274,24 @@ const parseFormData = (formData, form, point) => {
     return false;
   };
 
-  const getNewDate = (input) => {
-    const dateInfo = input.trim().split(` `);
-    const date = dateInfo[0].split(`/`);
-    const time = dateInfo[1].split(`:`);
-    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-  };
+  // console.log(`departure`, new Date(departure));
+  // console.log(`arrival`, arrival);
+  //
+  // const getNewDate = (input) => {
+  //   const dateInfo = input.trim().split(` `);
+  //   const date = dateInfo[0].split(`/`);
+  //   const time = dateInfo[1].split(`:`);
+  //   return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+  // };
+  //
+  // console.log(`date_from`, getNewDate(departure));
+  // console.log(`date_to`, getNewDate(arrival));
 
   return new PointModel({
     'id': point.id,
     'is_favorite': getFavorite(favorite),
-    'date_from': getNewDate(departure),
-    'date_to': getNewDate(arrival),
+    'date_from': departure,
+    'date_to': arrival,
     'base_price': price,
     'type': type[0].toLowerCase(),
     'offers': point.offers.slice(),
@@ -561,7 +567,6 @@ export default class Form extends AbstractSmartComponent {
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
       this._checkDates();
-
     });
 
     // Хендлер для клика по кнопке rollUp в форме;
