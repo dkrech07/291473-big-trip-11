@@ -92,7 +92,8 @@ export default class TripController {
   // Сортировка точек маршрута в зависимости от выбранного параметра;
   _getSortedTrips(sortType) {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
-
+    const tripSortElementContainer = document.querySelector(`.trip-events__trip-sort`);
+    const dayElement = tripSortElementContainer.querySelector(`.trip-sort__item--day`);
     switch (sortType) {
       case SortTypes.SORT_EVENT:
         this._currentSort = SortTypes.SORT_EVENT;
@@ -103,6 +104,11 @@ export default class TripController {
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderPoints(pointsEvent);
+
+
+        if (!dayElement.textContent) {
+          dayElement.textContent = `DAY`;
+        }
         break;
 
       case SortTypes.SORT_TIME:
@@ -112,6 +118,10 @@ export default class TripController {
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderSortPoints(pointsTime);
+
+        if (dayElement.textContent) {
+          dayElement.textContent = ``;
+        }
         break;
 
       case SortTypes.SORT_PRICE:
@@ -121,6 +131,10 @@ export default class TripController {
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderSortPoints(pointsPrice);
+
+        if (dayElement.textContent) {
+          dayElement.textContent = ``;
+        }
         break;
     }
     console.log(this._currentSort);
