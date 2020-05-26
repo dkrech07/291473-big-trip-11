@@ -4,7 +4,7 @@ import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
-import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+import {getPlaceholderMarkup, correctDateAndTimeFormat, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -551,11 +551,23 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
+
+      if (evt.target.value > correctDateAndTimeFormat(this._currentPoint.arrival)) {
+        document.querySelector(`.event__save-btn`).disabled = true;
+      } else {
+        document.querySelector(`.event__save-btn`).disabled = false;
+      }
     });
 
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
+
+      if (correctDateAndTimeFormat(this._currentPoint.departure) > evt.target.value) {
+        document.querySelector(`.event__save-btn`).disabled = true;
+      } else {
+        document.querySelector(`.event__save-btn`).disabled = false;
+      }
     });
 
     // Хендлер для клика по кнопке rollUp в форме;
