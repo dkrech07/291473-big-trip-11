@@ -7,7 +7,7 @@ import {TRIP_TYPES} from '../utils/common.js';
 
 const ESC_KEYCODE = 27;
 const SHAKE_ANIMATION_TIMEOUT = 600;
-const FIRST_TYPE_COUNT = 0;
+const DEFAULT_TYPE_COUNT = 4;
 
 export const Mode = {
   DEFAULT: `default`,
@@ -17,22 +17,17 @@ export const Mode = {
 
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
-  type: TRIP_TYPES[FIRST_TYPE_COUNT],
+  type: TRIP_TYPES[DEFAULT_TYPE_COUNT],
   destinationInfo: {
     description: ``,
     name: ``,
     pictures: [],
   },
   favorite: null,
-  offers: [
-    {title: `Upgrade to a business class`, price: 190},
-    {title: `Choose the radio station`, price: 30},
-    {title: `Choose temperature`, price: 170},
-    {title: `Drive quickly, I'm in a hurry`, price: 100},
-    {title: `Drive slowly`, price: 110}],
+  offers: [],
   price: 0,
-  departure: `15/05/2020 14:31`,
-  arrival: `15/05/2020 14:31`,
+  departure: new Date(),
+  arrival: new Date(),
 };
 
 export default class PointController {
