@@ -79,14 +79,12 @@ const createFormTemplate = (currentPoint, mode) => {
     }
 
     return (
-      `<section class="event__details">
-        <section class="event__section  event__section--offers">
+      `<section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
                 ${createOffersMarkup()}
           </div>
-        </section>
-      </stction>`
+        </section>`
     );
   };
 
@@ -129,6 +127,21 @@ const createFormTemplate = (currentPoint, mode) => {
       );
     }
 
+    return ``;
+  };
+
+  const getAllDetails = () => {
+    if (createDestinationContainer() || createPhotosMarkup() || createPhotosContainer()) {
+      return (
+        `<section class="event__details">
+          ${createOffersContainer()}
+
+          ${createDestinationContainer()}
+
+          ${createPhotosContainer()}
+        </section>`
+      );
+    }
     return ``;
   };
 
@@ -239,11 +252,8 @@ const createFormTemplate = (currentPoint, mode) => {
 
           ${getRollUpMarkUp()}
         </header>
-          ${createOffersContainer()}
 
-          ${createDestinationContainer()}
-
-          ${createPhotosContainer()}
+        ${getAllDetails()}
       </form>`
   );
 };
