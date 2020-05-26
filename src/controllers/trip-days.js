@@ -43,6 +43,7 @@ export default class TripController {
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
+    this._currentSort = SortTypes.SORT_EVENT;
   }
 
   render() {
@@ -79,7 +80,8 @@ export default class TripController {
 
   // Отрисовка новой формы редактирования (точки маршрута);
   createPoint(button) {
-    this._getSortedTrips(SortTypes.SORT_EVENT);
+    // this._getSortedTrips(SortTypes.SORT_EVENT); // - проблема с разваливающейся фомой вот в этой сортировке.
+    this._getSortedTrips(this._currentSort);
     button.setAttribute(`disabled`, `true`);
 
     const container = this._tripDaysComponent.getElement();
@@ -93,6 +95,7 @@ export default class TripController {
 
     switch (sortType) {
       case SortTypes.SORT_EVENT:
+        this._currentSort = SortTypes.SORT_EVENT;
         const sortEventInput = document.querySelector(`#sort-event`);
         sortEventInput.checked = true;
 
@@ -103,6 +106,7 @@ export default class TripController {
         break;
 
       case SortTypes.SORT_TIME:
+        this._currentSort = SortTypes.SORT_TIME;
         const pointsTime = this._pointsModel.getPointsAll().slice();
         pointsTime.sort((a, b) => a.arrival - a.departure > b.arrival - b.departure ? 1 : -1);
         this._tripDaysComponent.getElement().innerHTML = ``;
@@ -111,6 +115,7 @@ export default class TripController {
         break;
 
       case SortTypes.SORT_PRICE:
+        this._currentSort = SortTypes.SORT_PRICE;
         const pointsPrice = this._pointsModel.getPointsAll().slice();
         pointsPrice.sort((a, b) => a.price > b.price ? 1 : -1);
         this._tripDaysComponent.getElement().innerHTML = ``;
@@ -118,6 +123,7 @@ export default class TripController {
         this._renderSortPoints(pointsPrice);
         break;
     }
+    console.log(this._currentSort);
   }
 
   // Отрисовка точек маршрута в днях путешествия;
@@ -239,6 +245,7 @@ export default class TripController {
     this._renderPoints(this._pointsModel.getPoints());
     renderTripCost(this._pointsModel.getPoints());
     renderTripInfo(this._pointsModel.getPoints());
+    this._getSortedTrips(this._currentSort);
   }
 
   _onFilterChange() {
