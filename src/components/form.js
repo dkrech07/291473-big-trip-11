@@ -290,6 +290,16 @@ const parseFormData = (formData, form, point) => {
     return offer.isChecked === true;
   });
 
+  const getCheckDefault = () => { // После того, как форма получили данные об выбранных офферах, сбрасываю их к false;
+    for (const offer of point.offers) {
+      if (offer.isChecked) {
+        offer.isChecked = false;
+      }
+    }
+  };
+
+  getCheckDefault();
+
   return new PointModel({
     'id': point.id,
     'is_favorite': getFavorite(favorite),
