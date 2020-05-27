@@ -99,38 +99,66 @@ menuComponent.setOnChange((menuItem) => {
   }
 });
 
-apiWithProvider.getPoints()
-  .then((points) => {
-    // Получаю точки для определения начальной и конечной точки маршрута;
-    renderTripInfo(points);
-    // Отрисовка меню сортировки;
-    tripController.renderSortMenu();
-    // Отрисовка прелоадера;
-    tripController.renderPreloader();
+// apiWithProvider.getPoints()
+//   .then((points) => {
+//     // Получаю точки для определения начальной и конечной точки маршрута;
+//     renderTripInfo(points);
+//     // Отрисовка меню сортировки;
+//     tripController.renderSortMenu();
+//     // Отрисовка прелоадера;
+//     tripController.renderPreloader();
+//
+//     pointsModel.setPoints(points);
+//     for (const point of points) {
+//       if (point.offers.length > 0) {
+//         for (const offer of point.offers) {
+//           offer.isChecked = true;
+//         }
+//       }
+//     }
+//
+//     const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+//     renderTripCost(pointsModel.getPoints(pointsOfDeparture));
+//     tripController.render();
+//   });
+//
+// apiWithProvider.getDestinations()
+//   .then((destinations) => {
+//     DestinationsModel.setDestinations(destinations);
+//   });
+//
+// apiWithProvider.getOffers()
+//   .then((offers) => {
+//     OffersModel.setOffers(offers);
+//   });
 
-    pointsModel.setPoints(points);
-    for (const point of points) {
-      if (point.offers.length > 0) {
-        for (const offer of point.offers) {
-          offer.isChecked = true;
-        }
+Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()]).then((values) => {
+  console.log(values);
+
+  renderTripInfo(values[0]);
+  // Отрисовка меню сортировки;
+  tripController.renderSortMenu();
+  // Отрисовка прелоадера;
+  tripController.renderPreloader();
+
+  pointsModel.setPoints(values[0]);
+  for (const point of values[0]) {
+    if (point.offers.length > 0) {
+      for (const offer of point.offers) {
+        offer.isChecked = true;
       }
     }
+  }
 
-    const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-    renderTripCost(pointsModel.getPoints(pointsOfDeparture));
-    tripController.render();
-  });
+  const pointsOfDeparture = values[0].slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+  renderTripCost(pointsModel.getPoints(pointsOfDeparture));
+  tripController.render();
 
-apiWithProvider.getDestinations()
-  .then((destinations) => {
-    DestinationsModel.setDestinations(destinations);
-  });
+  DestinationsModel.setDestinations(values[1]);
 
-apiWithProvider.getOffers()
-  .then((offers) => {
-    OffersModel.setOffers(offers);
-  });
+  OffersModel.setOffers(values[2]);
+
+});
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
