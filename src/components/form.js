@@ -286,6 +286,10 @@ const parseFormData = (formData, form, point) => {
     return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
   };
 
+  const checkedOffers = point.offers.slice().filter((offer) => {
+    return offer.isChecked === true;
+  });
+
   return new PointModel({
     'id': point.id,
     'is_favorite': getFavorite(favorite),
@@ -293,7 +297,7 @@ const parseFormData = (formData, form, point) => {
     'date_to': getNewDate(arrival),
     'base_price': price,
     'type': type[0].toLowerCase(),
-    'offers': point.offers.slice(),
+    'offers': checkedOffers,
     'destination': point.destinationInfo,
   });
 };

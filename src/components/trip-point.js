@@ -1,6 +1,7 @@
 import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 import {getPlaceholderMarkup, TRIP_TYPES} from '../utils/common.js';
+import OffersModel from '../models/offers.js';
 const DISPLAY_OFFERS_COUNT = 3;
 
 const createTripPointMarkup = (point) => {
@@ -13,10 +14,48 @@ const createTripPointMarkup = (point) => {
 
   // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
 
+  const getAllOffers = (checkedOffers) => {
+    const offersList = OffersModel.getOffers().find(
+        (offer) => {
+          return offer.type === point.type;
+        }
+    );
+
+    const allOffers = offersList.offers;
+
+    for (const checkedOffer of checkedOffers) {
+      // console.log(checkedOffer.title);
+      for (const offer of allOffers) {
+        // console.log(offer.title);
+        if (checkedOffer.title === offer.title) {
+          offer.isChecked = true;
+          console.log(`Офферы совпали`, checkedOffer, offer);
+        }
+      }
+    }
+
+
+    // for (const checkedOffer of checkedOffers) {
+    //   for (const offer of offersList.offers) {
+    //     if (checkedOffer === offer) {
+    //       console.log(`Офферы совпали`, checkedOffer, offer);
+    //     }
+    //   }
+    // }
+    //
+    return offersList.offers;
+  };
+
+  console.log(getAllOffers(offers.slice())); // Получаю все офферы и выбранне оферы прочеканы;
+
   const createOffersMarkup = () => {
     const getCheckedOffers = () => {
-      const checkedOffers = offers.filter((offer) => offer.isChecked);
 
+      const checkedOffers = offers.slice();
+
+      // console.log(checkedOffers);
+      // console.log(point.type);
+      // console.log(OffersModel.getOffers());
       if (checkedOffers.length > DISPLAY_OFFERS_COUNT) {
         checkedOffers.length = DISPLAY_OFFERS_COUNT;
       }
