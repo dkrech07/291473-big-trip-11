@@ -69,14 +69,21 @@ const createFormTemplate = (currentPoint, mode) => {
     };
 
     const getOffers = (saveOffers) => {
-      const pointOffers = getOfferOfType().offers;
 
-      for (const offer of saveOffers) {
+      let pointOffers;
+      if (mode === `adding`) {
+        pointOffers = getOfferOfType().offers;
+        for (const offer of pointOffers) {
+          offer.isChecked = false;
+        }
+      } else {
+        pointOffers = getOfferOfType().offers;
 
-        for (const pointOffer of pointOffers) {
-
-          if (offer.title === pointOffer.title) {
-            pointOffer.isChecked = true;
+        for (const offer of saveOffers) {
+          for (const pointOffer of pointOffers) {
+            if (offer.title === pointOffer.title) {
+              pointOffer.isChecked = true;
+            }
           }
         }
       }
@@ -86,9 +93,11 @@ const createFormTemplate = (currentPoint, mode) => {
 
     const newOffers = getOffers(offers);
 
-    console.log(newOffers);
+    // console.log(newOffers);
+    console.log(offers);
 
-    return offers.map((offer) => {
+
+    return newOffers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
 
       return (
