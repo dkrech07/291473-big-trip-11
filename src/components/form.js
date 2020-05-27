@@ -57,7 +57,36 @@ const createFormTemplate = (currentPoint, mode) => {
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
-    return offers.map((offer) => {
+
+    const getOfferOfType = () => {
+      const offersList = OffersModel.getOffers().find(
+          (offer) => {
+            return offer.type === type;
+          }
+      );
+
+      return offersList;
+    };
+
+    const getOffers = (saveOffers) => {
+      const pointOffers = getOfferOfType().offers;
+
+      for (const offer of saveOffers) {
+
+        for (const pointOffer of pointOffers) {
+
+          if (offer.title === pointOffer.title) {
+            pointOffer.isChecked = true;
+          }
+        }
+      }
+
+      return pointOffers;
+    };
+
+    const newOffers = getOffers(offers);
+
+    return newOffers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
 
       return (
