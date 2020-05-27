@@ -12,10 +12,6 @@ import "flatpickr/dist/flatpickr.min.css";
 
 const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
-// Promise.all([DestinationsModel.getDestinations(), OffersModel.getOffers()]).then((values) => {
-//   console.log(values);
-// });
-
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
@@ -65,7 +61,7 @@ const createFormTemplate = (currentPoint, mode) => {
     const getOfferOfType = () => {
       const offersList = OffersModel.getOffers().find(
           (offer) => {
-            return offer.type === type;
+            return offer.type === type.toLowerCase();
           }
       );
 
@@ -90,7 +86,9 @@ const createFormTemplate = (currentPoint, mode) => {
 
     const newOffers = getOffers(offers);
 
-    return newOffers.map((offer) => {
+    console.log(newOffers);
+
+    return offers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
 
       return (

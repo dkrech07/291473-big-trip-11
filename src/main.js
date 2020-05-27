@@ -133,7 +133,7 @@ menuComponent.setOnChange((menuItem) => {
 //   });
 
 Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()]).then((values) => {
-  console.log(values);
+  // console.log(values);
 
   renderTripInfo(values[0]);
   // Отрисовка меню сортировки;
