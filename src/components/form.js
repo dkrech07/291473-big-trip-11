@@ -353,6 +353,9 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
 
+    this._departureDate = null;
+    this._arrivalDate = null;
+
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -505,12 +508,14 @@ export default class Form extends AbstractSmartComponent {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.departure,
+      maxDate: this._arrivalDate,
     });
 
     this._endTimeFlatpickr = flatpickr(endTimeInput, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.arrival,
+      minDate: this._departureDate,
     });
   }
 
@@ -584,23 +589,23 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
-
-      if (evt.target.value > correctDateAndTimeFormat(this._currentPoint.arrival)) {
-        document.querySelector(`.event__save-btn`).disabled = true;
-      } else {
-        document.querySelector(`.event__save-btn`).disabled = false;
-      }
+      this._departureDate = evt.target.value;
+      // if (evt.target.value > correctDateAndTimeFormat(this._currentPoint.arrival)) {
+      //   document.querySelector(`.event__save-btn`).disabled = true;
+      // } else {
+      //   document.querySelector(`.event__save-btn`).disabled = false;
+      // }
     });
 
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
-
-      if (correctDateAndTimeFormat(this._currentPoint.departure) > evt.target.value) {
-        document.querySelector(`.event__save-btn`).disabled = true;
-      } else {
-        document.querySelector(`.event__save-btn`).disabled = false;
-      }
+      this._arrivalDate = evt.target.value;
+      // if (correctDateAndTimeFormat(this._currentPoint.departure) > evt.target.value) {
+      //   document.querySelector(`.event__save-btn`).disabled = true;
+      // } else {
+      //   document.querySelector(`.event__save-btn`).disabled = false;
+      // }
     });
 
     // Хендлер для клика по кнопке rollUp в форме;
