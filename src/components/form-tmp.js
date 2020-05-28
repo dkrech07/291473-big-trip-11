@@ -1,16 +1,16 @@
-import AbstractSmartComponent from "./abstract-smart-component.js";
-import {changeFirstLetter} from '../utils/common.js';
-import {Mode as PointControllerMode} from '../controllers/trip-point.js';
-import DestinationsModel from '../models/destinations.js';
-import OffersModel from '../models/offers.js';
-import PointModel from "../models/point.js";
-import {getPlaceholderMarkup, correctDateAndTimeFormat, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
-
-import flatpickr from 'flatpickr';
-import {encode} from 'he';
-import "flatpickr/dist/flatpickr.min.css";
-
-const INPUT_DATE_FORMAT = `d/m/Y H:i`;
+// import AbstractSmartComponent from "./abstract-smart-component.js";
+// import {changeFirstLetter} from '../utils/common.js';
+// import {Mode as PointControllerMode} from '../controllers/trip-point.js';
+// import DestinationsModel from '../models/destinations.js';
+// import OffersModel from '../models/offers.js';
+// import PointModel from "../models/point.js";
+// import {getPlaceholderMarkup, correctDateAndTimeFormat, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+//
+// import flatpickr from 'flatpickr';
+// import {encode} from 'he';
+// import "flatpickr/dist/flatpickr.min.css";
+//
+// const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
@@ -92,7 +92,9 @@ const createFormTemplate = (currentPoint, mode) => {
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
 
-    return getOffers(offers).map((offer) => {
+    const newOffers = getOffers(offers);
+
+    return newOffers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
 
       return (
@@ -108,7 +110,7 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
-  const createOffersContainer = () => {
+  const createOffersContainer = () => { // НУЖНО ПОПРАВИТЬ - НУЖНО ОРИЕНТИРОВАТЬСЯ НЕ НА offers, а на офферсы из MODEL
     if (!getOffers(offers).length) {
       return ``;
     }
@@ -611,48 +613,28 @@ export default class Form extends AbstractSmartComponent {
     }
 
     // Хендлер для клика по предложению;
+    console.log(this);
     this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
-
       item.addEventListener(`change`, (evt) => {
 
         let label = document.querySelector(`[for="${evt.target.id}"]`);
         const labelTitle = label.querySelector(`.event__offer-title`).textContent;
 
-        if (this._mode !== `adding`) {
-          const labelPrice = label.querySelector(`.event__offer-price`).textContent;
+        this._currentPoint.offers.forEach((offer) => {
 
-          const checkedOffer = {title: labelTitle, price: parseInt(labelPrice, 10), isChecked: true};
-          const currentOffers = this._currentPoint.offers.find(
-              (offer) => {
-                return offer.title === checkedOffer.title;
-              }
-          );
-
-          if (!currentOffers) {
-            this._currentPoint.offers.push(checkedOffer);
+          if (offer.title === labelTitle && !offer.isChecked) {
             item.checked = true;
-          } else {
-            const index = this._currentPoint.offers.findIndex((it) => it.title === checkedOffer.title);
-            this._currentPoint.offers[index].isChecked = false;
-            // this._currentPoint.offers.splice(index, 1);
+            offer.isChecked = true;
+            console.log(item);
+            console.log(offer);
+          } else if (offer.title === labelTitle && offer.isChecked) {
             item.checked = false;
+            offer.isChecked = false;
+            console.log(item);
+            console.log(offer);
           }
-        }
+        });
 
-console.log(this._currentPoint.offers);
-console.log(item);
-
-        if (this._mode === `adding`) {
-          this._currentPoint.offers.forEach((offer) => {
-            if (offer.title === labelTitle && !offer.isChecked) {
-              item.checked = true;
-              offer.isChecked = true;
-            } else if (offer.title === labelTitle && offer.isChecked) {
-              item.checked = false;
-              offer.isChecked = false;
-            }
-          });
-        }
       });
     });
 
