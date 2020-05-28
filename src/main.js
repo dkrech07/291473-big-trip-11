@@ -15,7 +15,7 @@ import TripCostComponent from './components/trip-cost.js';
 import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 
 // Получаю данные с сервера;
-const AUTORIZATION = `Basic dsfsfe3redgdg2ff1`;
+const AUTORIZATION = `Basic dsfsfe3redgdg`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 // const STORE_PREFIX = `big-trip-localstorage`;
 // const STORE_VER = `v1`;
@@ -142,13 +142,13 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
   tripController.renderPreloader();
 
   pointsModel.setPoints(values[0]);
-  for (const point of values[0]) {
-    if (point.offers.length > 0) {
-      for (const offer of point.offers) {
-        offer.isChecked = true;
-      }
-    }
-  }
+  // for (const point of values[0]) {
+  //   if (point.offers.length > 0) {
+  //     for (const offer of point.offers) {
+  //       offer.isChecked = true;
+  //     }
+  //   }
+  // }
 
   const pointsOfDeparture = values[0].slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
   renderTripCost(pointsModel.getPoints(pointsOfDeparture));
