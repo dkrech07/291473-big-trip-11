@@ -55,44 +55,44 @@ const createFormTemplate = (currentPoint, mode) => {
     return `checked`;
   };
 
-  const getOfferOfType = () => {
-    const offersList = OffersModel.getOffers().find(
-        (offer) => {
-          return offer.type === type.toLowerCase();
-        }
-    );
+  // const getOfferOfType = () => {
+  //   const offersList = OffersModel.getOffers().find(
+  //       (offer) => {
+  //         return offer.type === type.toLowerCase();
+  //       }
+  //   );
+  //
+  //   return offersList;
+  // };
 
-    return offersList;
-  };
-
-  const getOffers = (saveOffers) => {
-    let pointOffers;
-
-    if (mode === `adding` || !saveOffers) {
-      pointOffers = getOfferOfType().offers;
-
-      for (const offer of pointOffers) {
-        offer.isChecked = false;
-      }
-    } else {
-      pointOffers = getOfferOfType().offers;
-
-      for (const offer of saveOffers) {
-        for (const pointOffer of pointOffers) {
-          if (offer.title === pointOffer.title) {
-            pointOffer.isChecked = true;
-          }
-        }
-      }
-    }
-
-    return pointOffers;
-  };
+  // const getOffers = (saveOffers) => {
+  //   let pointOffers;
+  //
+  //   if (mode === `adding` || !saveOffers) {
+  //     pointOffers = getOfferOfType().offers;
+  //
+  //     for (const offer of pointOffers) {
+  //       offer.isChecked = false;
+  //     }
+  //   } else {
+  //     pointOffers = getOfferOfType().offers;
+  //
+  //     for (const offer of saveOffers) {
+  //       for (const pointOffer of pointOffers) {
+  //         if (offer.title === pointOffer.title) {
+  //           pointOffer.isChecked = true;
+  //         }
+  //       }
+  //     }
+  //   }
+  //
+  //   return pointOffers;
+  // };
 
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
 
-    return getOffers(offers).map((offer) => {
+    return offers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
 
       return (
@@ -109,7 +109,7 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createOffersContainer = () => {
-    if (!getOffers(offers).length) {
+    if (offers.length) {
       return ``;
     }
 
@@ -353,9 +353,6 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
 
-    this._departureDate = null;
-    this._arrivalDate = null;
-
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -508,14 +505,20 @@ export default class Form extends AbstractSmartComponent {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.departure,
-      maxDate: this._arrivalDate,
+      maxDate: this._currentPoint.arrival,
+      onClose: (selectedDates, dateStr) => {
+        this._endTimeFlatpickr.set(`minDate`, dateStr);
+      },
     });
 
     this._endTimeFlatpickr = flatpickr(endTimeInput, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.arrival,
-      minDate: this._departureDate,
+      minDate: this._currentPoint.departure,
+      onClose: (selectedDates, dateStr) => {
+        this._startTimeFlatpickr.set(`maxDate`, dateStr);
+      },
     });
   }
 
@@ -557,7 +560,7 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       const destinationInput = element.querySelector(`.event__input--destination`);
-
+      console.log(evt);
       const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
         return destinationItem.name;
       });
@@ -589,23 +592,11 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
-      this._departureDate = evt.target.value;
-      // if (evt.target.value > correctDateAndTimeFormat(this._currentPoint.arrival)) {
-      //   document.querySelector(`.event__save-btn`).disabled = true;
-      // } else {
-      //   document.querySelector(`.event__save-btn`).disabled = false;
-      // }
     });
 
     // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
-      this._arrivalDate = evt.target.value;
-      // if (correctDateAndTimeFormat(this._currentPoint.departure) > evt.target.value) {
-      //   document.querySelector(`.event__save-btn`).disabled = true;
-      // } else {
-      //   document.querySelector(`.event__save-btn`).disabled = false;
-      // }
     });
 
     // Хендлер для клика по кнопке rollUp в форме;
@@ -640,7 +631,7 @@ export default class Form extends AbstractSmartComponent {
             const index = this._currentPoint.offers.findIndex((it) => it.title === checkedOffer.title);
             // this._currentPoint.offers[index].isChecked = false;
             this._currentPoint.offers.splice(index, 1);
-            item.checked = false;
+            // item.checked = false;
           }
         }
 
@@ -653,7 +644,7 @@ console.log(item);
               item.checked = true;
               offer.isChecked = true;
             } else if (offer.title === labelTitle && offer.isChecked) {
-              item.checked = false;
+              // item.checked = false;
               offer.isChecked = false;
             }
           });

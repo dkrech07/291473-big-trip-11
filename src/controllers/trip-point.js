@@ -3,6 +3,7 @@ import EventComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import PointModel from '../models/point.js';
+import OffersModel from '../models/offers.js';
 import {TRIP_TYPES} from '../utils/common.js';
 
 const ESC_KEYCODE = 27;
@@ -52,6 +53,38 @@ export default class PointController {
 
     // Создание новой текущей точки маршурта;
     this._point = Object.assign({}, point); // point - точка маршрута, которая будет отрисована в контейнер;
+
+    const getOfferOfType = () => {
+      const offersList = OffersModel.getOffers().find(
+          (offer) => {
+            return offer.type === this._point.type.toLowerCase();
+          }
+      );
+
+      return offersList;
+    };
+
+    const getOffers = (saveOffers) => {
+      const pointOffers = getOfferOfType().offers;
+
+      if (mode === `adding` || !saveOffers) {
+        for (const offer of pointOffers) {
+          offer.isChecked = false;
+        }
+      } else {
+        for (const offer of saveOffers) {
+          for (const pointOffer of pointOffers) {
+            if (offer.title === pointOffer.title) {
+              pointOffer.isChecked = true;
+            }
+          }
+        }
+      }
+
+      return pointOffers;
+    };
+
+    this._point.offers = getOffers(this._point.offers);
 
     const oldPointComponent = this._pointComponent;
     const oldFormComponent = this._formComponent;
