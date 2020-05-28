@@ -142,13 +142,13 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
   tripController.renderPreloader();
 
   pointsModel.setPoints(values[0]);
-  // for (const point of values[0]) {
-  //   if (point.offers.length > 0) {
-  //     for (const offer of point.offers) {
-  //       offer.isChecked = true;
-  //     }
-  //   }
-  // }
+  for (const point of values[0]) {
+    if (point.offers.length > 0) {
+      for (const offer of point.offers) {
+        offer.isChecked = true;
+      }
+    }
+  }
 
   const pointsOfDeparture = values[0].slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
   renderTripCost(pointsModel.getPoints(pointsOfDeparture));
