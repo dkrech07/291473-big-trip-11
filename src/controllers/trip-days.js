@@ -137,7 +137,6 @@ export default class TripController {
         }
         break;
     }
-    console.log(this._currentSort);
   }
 
   // Отрисовка точек маршрута в днях путешествия;

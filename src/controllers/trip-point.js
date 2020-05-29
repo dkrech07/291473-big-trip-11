@@ -190,6 +190,14 @@ export default class PointController {
     const newFormClickHandler = (evt) => { // -------------------------------------------------------Форма создания новой точки;
       evt.preventDefault();
 
+      // const checkDestination = () => {
+      //   if (!this._formComponent._currentPoint.destinationInfo.name) {
+      //     this._formComponent.getElement().querySelector(`.event__save-btn`).disabled = true;
+      //   }
+      // };
+      //
+      // checkDestination();
+
       const oldForm = document.querySelector(`.trip-days .event--edit`);
       console.log(`Нашел форму редактирования, надо удалить`, oldForm);
 

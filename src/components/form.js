@@ -109,7 +109,7 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const createOffersContainer = () => {
-    if (offers.length) {
+    if (!offers.length) {
       return ``;
     }
 
@@ -293,7 +293,7 @@ const createFormTemplate = (currentPoint, mode) => {
 };
 
 // Поддерживаю сохранение данных формы;
-const parseFormData = (formData, form, point) => {
+const parseFormData = (formData, form, point, offersForSaving) => {
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
 
   const price = parseInt(formData.get(`event-price`), 10);
@@ -315,10 +315,11 @@ const parseFormData = (formData, form, point) => {
     return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
   };
 
-  const checkedOffers = point.offers.slice().filter((offer) => {
-    return offer.isChecked === true;
-  });
+  // const checkedOffers = point.offers.slice().filter((offer) => { // Уже не нужна, т.к. в offersForSaving риходят только офферы с true;
+  //   return offer.isChecked === true;
+  // });
 
+  console.log(offersForSaving);
   return new PointModel({
     'id': point.id,
     'is_favorite': getFavorite(favorite),
@@ -326,7 +327,7 @@ const parseFormData = (formData, form, point) => {
     'date_to': getNewDate(arrival),
     'base_price': price,
     'type': type[0].toLowerCase(),
-    'offers': checkedOffers,
+    'offers': offersForSaving,
     'destination': point.destinationInfo,
   });
 };
@@ -353,6 +354,8 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
 
+    this._offersForSaving = [];
+
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -361,7 +364,7 @@ export default class Form extends AbstractSmartComponent {
     const form = this.getElement();
     const formData = new FormData(form);
 
-    return parseFormData(formData, form, point);
+    return parseFormData(formData, form, point, this._offersForSaving);
   }
 
   setDeleteButtonClickHandler(handler) {
@@ -560,7 +563,7 @@ export default class Form extends AbstractSmartComponent {
     // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       const destinationInput = element.querySelector(`.event__input--destination`);
-      console.log(evt);
+
       const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
         return destinationItem.name;
       });
@@ -579,7 +582,7 @@ export default class Form extends AbstractSmartComponent {
       const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
 
       if (index === -1) {
-        destinationInput.setCustomValidity(`Выберете пункт назначения из списка`);
+        destinationInput.setCustomValidity(`Выберите пункт назначения из списка`);
         return;
       }
 
@@ -613,42 +616,25 @@ export default class Form extends AbstractSmartComponent {
 
         let label = document.querySelector(`[for="${evt.target.id}"]`);
         const labelTitle = label.querySelector(`.event__offer-title`).textContent;
+        const labelPrice = label.querySelector(`.event__offer-price`).textContent;
 
-        if (this._mode !== `adding`) {
-          const labelPrice = label.querySelector(`.event__offer-price`).textContent;
-
-          const checkedOffer = {title: labelTitle, price: parseInt(labelPrice, 10), isChecked: true};
-          const currentOffers = this._currentPoint.offers.find(
-              (offer) => {
-                return offer.title === checkedOffer.title;
-              }
-          );
-
-          if (!currentOffers) {
-            this._currentPoint.offers.push(checkedOffer);
-            item.checked = true;
-          } else {
-            const index = this._currentPoint.offers.findIndex((it) => it.title === checkedOffer.title);
-            // this._currentPoint.offers[index].isChecked = false;
-            this._currentPoint.offers.splice(index, 1);
-            // item.checked = false;
-          }
-        }
-
-console.log(this._currentPoint.offers);
-console.log(item);
-
-        if (this._mode === `adding`) {
-          this._currentPoint.offers.forEach((offer) => {
-            if (offer.title === labelTitle && !offer.isChecked) {
-              item.checked = true;
-              offer.isChecked = true;
-            } else if (offer.title === labelTitle && offer.isChecked) {
-              // item.checked = false;
-              offer.isChecked = false;
+        const checkedOffer = {title: labelTitle, price: parseInt(labelPrice, 10), isChecked: true};
+        const currentOffers = this._offersForSaving.find(
+            (offer) => {
+              return offer.title === checkedOffer.title;
             }
-          });
+        );
+
+        if (!currentOffers) {
+          this._offersForSaving.push(checkedOffer);
+          item.checked = true;
+        } else {
+          const index = this._offersForSaving.findIndex((it) => it.title === checkedOffer.title);
+          this._offersForSaving.splice(index, 1);
+          // this._offersForSaving[index].isChecked = false;
+          // item.checked = false;
         }
+
       });
     });
 
