@@ -17,7 +17,7 @@ import TripCostComponent from './components/trip-cost.js';
 import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 
 // Получаю данные с сервера;
-const AUTORIZATION = `Basic dsfsfe3`;
+const AUTORIZATION = `Basic dsfsfe33`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const api = new API(END_POINT, AUTORIZATION);
