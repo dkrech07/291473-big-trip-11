@@ -6,6 +6,12 @@ import {calculateTripDuration} from "../utils/common";
 const BAR_HEIGHT = 55;
 const ICON_SIZE = 20;
 
+const ChartTitle = {
+  MONEY: `MONEY`,
+  TRANSPORT: `TRANSPORT`,
+  TIME: `TIME SPENT`
+};
+
 const getUniqueTripTypes = (type, index, array) => {
   return array.indexOf(type) === index;
 };
@@ -73,7 +79,7 @@ const chartCallback = (animation) => {
   }
 };
 
-const chartContent = (ctx, pointTypes, pointParameters) => {
+const chartContent = (ctx, pointTypes, pointParameters, chartName, formatter) => {
   return new Chart(ctx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
@@ -98,12 +104,12 @@ const chartContent = (ctx, pointTypes, pointParameters) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `€ ${val}`
+          formatter,
         }
       },
       title: {
         display: true,
-        text: `MONEY`,
+        text: `${chartName}`,
         fontColor: `#000000`,
         fontSize: 23,
         position: `left`
@@ -148,21 +154,21 @@ const renderMoneyChart = (moneyCtx, points) => {
   const pointTypes = getPointsType(points);
   const pointsCosts = pointTypes.map((type) => calculateUniquePrice(points, type));
 
-  chartContent(moneyCtx, pointTypes, pointsCosts);
+  chartContent(moneyCtx, pointTypes, pointsCosts, ChartTitle.MONEY, (val) => `€ ${val}`);
 };
 
 const renderTransportChart = (transportCtx, points) => {
   const pointTypes = getPointsType(points).filter((point) => point !== `RESTAURANT` && point !== `CHECK-IN` && point !== `SIGHTSEEING`);
   const pointTypesCount = pointTypes.map((type) => calculateUniqueCost(points, type));
 
-  chartContent(transportCtx, pointTypes, pointTypesCount);
+  chartContent(transportCtx, pointTypes, pointTypesCount, ChartTitle.TRANSPORT, (val) => `${val}x`);
 };
 
 const renderTimeSpentChart = (timeSpentCtx, points) => {
   const pointTypes = getPointsType(points);
   const pointTypesTimeSpent = pointTypes.map((type) => calculateUniqueTimeSpent(points, type));
 
-  chartContent(timeSpentCtx, pointTypes, pointTypesTimeSpent);
+  chartContent(timeSpentCtx, pointTypes, pointTypesTimeSpent, ChartTitle.TIME, (val) => `${val}H`);
 };
 
 const createStatisticsTemplate = () => {
@@ -225,8 +231,8 @@ export default class StatisticsComponent extends AbstractSmartComponent {
     const timeSpentCtx = element.querySelector(`.statistics__chart--time`);
 
     moneyCtx.height = BAR_HEIGHT * 6;
-    transportCtx.height = BAR_HEIGHT * 6;
-    timeSpentCtx.height = BAR_HEIGHT * 6;
+    transportCtx.height = BAR_HEIGHT * 7;
+    timeSpentCtx.height = BAR_HEIGHT * 7;
 
     this._resetCharts();
 

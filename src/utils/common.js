@@ -6,6 +6,7 @@ const INPUT_MONTH_DAY_FORMAT = `MMM DD`;
 const INPUT_YEAR_MONTH_DAY_FORMAT = `YYYY-MM-DD`;
 const INPUT_YEAR_MONTH_DAY_TIME_FORMAT = `YYYY-MM-DDTHH:MM`;
 const INPUT_TIME_FORMAT = `HH:mm`;
+const INPUT_DATE_AND_TIME_FORMAT = `DD/MM/YYYY HH:mm`;
 
 const TRIP_TYPES = [
   `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`
@@ -51,6 +52,11 @@ const correctDateISOFormat = (date) => {
 const correctTimeFormat = (time) => {
   return moment(time).format(INPUT_TIME_FORMAT);
 };
+
+const correctDateAndTimeFormat = (date) => {
+  return moment(date).format(INPUT_DATE_AND_TIME_FORMAT);
+};
+
 
 const calculateTripDuration = (departure, arrival) => {
   return moment.duration(moment(arrival).diff(moment(departure)));
@@ -116,6 +122,7 @@ export {
   correctMonthAndDayFormat,
   correctDayFormat,
   correctTimeFormat,
+  correctDateAndTimeFormat,
   getPrice,
   calculateTripTime,
   INPUT_YEAR_MONTH_DAY_FORMAT,

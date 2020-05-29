@@ -3,23 +3,22 @@ import Store from "./api/store.js";
 import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
-import {RenderPosition, render} from './utils/render.js';
+import {RenderPosition, render, remove} from './utils/render.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
 import OffersModel from './models/offers.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
+import PreloaderComponent from './components/preloader.js';
+import NoPointsComponent from './components/no-points.js';
 
 import TripCostComponent from './components/trip-cost.js';
 import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 
 // Получаю данные с сервера;
-const AUTORIZATION = `Basic dsfsfe3redgdg`;
+const AUTORIZATION = `Basic dsfsfe33`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
-// const STORE_PREFIX = `big-trip-localstorage`;
-// const STORE_VER = `v1`;
-// const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new API(END_POINT, AUTORIZATION);
 const store = new Store(window.localStorage);
@@ -68,6 +67,10 @@ const newPointClickHandler = (evt) => {
   evt.preventDefault();
   filterController.setDefaultView();
   tripController.createPoint(newPointButton);
+
+  menuComponent.setActiveItem(MenuItem.TABLE);
+  statisticsComponent.hide();
+  tripController.show();
 };
 
 newPointButton.addEventListener(`click`, newPointClickHandler);
@@ -90,42 +93,45 @@ menuComponent.setOnChange((menuItem) => {
       filterController.setDefaultView(); // скидываю фильтр к дефолту controllers/filer.js
       tripController.hide();
       statisticsComponent.show();
+      document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
       break;
   }
 });
 
-apiWithProvider.getPoints()
-  .then((points) => {
-    // Получаю точки для определения начальной и конечной точки маршрута;
-    renderTripInfo(points);
-    // Отрисовка меню сортировки;
-    tripController.renderSortMenu();
-    // Отрисовка прелоадера;
-    tripController.renderPreloader();
+const preloaderComponent = new PreloaderComponent();
+const noPointsComponent = new NoPointsComponent();
 
-    pointsModel.setPoints(points);
-    for (const point of points) {
-      if (point.offers.length > 0) {
-        for (const offer of point.offers) {
-          offer.isChecked = true;
-        }
+// Отрисовка прелоадера;
+render(tripEventsElement, preloaderComponent);
+
+Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()]).then((values) => {
+  // Удаление прелоадера;
+  remove(preloaderComponent);
+
+  renderTripInfo(values[0]);
+  // Отрисовка меню сортировки;
+  tripController.renderSortMenu();
+
+  pointsModel.setPoints(values[0]);
+  for (const point of values[0]) {
+    if (point.offers.length > 0) {
+      for (const offer of point.offers) {
+        offer.isChecked = true;
       }
     }
+  }
 
-    const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-    renderTripCost(pointsModel.getPoints(pointsOfDeparture));
-    tripController.render();
-  });
+  const pointsOfDeparture = values[0].slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
+  renderTripCost(pointsModel.getPoints(pointsOfDeparture));
+  tripController.render();
 
-apiWithProvider.getDestinations()
-  .then((destinations) => {
-    DestinationsModel.setDestinations(destinations);
-  });
+  DestinationsModel.setDestinations(values[1]);
 
-apiWithProvider.getOffers()
-  .then((offers) => {
-    OffersModel.setOffers(offers);
-  });
+  OffersModel.setOffers(values[2]);
+
+}).catch(() => {
+  render(tripEventsElement, noPointsComponent);
+});
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)

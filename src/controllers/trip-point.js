@@ -2,10 +2,13 @@ import FormComponent from '../components/form.js';
 import EventComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
-import PointModel from "../models/point.js";
+import PointModel from '../models/point.js';
+import OffersModel from '../models/offers.js';
+import {TRIP_TYPES} from '../utils/common.js';
 
 const ESC_KEYCODE = 27;
 const SHAKE_ANIMATION_TIMEOUT = 600;
+const DEFAULT_TYPE_COUNT = 4;
 
 export const Mode = {
   DEFAULT: `default`,
@@ -15,7 +18,7 @@ export const Mode = {
 
 export const EmptyPoint = {
   id: String(new Date() + Math.random()),
-  type: `Taxi`,
+  type: TRIP_TYPES[DEFAULT_TYPE_COUNT],
   destinationInfo: {
     description: ``,
     name: ``,
@@ -24,8 +27,8 @@ export const EmptyPoint = {
   favorite: null,
   offers: [],
   price: 0,
-  departure: `15/05/2020 14:31`,
-  arrival: `15/05/2020 14:31`,
+  departure: new Date(),
+  arrival: new Date(),
 };
 
 export default class PointController {
@@ -35,12 +38,10 @@ export default class PointController {
     this._onViewChange = onViewChange; // Понадобятся чуть позже, после реализации удаления / добавления карточки точки маршрута
     this._mode = Mode.DEFAULT;
     this._point = null;
-
     this._pointComponent = null;
     this._formComponent = null;
     this._formContainerComponent = null;
     this._onEscKeyDown = null;
-
     this._newPointButton = button;
   }
 
@@ -51,6 +52,38 @@ export default class PointController {
     // Создание новой текущей точки маршурта;
     this._point = Object.assign({}, point); // point - точка маршрута, которая будет отрисована в контейнер;
 
+    const getOfferOfType = () => {
+      const offersList = OffersModel.getOffers().find(
+          (offer) => {
+            return offer.type === this._point.type.toLowerCase();
+          }
+      );
+
+      return JSON.parse(JSON.stringify(offersList));
+    };
+
+    const getOffers = (saveOffers) => {
+      const pointOffers = getOfferOfType().offers;
+
+      if (mode === `adding` || !saveOffers) {
+        for (const offer of pointOffers) {
+          offer.isChecked = false;
+        }
+      } else {
+        for (const offer of saveOffers) {
+          for (const pointOffer of pointOffers) {
+            if (offer.title === pointOffer.title) {
+              pointOffer.isChecked = true;
+            }
+          }
+        }
+      }
+
+      return pointOffers;
+    };
+
+    this._point.offers = getOffers(this._point.offers);
+
     const oldPointComponent = this._pointComponent;
     const oldFormComponent = this._formComponent;
 
@@ -59,9 +92,9 @@ export default class PointController {
     this._formContainerComponent = new FormContainerComponent();
 
     // Отрисовка точки маршрута;
-    if (!oldPointComponent && !oldFormComponent && mode === Mode.DEFAULT) { // Если нет старой точки и старой формы и режим дефолт - рендери новую точку
+    if (!oldPointComponent && !oldFormComponent && mode === Mode.DEFAULT) {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
-    } else if (oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) { // Если есть старая точка и старая форма и режим дефолт - замени старую точку на новую
+    } else if (oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) {
       replace(this._pointComponent, oldPointComponent);
     }
 
@@ -83,7 +116,6 @@ export default class PointController {
 
     // Удаление формы редактирования точки маршрута;
     const deleteButtonClickHandler = () => {
-
       this.renameDeleteButton();
       this.disableFormElements();
       this._onDataChange(this, this._point, null);
@@ -112,11 +144,10 @@ export default class PointController {
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      this._onDataChange(this, this._point, newData);
 
+      this._onDataChange(this, this._point, newData);
       this.renameSaveButton();
       this.disableFormElements();
-
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
@@ -130,6 +161,13 @@ export default class PointController {
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
     const pointRollUpClickHandler = () => {
+      const oldForm = document.querySelector(`.trip-days > .event--edit`);
+      const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
+      if (oldForm) {
+        newPointButton.removeAttribute(`disabled`);
+        oldForm.remove();
+      }
+
       this._replacePointToEdit();
 
       this._formComponent.setSaveFormClickHandler(saveFormClickHandler);
@@ -255,5 +293,4 @@ export default class PointController {
       this.renameSaveButton(false);
     }, SHAKE_ANIMATION_TIMEOUT);
   }
-
 }

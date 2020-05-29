@@ -15,7 +15,6 @@ const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
-
   const destination = encode(destinationInfo.name);
   const price = encode(notSanitizedPrice.toString());
 
@@ -80,26 +79,27 @@ const createFormTemplate = (currentPoint, mode) => {
 
     return (
       `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-              ${createOffersMarkup()}
-        </div>
-      </section>`
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+                ${createOffersMarkup()}
+          </div>
+        </section>`
     );
   };
 
-  // Выводит в форму текст описания
   const createDescriptionMarkup = () => {
     return (
       `<p class="event__destination-description">${destinationInfo.description}</p>`
     );
   };
 
-  const destinationContainer = () => {
+  const createDestinationContainer = () => {
     if (destination) {
       return (
-        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        ${createDescriptionMarkup()}`
+        `<section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${createDescriptionMarkup()}
+        <section>`
       );
     } else {
       return ``;
@@ -114,10 +114,34 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
-  // // Проставляет для всех "звездочек" нективное состояние
-  // const getCheckFavorite = (check) => {
-  //   return (check && `checked`) || ``;
-  // };
+  const createPhotosContainer = () => {
+    if (destinationInfo.pictures.length) {
+      return (
+        `<div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${createPhotosMarkup()}
+            </div>
+          </div>`
+      );
+    }
+
+    return ``;
+  };
+
+  const getAllDetails = () => {
+    if (createDestinationContainer() || createPhotosMarkup() || createPhotosContainer()) {
+      return (
+        `<section class="event__details">
+          ${createOffersContainer()}
+
+          ${createDestinationContainer()}
+
+          ${createPhotosContainer()}
+        </section>`
+      );
+    }
+    return ``;
+  };
 
   const getCheckFavorite = (isFavorite) => {
     if (isFavorite) {
@@ -227,25 +251,13 @@ const createFormTemplate = (currentPoint, mode) => {
           ${getRollUpMarkUp()}
         </header>
 
-        <section class="event__details">
-          ${createOffersContainer()}
-
-          <section class="event__section  event__section--destination">
-          ${destinationContainer()}
-
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-              ${createPhotosMarkup()}
-              </div>
-            </div>
-          </section>
-        </section>
+        ${getAllDetails()}
       </form>`
   );
 };
 
 // Поддерживаю сохранение данных формы;
-const parseFormData = (formData, form, point) => {
+const parseFormData = (formData, form, point, offersForSaving) => {
   const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
 
   const price = parseInt(formData.get(`event-price`), 10);
@@ -274,7 +286,7 @@ const parseFormData = (formData, form, point) => {
     'date_to': getNewDate(arrival),
     'base_price': price,
     'type': type[0].toLowerCase(),
-    'offers': point.offers.slice(),
+    'offers': offersForSaving,
     'destination': point.destinationInfo,
   });
 };
@@ -285,7 +297,6 @@ export default class Form extends AbstractSmartComponent {
 
     this._currentPoint = currentPoint;
     this._mode = mode;
-
     this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
     this._tripTypeClickHandner = null;
@@ -297,10 +308,9 @@ export default class Form extends AbstractSmartComponent {
     this._formRollupClickHandler = null;
     this._formOfferClickHandler = null;
     this._formPriceClickHandler = null;
-
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
-
+    this._offersForSaving = currentPoint.offers.filter((offer) => offer.isChecked);
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -309,7 +319,7 @@ export default class Form extends AbstractSmartComponent {
     const form = this.getElement();
     const formData = new FormData(form);
 
-    return parseFormData(formData, form, point);
+    return parseFormData(formData, form, point, this._offersForSaving);
   }
 
   setDeleteButtonClickHandler(handler) {
@@ -411,16 +421,13 @@ export default class Form extends AbstractSmartComponent {
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
     this.setDestinationClickHandner(this._destinationClickHandner);
-
     this.setStartTimeClickHandler(this._startTimeClickHandler);
     this.setEndTimeClickHandler(this._endTimeClickHandler);
-
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setCancelButtonClickHandler(this._cancelButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
     this.setOfferClickHandler(this._formOfferClickHandler);
     this.setFromPriceClickHandler(this._formPriceClickHandler);
-
     this._subscribeOnEvents();
   }
 
@@ -433,7 +440,6 @@ export default class Form extends AbstractSmartComponent {
   reset() {
     const currentPoint = this._currentPoint;
     this._currentPoint.favorite = currentPoint.favorite;
-
     this.rerender();
   }
 
@@ -441,7 +447,6 @@ export default class Form extends AbstractSmartComponent {
     if (this._flatpickr) {
       this._startTimeFlatpickr.destroy();
       this._endTimeFlatpickr.destroy();
-
       this._startTimeFlatpickr = null;
       this._endTimeFlatpickr = null;
     }
@@ -453,12 +458,20 @@ export default class Form extends AbstractSmartComponent {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.departure,
+      maxDate: this._currentPoint.arrival,
+      onClose: (selectedDates, dateStr) => {
+        this._endTimeFlatpickr.set(`minDate`, dateStr);
+      },
     });
 
     this._endTimeFlatpickr = flatpickr(endTimeInput, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.arrival,
+      minDate: this._currentPoint.departure,
+      onClose: (selectedDates, dateStr) => {
+        this._startTimeFlatpickr.set(`maxDate`, dateStr);
+      },
     });
   }
 
@@ -519,7 +532,7 @@ export default class Form extends AbstractSmartComponent {
       const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
 
       if (index === -1) {
-        destinationInput.setCustomValidity(`Выберете пункт назначения из списка`);
+        destinationInput.setCustomValidity(`Выберите пункт назначения из списка`);
         return;
       }
 
@@ -548,21 +561,26 @@ export default class Form extends AbstractSmartComponent {
 
     // Хендлер для клика по предложению;
     this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
+
       item.addEventListener(`change`, (evt) => {
+
         let label = document.querySelector(`[for="${evt.target.id}"]`);
-
         const labelTitle = label.querySelector(`.event__offer-title`).textContent;
+        const labelPrice = label.querySelector(`.event__offer-price`).textContent;
 
-        this._currentPoint.offers.forEach((offer) => {
-          if (offer.title === labelTitle && !offer.isChecked) {
-            item.checked = true;
-            offer.isChecked = true;
-          } else if (offer.title === labelTitle && offer.isChecked) {
-            item.checked = false;
-            offer.isChecked = false;
-          }
-        });
+        const checkedOffer = {title: labelTitle, price: parseInt(labelPrice, 10), isChecked: true};
+        const currentOffers = this._offersForSaving.find(
+            (offer) => {
+              return offer.title === checkedOffer.title;
+            }
+        );
 
+        if (!currentOffers) {
+          this._offersForSaving.push(checkedOffer);
+        } else {
+          const index = this._offersForSaving.findIndex((it) => it.title === checkedOffer.title);
+          this._offersForSaving.splice(index, 1);
+        }
       });
     });
 
