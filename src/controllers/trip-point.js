@@ -179,11 +179,8 @@ export default class PointController {
     this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
 
     // Отрисовка формы редактирования для новой карточки;
-    const newFormClickHandler = (evt) => { // -------------------------------------------------------Форма создания новой точки;
+    const newFormClickHandler = (evt) => {
       evt.preventDefault();
-
-      const oldForm = document.querySelector(`.trip-days .event--edit`);
-      console.log(`Нашел форму редактирования, надо удалить`, oldForm);
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
