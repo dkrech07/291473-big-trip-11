@@ -19,9 +19,6 @@ import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
 // Получаю данные с сервера;
 const AUTORIZATION = `Basic dsfsfe3`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
-// const STORE_PREFIX = `big-trip-localstorage`;
-// const STORE_VER = `v1`;
-// const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new API(END_POINT, AUTORIZATION);
 const store = new Store(window.localStorage);
@@ -104,43 +101,6 @@ menuComponent.setOnChange((menuItem) => {
 const preloaderComponent = new PreloaderComponent();
 const noPointsComponent = new NoPointsComponent();
 
-// apiWithProvider.getPoints()
-//   .then((points) => {
-//     // Получаю точки для определения начальной и конечной точки маршрута;
-//     renderTripInfo(points);
-//     // Отрисовка меню сортировки;
-//     tripController.renderSortMenu();
-//     // Отрисовка прелоадера;
-//     tripController.renderPreloader();
-//
-//     pointsModel.setPoints(points);
-//     for (const point of points) {
-//       if (point.offers.length > 0) {
-//         for (const offer of point.offers) {
-//           offer.isChecked = true;
-//         }
-//       }
-//     }
-//
-//     const pointsOfDeparture = points.slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-//     renderTripCost(pointsModel.getPoints(pointsOfDeparture));
-//     tripController.render();
-//   });
-//
-// apiWithProvider.getDestinations()
-//   .then((destinations) => {
-//     DestinationsModel.setDestinations(destinations);
-//   });
-//
-// apiWithProvider.getOffers()
-//   .then((offers) => {
-//     OffersModel.setOffers(offers);
-//   });
-
-// renderPreloader() {
-//   render(this._container, this._preloaderComponent);
-// }
-
 // Отрисовка прелоадера;
 render(tripEventsElement, preloaderComponent);
 
@@ -172,9 +132,6 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
 }).catch(() => {
   render(tripEventsElement, noPointsComponent);
 });
-
-// const preloaderComponent = new PreloaderComponent();
-// render(this._container, this._preloaderComponent);
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
