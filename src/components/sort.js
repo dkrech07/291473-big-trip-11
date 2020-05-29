@@ -64,6 +64,16 @@ export default class Sort extends AbstractComponent {
 
       const sortType = evt.target.dataset.sortType;
 
+      const allSortElements = document.querySelectorAll(`.trip-sort__btn`);
+      for (const sortElement of allSortElements) {
+        sortElement.classList.remove(`trip-sort__btn--active`);
+        sortElement.classList.remove(`trip-sort__btn--by-increase`);
+      }
+
+      const currentSort = evt.target;
+      currentSort.classList.add(`trip-sort__btn--active`);
+      currentSort.classList.add(`trip-sort__btn--by-increase`);
+
       if (this._currenSortType === sortType) {
         return;
       }

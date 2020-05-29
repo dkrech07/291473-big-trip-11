@@ -16,13 +16,10 @@ export default class FilterController {
   constructor(container, pointsModel) {
     this._container = tripFilterElement;
     this._pointsModel = pointsModel;
-
     this._activeFilterType = FilterType.EVERYTHING;
     this._filterComponent = null;
-
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-
     this._pointsModel.setDataChangeHandler(this._onDataChange);
   }
 
