@@ -354,7 +354,7 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
 
-    this._offersForSaving = [];
+    this._offersForSaving = currentPoint.offers.filter((offer) => offer.isChecked);
 
     this._subscribeOnEvents();
     this._applyFlatpickr();

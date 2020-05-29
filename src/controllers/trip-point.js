@@ -61,7 +61,7 @@ export default class PointController {
           }
       );
 
-      return offersList;
+      return JSON.parse(JSON.stringify(offersList));
     };
 
     const getOffers = (saveOffers) => {
