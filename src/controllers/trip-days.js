@@ -26,20 +26,16 @@ export default class TripController {
     this._container = container;
     this._pointsModel = pointsModel;
     this._api = api;
-
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
-
     this._points = null;
     this._tripDayComponent = null;
     this._creatingPoint = null;
     this._showedPointsControllers = [];
     this._noPointsComponent = null;
-
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
     this._currentSort = SortTypes.SORT_EVENT;
   }
@@ -56,7 +52,6 @@ export default class TripController {
       .then((points) => {
 
         if (points.length > 0) {
-
           if (this._noPointsComponent) {
             remove(this._noPointsComponent);
           }
@@ -68,7 +63,7 @@ export default class TripController {
         }
       });
 
-    // Обрботка клика по кнопкам меню сортировки
+    // Обрботка клика по кнопкам меню сортировки;
     this._sortComponent.setSortTypeChangeHandler(() => {
       this._getSortedTrips(this._sortComponent.getSortType());
     });
@@ -76,7 +71,6 @@ export default class TripController {
 
   // Отрисовка новой формы редактирования (точки маршрута);
   createPoint(button) {
-    // this._getSortedTrips(SortTypes.SORT_EVENT); // - проблема с разваливающейся фомой вот в этой сортировке.
     this._getSortedTrips(this._currentSort);
     button.setAttribute(`disabled`, `true`);
 
@@ -95,12 +89,10 @@ export default class TripController {
         this._currentSort = SortTypes.SORT_EVENT;
         const sortEventInput = document.querySelector(`#sort-event`);
         sortEventInput.checked = true;
-
         const pointsEvent = this._pointsModel.getPointsAll().slice();
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderPoints(pointsEvent);
-
 
         if (!dayElement.textContent) {
           dayElement.textContent = `DAY`;
@@ -138,7 +130,6 @@ export default class TripController {
   // Отрисовка точек маршрута в днях путешествия;
   _renderPoints(points) {
     const days = getDays(points);
-    // console.log(days);
     for (const day of days) {
       this._tripDayComponent = new TripDayComponent(day);
       render(this._tripDaysComponent.getElement(), this._tripDayComponent);
@@ -248,8 +239,6 @@ export default class TripController {
   }
 
   _updatePoints() {
-    // const pointsList = this._pointsModel.getPoints().slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-    // this._getSortedTrips(SortTypes.SORT_EVENT);
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
     renderTripCost(this._pointsModel.getPoints());

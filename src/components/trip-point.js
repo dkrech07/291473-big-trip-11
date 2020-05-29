@@ -1,17 +1,13 @@
 import {correctDateISOFormat, correctTimeFormat, calculateTripTime} from '../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 import {getPlaceholderMarkup, TRIP_TYPES} from '../utils/common.js';
-import OffersModel from '../models/offers.js';
 const DISPLAY_OFFERS_COUNT = 3;
 
 const createTripPointMarkup = (point) => {
   const {type, destinationInfo, offers, departure, arrival, price} = point;
-  // const {type, destination, offers, departure, arrival, price} = point;
 
   const tripTime = calculateTripTime(departure, arrival);
-
   const pointImage = point.type.toLowerCase();
-
   const createOffersMarkup = () => {
 
     const getCheckedOffers = () => {
@@ -22,7 +18,6 @@ const createTripPointMarkup = (point) => {
       }
       return checkedOffers;
     };
-
     return getCheckedOffers().map((offer) => {
 
       return (

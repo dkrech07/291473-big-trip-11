@@ -4,7 +4,7 @@ import {Mode as PointControllerMode} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
-import {getPlaceholderMarkup, correctDateAndTimeFormat, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -15,7 +15,6 @@ const INPUT_DATE_FORMAT = `d/m/Y H:i`;
 const createFormTemplate = (currentPoint, mode) => {
   const {type, destinationInfo, offers, price: notSanitizedPrice, departure, arrival, favorite} = currentPoint;
   const currentTripType = type.toLowerCase();
-
   const destination = encode(destinationInfo.name);
   const price = encode(notSanitizedPrice.toString());
 
@@ -55,43 +54,8 @@ const createFormTemplate = (currentPoint, mode) => {
     return `checked`;
   };
 
-  // const getOfferOfType = () => {
-  //   const offersList = OffersModel.getOffers().find(
-  //       (offer) => {
-  //         return offer.type === type.toLowerCase();
-  //       }
-  //   );
-  //
-  //   return offersList;
-  // };
-
-  // const getOffers = (saveOffers) => {
-  //   let pointOffers;
-  //
-  //   if (mode === `adding` || !saveOffers) {
-  //     pointOffers = getOfferOfType().offers;
-  //
-  //     for (const offer of pointOffers) {
-  //       offer.isChecked = false;
-  //     }
-  //   } else {
-  //     pointOffers = getOfferOfType().offers;
-  //
-  //     for (const offer of saveOffers) {
-  //       for (const pointOffer of pointOffers) {
-  //         if (offer.title === pointOffer.title) {
-  //           pointOffer.isChecked = true;
-  //         }
-  //       }
-  //     }
-  //   }
-  //
-  //   return pointOffers;
-  // };
-
   // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
-
     return offers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
 
@@ -315,11 +279,6 @@ const parseFormData = (formData, form, point, offersForSaving) => {
     return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
   };
 
-  // const checkedOffers = point.offers.slice().filter((offer) => { // Уже не нужна, т.к. в offersForSaving риходят только офферы с true;
-  //   return offer.isChecked === true;
-  // });
-
-  console.log(offersForSaving);
   return new PointModel({
     'id': point.id,
     'is_favorite': getFavorite(favorite),
@@ -338,7 +297,6 @@ export default class Form extends AbstractSmartComponent {
 
     this._currentPoint = currentPoint;
     this._mode = mode;
-
     this._saveFormClickHandler = null;
     this._favoriteButtonClickHandler = null;
     this._tripTypeClickHandner = null;
@@ -350,12 +308,9 @@ export default class Form extends AbstractSmartComponent {
     this._formRollupClickHandler = null;
     this._formOfferClickHandler = null;
     this._formPriceClickHandler = null;
-
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
-
     this._offersForSaving = currentPoint.offers.filter((offer) => offer.isChecked);
-
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -466,16 +421,13 @@ export default class Form extends AbstractSmartComponent {
     this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
     this.setTripTypeClickHandner(this._tripTypeClickHandner);
     this.setDestinationClickHandner(this._destinationClickHandner);
-
     this.setStartTimeClickHandler(this._startTimeClickHandler);
     this.setEndTimeClickHandler(this._endTimeClickHandler);
-
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setCancelButtonClickHandler(this._cancelButtonClickHandler);
     this.setFormRollupClickHandler(this._formRollupClickHandler);
     this.setOfferClickHandler(this._formOfferClickHandler);
     this.setFromPriceClickHandler(this._formPriceClickHandler);
-
     this._subscribeOnEvents();
   }
 
@@ -488,7 +440,6 @@ export default class Form extends AbstractSmartComponent {
   reset() {
     const currentPoint = this._currentPoint;
     this._currentPoint.favorite = currentPoint.favorite;
-
     this.rerender();
   }
 
@@ -496,7 +447,6 @@ export default class Form extends AbstractSmartComponent {
     if (this._flatpickr) {
       this._startTimeFlatpickr.destroy();
       this._endTimeFlatpickr.destroy();
-
       this._startTimeFlatpickr = null;
       this._endTimeFlatpickr = null;
     }
@@ -627,12 +577,9 @@ export default class Form extends AbstractSmartComponent {
 
         if (!currentOffers) {
           this._offersForSaving.push(checkedOffer);
-          // item.checked = true;
         } else {
           const index = this._offersForSaving.findIndex((it) => it.title === checkedOffer.title);
           this._offersForSaving.splice(index, 1);
-          // this._offersForSaving[index].isChecked = false;
-          // item.checked = false;
         }
       });
     });

@@ -14,7 +14,6 @@ export const renderTripInfo = (points) => {
   }
 
   if (points.length > 0) {
-
     const sortedList = points.slice().sort((a, b) => a.date > b.date ? 1 : -1);
 
     const firstPointDestination = sortedList[0].destinationInfo.name;

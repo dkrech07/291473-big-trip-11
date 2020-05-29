@@ -49,7 +49,6 @@ class API {
   }
 
   updatePoint(id, data) {
-    // console.log(`updatePoint`, data);
     return this._load({
       url: `points/${id}`,
       method: Method.PUT,
