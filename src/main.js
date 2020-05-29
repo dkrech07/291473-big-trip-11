@@ -11,6 +11,7 @@ import OffersModel from './models/offers.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 import PreloaderComponent from './components/preloader.js';
+import NoPointsComponent from './components/no-points.js';
 
 import TripCostComponent from './components/trip-cost.js';
 import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
@@ -100,6 +101,9 @@ menuComponent.setOnChange((menuItem) => {
   }
 });
 
+const preloaderComponent = new PreloaderComponent();
+const noPointsComponent = new NoPointsComponent();
+
 // apiWithProvider.getPoints()
 //   .then((points) => {
 //     // Получаю точки для определения начальной и конечной точки маршрута;
@@ -138,9 +142,8 @@ menuComponent.setOnChange((menuItem) => {
 // }
 
 // Отрисовка прелоадера;
-const preloaderComponent = new PreloaderComponent();
 render(tripEventsElement, preloaderComponent);
-console.log(preloaderComponent);
+
 Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()]).then((values) => {
   // Удаление прелоадера;
   remove(preloaderComponent);
@@ -166,6 +169,8 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
 
   OffersModel.setOffers(values[2]);
 
+}).catch(() => {
+  render(tripEventsElement, noPointsComponent);
 });
 
 // const preloaderComponent = new PreloaderComponent();
