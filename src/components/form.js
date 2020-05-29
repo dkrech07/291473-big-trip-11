@@ -627,14 +627,13 @@ export default class Form extends AbstractSmartComponent {
 
         if (!currentOffers) {
           this._offersForSaving.push(checkedOffer);
-          item.checked = true;
+          // item.checked = true;
         } else {
           const index = this._offersForSaving.findIndex((it) => it.title === checkedOffer.title);
           this._offersForSaving.splice(index, 1);
           // this._offersForSaving[index].isChecked = false;
           // item.checked = false;
         }
-
       });
     });
 

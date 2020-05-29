@@ -147,6 +147,7 @@ export default class PointController {
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
+
       this._onDataChange(this, this._point, newData);
 
       this.renameSaveButton();
@@ -197,10 +198,6 @@ export default class PointController {
       // };
       //
       // checkDestination();
-
-      const oldForm = document.querySelector(`.trip-days .event--edit`);
-      console.log(`Нашел форму редактирования, надо удалить`, oldForm);
-
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
       this._onDataChange(this, EmptyPoint, newData);
