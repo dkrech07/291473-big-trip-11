@@ -12,18 +12,17 @@ const createTripPointMarkup = (point) => {
 
   const pointImage = point.type.toLowerCase();
 
-  // const checkedOffers = point.offers.filter((offer) => offer.isChecked === true);
-
   const createOffersMarkup = () => {
-    const getCheckedOffers = () => {
 
-      const checkedOffers = offers.slice();
+    const getCheckedOffers = () => {
+      const checkedOffers = offers.filter((offer) => offer.isChecked === true);
 
       if (checkedOffers.length > DISPLAY_OFFERS_COUNT) {
         checkedOffers.length = DISPLAY_OFFERS_COUNT;
       }
       return checkedOffers;
     };
+
     return getCheckedOffers().map((offer) => {
 
       return (
