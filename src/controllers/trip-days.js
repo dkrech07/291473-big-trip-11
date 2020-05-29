@@ -5,7 +5,6 @@ import TripsContainerComponent from '../components/trips-container.js';
 import {render, remove} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
-import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
 import {renderTripCost} from '../main.js';
 import {renderTripInfo} from '../utils/trip-info.js';
@@ -30,7 +29,6 @@ export default class TripController {
 
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
-    this._preloaderComponent = new PreloaderComponent();
 
     this._points = null;
     this._tripDayComponent = null;
@@ -56,8 +54,6 @@ export default class TripController {
 
     this._api.getPoints()
       .then((points) => {
-        // Удаление прелоадера;
-        remove(this._preloaderComponent);
 
         if (points.length > 0) {
 
@@ -287,9 +283,5 @@ export default class TripController {
   // Отрисовка меню сортировки;
   renderSortMenu() {
     render(this._container, this._sortComponent);
-  }
-
-  renderPreloader() {
-    render(this._container, this._preloaderComponent);
   }
 }

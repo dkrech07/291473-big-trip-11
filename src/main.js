@@ -3,13 +3,14 @@ import Store from "./api/store.js";
 import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {getPrice} from './utils/common.js';
-import {RenderPosition, render} from './utils/render.js';
+import {RenderPosition, render, remove} from './utils/render.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
 import OffersModel from './models/offers.js';
 import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
+import PreloaderComponent from './components/preloader.js';
 
 import TripCostComponent from './components/trip-cost.js';
 import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
@@ -132,14 +133,21 @@ menuComponent.setOnChange((menuItem) => {
 //     OffersModel.setOffers(offers);
 //   });
 
+// renderPreloader() {
+//   render(this._container, this._preloaderComponent);
+// }
+
+// Отрисовка прелоадера;
+const preloaderComponent = new PreloaderComponent();
+render(tripEventsElement, preloaderComponent);
+console.log(preloaderComponent);
 Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()]).then((values) => {
-  // console.log(values);
+  // Удаление прелоадера;
+  remove(preloaderComponent);
 
   renderTripInfo(values[0]);
   // Отрисовка меню сортировки;
   tripController.renderSortMenu();
-  // Отрисовка прелоадера;
-  tripController.renderPreloader();
 
   pointsModel.setPoints(values[0]);
   for (const point of values[0]) {
@@ -159,6 +167,9 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
   OffersModel.setOffers(values[2]);
 
 });
+
+// const preloaderComponent = new PreloaderComponent();
+// render(this._container, this._preloaderComponent);
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
