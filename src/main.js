@@ -36,7 +36,7 @@ const renderTripMenuOptions = () => {
 
 renderTripMenuOptions();
 
-const filterController = new FilterController(mainElement, pointsModel);
+const filterController = new FilterController(pointsModel);
 filterController.render();
 
 const tripController = new TripController(tripEventsElement, pointsModel, apiWithProvider);
