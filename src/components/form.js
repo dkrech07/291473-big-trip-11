@@ -1,10 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {changeFirstLetter} from '../utils/common.js';
-import {Mode as PointControllerMode} from '../controllers/trip-point.js';
+import {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
-import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES, parseData} from '../utils/common.js';
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -305,6 +305,7 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
     this._offersForSaving = currentPoint.offers.filter((offer) => offer.isChecked);
+    this._defaultPoint = parseData(currentPoint);
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -434,6 +435,13 @@ export default class Form extends AbstractSmartComponent {
   reset() {
     const currentPoint = this._currentPoint;
     this._currentPoint.favorite = currentPoint.favorite;
+
+    if (this._mode === PointControllerMode.ADDING) {
+      this._currentPoint = EmptyPoint;
+      console.log(this._currentPoint);
+    } else {
+      this._currentPoint = this._defaultPoint;
+    }
     this.rerender();
   }
 
@@ -476,7 +484,6 @@ export default class Form extends AbstractSmartComponent {
       element.querySelector(`#event-favorite-1`)
       .addEventListener(`click`, (evt) => {
         this._currentPoint.favorite = evt.target.checked;
-
         this.rerender();
       });
     }

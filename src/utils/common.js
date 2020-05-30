@@ -131,6 +131,8 @@ const getTripCost = (model) => {
   render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
 };
 
+const parseData = (data) => JSON.parse(JSON.stringify(data));
+
 export {
   correctDateFormat,
   correctDateISOFormat,
@@ -148,4 +150,5 @@ export {
   TRIP_TYPES,
   STOP_TYPES,
   getTripCost,
+  parseData,
 };

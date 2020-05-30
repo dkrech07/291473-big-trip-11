@@ -4,7 +4,7 @@ import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import PointModel from '../models/point.js';
 import OffersModel from '../models/offers.js';
-import {TRIP_TYPES} from '../utils/common.js';
+import {TRIP_TYPES, parseData} from '../utils/common.js';
 
 const ESC_KEYCODE = 27;
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -56,7 +56,7 @@ export default class PointController {
           }
       );
 
-      return JSON.parse(JSON.stringify(offersList));
+      return parseData(offersList);
     };
 
     const getOffers = (saveOffers) => {
@@ -96,14 +96,12 @@ export default class PointController {
 
     this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
+        this._formComponent.reset();
         this.replaceEditToPoint();
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       }
 
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
-        this._formComponent._currentPoint.destinationInfo.name = ``;
-        this._formComponent._currentPoint.destinationInfo.description = ``;
-        this._formComponent._currentPoint.destinationInfo.pictures = [];
         this._newPointButton.removeAttribute(`disabled`);
 
         this._formComponent.reset();
@@ -154,6 +152,7 @@ export default class PointController {
       const oldFormElement = document.querySelector(`.trip-days > .event--edit`);
       const newPointButtonElement = document.querySelector(`.trip-main__event-add-btn`);
       if (oldFormElement) {
+        oldFormElement.reset();
         newPointButtonElement.removeAttribute(`disabled`);
         oldFormElement.remove();
       }
