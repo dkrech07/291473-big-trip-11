@@ -258,7 +258,7 @@ const createFormTemplate = (currentPoint, mode) => {
 
 // Поддерживаю сохранение данных формы;
 const parseFormData = (formData, form, point, offersForSaving) => {
-  const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
+  const typeElement = form.querySelector(`.event__label`).textContent.trim().split(` `);
 
   const price = parseInt(formData.get(`event-price`), 10);
   const favorite = formData.get(`event-favorite`);
@@ -285,7 +285,7 @@ const parseFormData = (formData, form, point, offersForSaving) => {
     'date_from': getNewDate(departure),
     'date_to': getNewDate(arrival),
     'base_price': price,
-    'type': type[0].toLowerCase(),
+    'type': typeElement[0].toLowerCase(),
     'offers': offersForSaving,
     'destination': point.destinationInfo,
   });
@@ -451,10 +451,10 @@ export default class Form extends AbstractSmartComponent {
       this._endTimeFlatpickr = null;
     }
 
-    const startTimeInput = this.getElement().querySelector(`input[name="event-start-time"]`);
-    const endTimeInput = this.getElement().querySelector(`input[name="event-end-time"]`);
+    const startTimeInputElement = this.getElement().querySelector(`input[name="event-start-time"]`);
+    const endTimeInputElement = this.getElement().querySelector(`input[name="event-end-time"]`);
 
-    this._startTimeFlatpickr = flatpickr(startTimeInput, {
+    this._startTimeFlatpickr = flatpickr(startTimeInputElement, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.departure,
@@ -464,7 +464,7 @@ export default class Form extends AbstractSmartComponent {
       },
     });
 
-    this._endTimeFlatpickr = flatpickr(endTimeInput, {
+    this._endTimeFlatpickr = flatpickr(endTimeInputElement, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.arrival,
@@ -506,13 +506,13 @@ export default class Form extends AbstractSmartComponent {
 
     // Хендлер клика по пунктам назначения (очистка значения в поле по фокусу);
     element.querySelector(`.event__input--destination`).addEventListener(`focus`, () => {
-      const destinationInput = element.querySelector(`.event__input--destination`);
-      destinationInput.value = null;
+      const destinationInputElement = element.querySelector(`.event__input--destination`);
+      destinationInputElement.value = null;
     });
 
     // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      const destinationInput = element.querySelector(`.event__input--destination`);
+      const destinationInputElement = element.querySelector(`.event__input--destination`);
 
       const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
         return destinationItem.name;
@@ -532,7 +532,7 @@ export default class Form extends AbstractSmartComponent {
       const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
 
       if (index === -1) {
-        destinationInput.setCustomValidity(`Выберите пункт назначения из списка`);
+        destinationInputElement.setCustomValidity(`Выберите пункт назначения из списка`);
         return;
       }
 
@@ -564,9 +564,9 @@ export default class Form extends AbstractSmartComponent {
 
       item.addEventListener(`change`, (evt) => {
 
-        let label = document.querySelector(`[for="${evt.target.id}"]`);
-        const labelTitle = label.querySelector(`.event__offer-title`).textContent;
-        const labelPrice = label.querySelector(`.event__offer-price`).textContent;
+        let labelElement = document.querySelector(`[for="${evt.target.id}"]`);
+        const labelTitle = labelElement.querySelector(`.event__offer-title`).textContent;
+        const labelPrice = labelElement.querySelector(`.event__offer-price`).textContent;
 
         const checkedOffer = {title: labelTitle, price: parseInt(labelPrice, 10), isChecked: true};
         const currentOffers = this._offersForSaving.find(

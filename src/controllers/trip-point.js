@@ -164,11 +164,11 @@ export default class PointController {
 
     // Открытие формы редактирования точки маршрута (замена карточки на форму);
     const pointRollUpClickHandler = () => {
-      const oldForm = document.querySelector(`.trip-days > .event--edit`);
-      const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
-      if (oldForm) {
-        newPointButton.removeAttribute(`disabled`);
-        oldForm.remove();
+      const oldFormElement = document.querySelector(`.trip-days > .event--edit`);
+      const newPointButtonElement = document.querySelector(`.trip-main__event-add-btn`);
+      if (oldFormElement) {
+        newPointButtonElement.removeAttribute(`disabled`);
+        oldFormElement.remove();
       }
 
       this._replacePointToEdit();
@@ -241,11 +241,11 @@ export default class PointController {
     this._formComponent.getElement().querySelector(`.event__reset-btn`).disabled = status;
     this._formComponent.getElement().querySelector(`.event__type-toggle`).disabled = status;
 
-    const favoriteButton = this._formComponent.getElement().querySelector(`#event-favorite-1`);
-    const rollUpButton = this._formComponent.getElement().querySelector(`.event__rollup-btn`);
-    if (favoriteButton && rollUpButton) {
-      favoriteButton.disabled = status;
-      rollUpButton.disabled = status;
+    const favoriteButtonElement = this._formComponent.getElement().querySelector(`#event-favorite-1`);
+    const rollUpButtonElement = this._formComponent.getElement().querySelector(`.event__rollup-btn`);
+    if (favoriteButtonElement && rollUpButtonElement) {
+      favoriteButtonElement.disabled = status;
+      rollUpButtonElement.disabled = status;
     }
 
     const inputElements = this._formComponent.getElement().querySelectorAll(`.event__input`);
@@ -262,20 +262,20 @@ export default class PointController {
   }
 
   renameSaveButton(status = true) {
-    const saveButton = this._formComponent.getElement().querySelector(`.event__save-btn`);
+    const saveButtonElement = this._formComponent.getElement().querySelector(`.event__save-btn`);
     if (status) {
-      saveButton.textContent = `Saving...`;
+      saveButtonElement.textContent = `Saving...`;
     } else {
-      saveButton.textContent = `Save`;
+      saveButtonElement.textContent = `Save`;
     }
   }
 
   renameDeleteButton(status = true) {
-    const deleteButton = this._formComponent.getElement().querySelector(`.event__reset-btn`);
+    const deleteButtonElement = this._formComponent.getElement().querySelector(`.event__reset-btn`);
     if (status) {
-      deleteButton.textContent = `Deleting...`;
+      deleteButtonElement.textContent = `Deleting...`;
     } else {
-      deleteButton.textContent = `Delete`;
+      deleteButtonElement.textContent = `Delete`;
     }
   }
 

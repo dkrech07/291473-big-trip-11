@@ -104,8 +104,8 @@ const changeFirstLetter = (word) => {
 };
 
 const getPlaceholderMarkup = (tripType, typesList) => {
-  const pointTypesTo = typesList.filter((item) => {
-    return item === changeFirstLetter(tripType);
+  const pointTypesTo = typesList.filter((placeholder) => {
+    return placeholder === changeFirstLetter(tripType);
   });
 
   if (pointTypesTo.length !== 0) {

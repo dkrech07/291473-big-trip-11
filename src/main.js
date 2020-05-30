@@ -27,7 +27,7 @@ const apiWithProvider = new Provider(api, store);
 // Общие переменные;
 const headerElement = document.querySelector(`.page-header`);
 const tripMenuElement = headerElement.querySelector(`.trip-main`);
-const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
+const newPointButtonElement = headerElement.querySelector(`.trip-main__event-add-btn`);
 const mainElement = document.querySelector(`.page-body__page-main`);
 const tripEventsElement = mainElement.querySelector(`.trip-events`);
 const pointsModel = new PointsModel();
@@ -66,14 +66,14 @@ const tripController = new TripController(tripEventsElement, pointsModel, apiWit
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
   filterController.setDefaultView();
-  tripController.createPoint(newPointButton);
+  tripController.createPoint(newPointButtonElement);
 
   menuComponent.setActiveItem(MenuItem.TABLE);
   statisticsComponent.hide();
   tripController.show();
 };
 
-newPointButton.addEventListener(`click`, newPointClickHandler);
+newPointButtonElement.addEventListener(`click`, newPointClickHandler);
 
 // Генерирую статистику и скрываю ее;
 const statisticsComponent = new StatisticsComponent(pointsModel);

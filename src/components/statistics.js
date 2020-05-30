@@ -12,8 +12,8 @@ const ChartTitle = {
   TIME: `TIME SPENT`
 };
 
-const getUniqueTripTypes = (type, index, array) => {
-  return array.indexOf(type) === index;
+const getUniqueTripTypes = (type, index, allTripTypes) => {
+  return allTripTypes.indexOf(type) === index;
 };
 
 const calculateUniqueCost = (points, type) => {
@@ -150,25 +150,25 @@ const chartContent = (ctx, pointTypes, pointParameters, chartName, formatter) =>
   });
 };
 
-const renderMoneyChart = (moneyCtx, points) => {
+const renderMoneyChart = (moneyCtxElement, points) => {
   const pointTypes = getPointsType(points);
   const pointsCosts = pointTypes.map((type) => calculateUniquePrice(points, type));
 
-  chartContent(moneyCtx, pointTypes, pointsCosts, ChartTitle.MONEY, (val) => `€ ${val}`);
+  chartContent(moneyCtxElement, pointTypes, pointsCosts, ChartTitle.MONEY, (val) => `€ ${val}`);
 };
 
-const renderTransportChart = (transportCtx, points) => {
+const renderTransportChart = (transportCtxElement, points) => {
   const pointTypes = getPointsType(points).filter((point) => point !== `RESTAURANT` && point !== `CHECK-IN` && point !== `SIGHTSEEING`);
   const pointTypesCount = pointTypes.map((type) => calculateUniqueCost(points, type));
 
-  chartContent(transportCtx, pointTypes, pointTypesCount, ChartTitle.TRANSPORT, (val) => `${val}x`);
+  chartContent(transportCtxElement, pointTypes, pointTypesCount, ChartTitle.TRANSPORT, (val) => `${val}x`);
 };
 
-const renderTimeSpentChart = (timeSpentCtx, points) => {
+const renderTimeSpentChart = (timeSpentCtxElement, points) => {
   const pointTypes = getPointsType(points);
   const pointTypesTimeSpent = pointTypes.map((type) => calculateUniqueTimeSpent(points, type));
 
-  chartContent(timeSpentCtx, pointTypes, pointTypesTimeSpent, ChartTitle.TIME, (val) => `${val}H`);
+  chartContent(timeSpentCtxElement, pointTypes, pointTypesTimeSpent, ChartTitle.TIME, (val) => `${val}H`);
 };
 
 const createStatisticsTemplate = () => {
@@ -226,19 +226,19 @@ export default class StatisticsComponent extends AbstractSmartComponent {
   _renderCharts() {
     const element = this.getElement();
 
-    const moneyCtx = element.querySelector(`.statistics__chart--money`);
-    const transportCtx = element.querySelector(`.statistics__chart--transport`);
-    const timeSpentCtx = element.querySelector(`.statistics__chart--time`);
+    const moneyCtxElement = element.querySelector(`.statistics__chart--money`);
+    const transportCtxElement = element.querySelector(`.statistics__chart--transport`);
+    const timeSpentCtxElement = element.querySelector(`.statistics__chart--time`);
 
-    moneyCtx.height = BAR_HEIGHT * 6;
-    transportCtx.height = BAR_HEIGHT * 7;
-    timeSpentCtx.height = BAR_HEIGHT * 7;
+    moneyCtxElement.height = BAR_HEIGHT * 6;
+    transportCtxElement.height = BAR_HEIGHT * 7;
+    timeSpentCtxElement.height = BAR_HEIGHT * 7;
 
     this._resetCharts();
 
-    this._moneyChart = renderMoneyChart(moneyCtx, this._points.getPoints());
-    this._transportChart = renderTransportChart(transportCtx, this._points.getPoints());
-    this._timeSpendChart = renderTimeSpentChart(timeSpentCtx, this._points.getPoints());
+    this._moneyChart = renderMoneyChart(moneyCtxElement, this._points.getPoints());
+    this._transportChart = renderTransportChart(transportCtxElement, this._points.getPoints());
+    this._timeSpendChart = renderTimeSpentChart(timeSpentCtxElement, this._points.getPoints());
   }
 
   _resetCharts() {

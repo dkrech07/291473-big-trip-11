@@ -82,13 +82,13 @@ export default class TripController {
   // Сортировка точек маршрута в зависимости от выбранного параметра;
   _getSortedTrips(sortType) {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
-    const tripSortElementContainer = document.querySelector(`.trip-events__trip-sort`);
-    const dayElement = tripSortElementContainer.querySelector(`.trip-sort__item--day`);
+    const tripSortContainerElement = document.querySelector(`.trip-events__trip-sort`);
+    const dayElement = tripSortContainerElement.querySelector(`.trip-sort__item--day`);
     switch (sortType) {
       case SortTypes.SORT_EVENT:
         this._currentSort = SortTypes.SORT_EVENT;
-        const sortEventInput = document.querySelector(`#sort-event`);
-        sortEventInput.checked = true;
+        const sortEventInputElement = document.querySelector(`#sort-event`);
+        sortEventInputElement.checked = true;
         const pointsEvent = this._pointsModel.getPointsAll().slice();
         this._tripDaysComponent.getElement().innerHTML = ``;
 
@@ -152,10 +152,10 @@ export default class TripController {
     this._tripDayComponent = new TripsContainerComponent();
     render(this._tripDaysComponent.getElement(), this._tripDayComponent);
 
-    const container = this._tripDayComponent.getElement().querySelector(`.trip-events__list`);
+    const eventsContainerElement = this._tripDayComponent.getElement().querySelector(`.trip-events__list`);
 
     for (const point of sortPointsList) {
-      const pointController = new PointController(container, this._onDataChange, this._onViewChange);
+      const pointController = new PointController(eventsContainerElement, this._onDataChange, this._onViewChange);
       pointController.render(point, PointControllerMode.DEFAULT);
       this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
     }
