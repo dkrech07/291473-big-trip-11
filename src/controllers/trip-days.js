@@ -175,6 +175,7 @@ export default class TripController {
 
           this._pointsModel.removePoint(oldData.id);
           this._updatePoints();
+          this._updateTripInformation();
         }).catch(() => {
           pointController.renameDeleteButton(false);
           pointController.shake();
@@ -190,6 +191,7 @@ export default class TripController {
 
           this._pointsModel.addPoint(pointsModel);
           this._updatePoints();
+          this._updateTripInformation();
         }).catch(() => {
           pointController.shake();
         });
@@ -201,10 +203,10 @@ export default class TripController {
         pointController.disableFormElements(false);
         pointController.renameDeleteButton(false);
         pointController.destroy(oldData.id);
-        this._updatePoints();
 
         this._pointsModel.removePoint(oldData.id);
         this._updatePoints();
+        this._updateTripInformation();
       }).catch(() => {
         pointController.renameDeleteButton(false);
         pointController.shake();
@@ -220,6 +222,7 @@ export default class TripController {
           pointController.replaceEditToPoint();
 
           this._updatePoints();
+          this._updateTripInformation();
         }
       }).catch(() => {
         pointController.renameDeleteButton(false);
@@ -241,9 +244,12 @@ export default class TripController {
   _updatePoints() {
     this._removePoints();
     this._renderPoints(this._pointsModel.getPoints());
+    this._getSortedTrips(this._currentSort);
+  }
+
+  _updateTripInformation() {
     renderTripCost(this._pointsModel.getPoints());
     renderTripInfo(this._pointsModel.getPoints());
-    this._getSortedTrips(this._currentSort);
   }
 
   _onFilterChange() {
