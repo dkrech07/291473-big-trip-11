@@ -112,7 +112,6 @@ export default class TripController {
     }
   }
 
-
   _getSortedTrips(sortType) {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
     const tripSortContainerElement = document.querySelector(`.trip-events__trip-sort`);
@@ -167,72 +166,67 @@ export default class TripController {
     }
   }
 
-  _onDataChange(pointController, oldData, newData) {
-    if (oldData === EmptyPoint) {
-      this._creatingPoint = null;
-      if (newData === null) {
-        this._api.deletePoint(oldData.id)
-        .then(() => {
-          this._showNoPoints();
-          pointController.disableFormElements(false);
-          pointController.renameDeleteButton(false);
-          pointController.destroy();
-
-          this._pointsModel.removePoint(oldData.id);
-          this._updatePoints();
-          this._updateTripInformation();
-        }).catch(() => {
-          pointController.renameDeleteButton(false);
-          pointController.shake();
-        });
-      } else {
-
-        this._api.createPoint(newData)
-        .then((pointsModel) => {
-          this._showNoPoints();
-          pointController.disableFormElements(false);
-          pointController.renameSaveButton(false);
-          pointController.replaceEditToNewPoint();
-
-          this._pointsModel.addPoint(pointsModel);
-          this._updatePoints();
-          this._updateTripInformation();
-        }).catch(() => {
-          pointController.shake();
-        });
-      }
-    } else if (newData === null) {
-      this._api.deletePoint(oldData.id)
-      .then(() => {
+  _createPoint(pointController, newData) {
+    this._api.createPoint(newData)
+      .then((pointsModel) => {
         this._showNoPoints();
         pointController.disableFormElements(false);
-        pointController.renameDeleteButton(false);
-        pointController.destroy(oldData.id);
+        pointController.renameSaveButton(false);
+        pointController.replaceEditToNewPoint();
 
-        this._pointsModel.removePoint(oldData.id);
+        this._pointsModel.addPoint(pointsModel);
         this._updatePoints();
         this._updateTripInformation();
       }).catch(() => {
-        pointController.renameDeleteButton(false);
         pointController.shake();
       });
+  }
+
+  _deletePoint(pointController, oldData) {
+    this._api.deletePoint(oldData.id)
+    .then(() => {
+      this._showNoPoints();
+      pointController.disableFormElements(false);
+      pointController.renameDeleteButton(false);
+      pointController.destroy(oldData.id);
+
+      this._pointsModel.removePoint(oldData.id);
+      this._updatePoints();
+      this._updateTripInformation();
+    }).catch(() => {
+      pointController.renameDeleteButton(false);
+      pointController.shake();
+    });
+  }
+
+  _updatePoint(pointController, oldData, newData) {
+    this._api.updatePoint(oldData.id, newData)
+    .then((pointsModel) => {
+      const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
+
+      if (isSuccess) {
+        pointController.disableFormElements(false);
+        pointController.renameSaveButton(false);
+        pointController.replaceEditToPoint();
+
+        this._updatePoints();
+        this._updateTripInformation();
+      }
+    }).catch(() => {
+      pointController.renameDeleteButton(false);
+      pointController.shake();
+    });
+  }
+
+  _onDataChange(pointController, oldData, newData) {
+    if (oldData === EmptyPoint) {
+      this._createPoint(pointController, newData);
+
+    } else if (newData === null) {
+      this._deletePoint(pointController, oldData);
+
     } else {
-      this._api.updatePoint(oldData.id, newData)
-      .then((pointsModel) => {
-        const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
-
-        if (isSuccess) {
-          pointController.disableFormElements(false);
-          pointController.renameSaveButton(false);
-          pointController.replaceEditToPoint();
-
-          this._updatePoints();
-          this._updateTripInformation();
-        }
-      }).catch(() => {
-        pointController.renameDeleteButton(false);
-        pointController.shake();
-      });
+      this._updatePoint(pointController, oldData, newData);
     }
   }
 
