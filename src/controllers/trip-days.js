@@ -120,7 +120,7 @@ export default class TripController {
 
     switch (sortType) {
       case SortTypes.SORT_EVENT:
-        this._getSortPrice(dayElement);
+        this._getSortEvent(dayElement);
         break;
 
       case SortTypes.SORT_TIME:
