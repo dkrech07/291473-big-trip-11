@@ -53,13 +53,11 @@ export default class Points {
     handlers.forEach((handler) => handler());
   }
 
-  // Добавление новой точки маршрута;
   addPoint(point) {
     this._points = [].concat(point, this._points);
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  // Удаление уже имеющейся точки маршрута;
   removePoint(id) {
     const index = this._points.findIndex((it) => it.id === id);
 

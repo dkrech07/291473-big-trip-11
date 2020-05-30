@@ -33,9 +33,9 @@ export const EmptyPoint = {
 
 export default class PointController {
   constructor(container, onDataChange, onViewChange, button) {
-    this._container = container; // container — элемент, в который контроллер отрисовывает точку маршрута или открытую форму
-    this._onDataChange = onDataChange; // Реализует сохранение данных формы (передает данные в модель);
-    this._onViewChange = onViewChange; // Понадобятся чуть позже, после реализации удаления / добавления карточки точки маршрута
+    this._container = container;
+    this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
     this._mode = Mode.DEFAULT;
     this._point = null;
     this._pointComponent = null;
@@ -46,11 +46,8 @@ export default class PointController {
   }
 
   render(point, mode) {
-    // Режим отрисовки точки маршрута (default, edit, adding);
     this._mode = mode;
-
-    // Создание новой текущей точки маршурта;
-    this._point = Object.assign({}, point); // point - точка маршрута, которая будет отрисована в контейнер;
+    this._point = Object.assign({}, point);
 
     const getOfferOfType = () => {
       const offersList = OffersModel.getOffers().find(
@@ -91,14 +88,12 @@ export default class PointController {
     this._formComponent = new FormComponent(this._point, this._mode);
     this._formContainerComponent = new FormContainerComponent();
 
-    // Отрисовка точки маршрута;
     if (!oldPointComponent && !oldFormComponent && mode === Mode.DEFAULT) {
       render(this._container, this._pointComponent, RenderPosition.AFTERBEGIN);
     } else if (oldPointComponent && oldFormComponent && mode === Mode.DEFAULT) {
       replace(this._pointComponent, oldPointComponent);
     }
 
-    // Удаление формы редактиования точки маршрута по нажатию на ESC;
     this._onEscKeyDown = (evt) => {
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.EDIT) {
         this.replaceEditToPoint();
@@ -117,14 +112,12 @@ export default class PointController {
       }
     };
 
-    // Удаление формы редактирования точки маршрута;
     const deleteButtonClickHandler = () => {
       this.renameDeleteButton();
       this.disableFormElements();
       this._onDataChange(this, this._point, null);
     };
 
-    // Выход из формы создания точки маршрута;
     const cancelButtonClickHandler = () => {
       if (this._newPointButton) {
         this._newPointButton.removeAttribute(`disabled`);
@@ -135,13 +128,9 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
-    // Отлавливаю клик по "Delete" на форме редактирования точки маршрута;
     this._formComponent.setDeleteButtonClickHandler(deleteButtonClickHandler);
-
-    // Отлавливаю клик по "Cancel" на форме создания точки маршрута;
     this._formComponent.setCancelButtonClickHandler(cancelButtonClickHandler);
 
-    // Сохранение формы редактирования точки маршрута;
     const saveFormClickHandler = (evt) => {
       evt.preventDefault();
 
@@ -154,7 +143,6 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
-    // Замена формы на карточку пункта маршрута;
     const formRollupClickHandler = () => {
       this.replaceEditToPoint();
 
@@ -162,7 +150,6 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     };
 
-    // Открытие формы редактирования точки маршрута (замена карточки на форму);
     const pointRollUpClickHandler = () => {
       const oldFormElement = document.querySelector(`.trip-days > .event--edit`);
       const newPointButtonElement = document.querySelector(`.trip-main__event-add-btn`);
@@ -178,10 +165,8 @@ export default class PointController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     };
 
-    // Отлавливаю клик по кнопке-rollUp на карточке точки маршрута;
     this._pointComponent.setPointRollupClickHandler(pointRollUpClickHandler);
 
-    // Отрисовка формы редактирования для новой карточки;
     const newFormClickHandler = (evt) => {
       evt.preventDefault();
 

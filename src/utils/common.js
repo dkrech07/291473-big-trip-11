@@ -16,7 +16,6 @@ const STOP_TYPES = [
   `Check-in`, `Sightseeing`, `Restaurant`
 ];
 
-// Корректировка формата времени: добавляет вначале ноль, если число однозначное;
 const correctFormat = (number) => {
   const date = number.toString();
 
@@ -28,7 +27,6 @@ const correctFormat = (number) => {
   return date;
 };
 
-// Корректировка формата даты: год, день, часы, минуты;
 const correctDayFormat = (date) => {
   return moment(date).format(INPUT_DAY_FORMAT);
 };
@@ -57,12 +55,10 @@ const correctDateAndTimeFormat = (date) => {
   return moment(date).format(INPUT_DATE_AND_TIME_FORMAT);
 };
 
-
 const calculateTripDuration = (departure, arrival) => {
   return moment.duration(moment(arrival).diff(moment(departure)));
 };
 
-// Расчет длительности путешествия;
 const calculateTripTime = (departure, arrival) => {
 
   const duration = calculateTripDuration(departure, arrival);
@@ -80,7 +76,6 @@ const calculateTripTime = (departure, arrival) => {
   }
 };
 
-// Получение цены путешествия (цена путешествия + цена предложений);
 const getPrice = (points) => {
 
   let pointsPrices = 0;

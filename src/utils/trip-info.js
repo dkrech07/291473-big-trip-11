@@ -3,7 +3,6 @@ import TripInfoComponent from '../components/trip-info.js';
 import {render, RenderPosition} from '../utils/render.js';
 import {correctMonthAndDayFormat} from '../utils/common.js';
 
-// Отрисовка информации о крайних точках маршрута в шапке;
 export const tripInfoContainer = new TripInfoContainerComponent();
 export const renderTripInfo = (points) => {
 
