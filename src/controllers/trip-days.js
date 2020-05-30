@@ -74,49 +74,63 @@ export default class TripController {
     this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
   }
 
+  _getSortEvent(dayElement) {
+    this._currentSort = SortTypes.SORT_EVENT;
+    const sortEventInputElement = document.querySelector(`#sort-event`);
+    sortEventInputElement.checked = true;
+    const pointsEvent = this._pointsModel.getPointsAll().slice();
+    this._tripDaysComponent.getElement().innerHTML = ``;
+
+    this._renderPoints(pointsEvent);
+
+    if (!dayElement.textContent) {
+      dayElement.textContent = `DAY`;
+    }
+  }
+
+  _getSortTime(dayElement) {
+    const pointsTime = this._pointsModel.getPointsAll().slice();
+    pointsTime.sort((a, b) => a.arrival - a.departure > b.arrival - b.departure ? 1 : -1);
+    this._tripDaysComponent.getElement().innerHTML = ``;
+
+    this._renderSortPoints(pointsTime);
+
+    if (dayElement.textContent) {
+      dayElement.textContent = ``;
+    }
+  }
+
+  _getSortPrice(dayElement) {
+    const pointsPrice = this._pointsModel.getPointsAll().slice();
+    pointsPrice.sort((a, b) => a.price > b.price ? 1 : -1);
+    this._tripDaysComponent.getElement().innerHTML = ``;
+
+    this._renderSortPoints(pointsPrice);
+
+    if (dayElement.textContent) {
+      dayElement.textContent = ``;
+    }
+  }
+
+
   _getSortedTrips(sortType) {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
     const tripSortContainerElement = document.querySelector(`.trip-events__trip-sort`);
     const dayElement = tripSortContainerElement.querySelector(`.trip-sort__item--day`);
+
     switch (sortType) {
       case SortTypes.SORT_EVENT:
-        this._currentSort = SortTypes.SORT_EVENT;
-        const sortEventInputElement = document.querySelector(`#sort-event`);
-        sortEventInputElement.checked = true;
-        const pointsEvent = this._pointsModel.getPointsAll().slice();
-        this._tripDaysComponent.getElement().innerHTML = ``;
-
-        this._renderPoints(pointsEvent);
-
-        if (!dayElement.textContent) {
-          dayElement.textContent = `DAY`;
-        }
+        this._getSortPrice(dayElement);
         break;
 
       case SortTypes.SORT_TIME:
         this._currentSort = SortTypes.SORT_TIME;
-        const pointsTime = this._pointsModel.getPointsAll().slice();
-        pointsTime.sort((a, b) => a.arrival - a.departure > b.arrival - b.departure ? 1 : -1);
-        this._tripDaysComponent.getElement().innerHTML = ``;
-
-        this._renderSortPoints(pointsTime);
-
-        if (dayElement.textContent) {
-          dayElement.textContent = ``;
-        }
+        this._getSortTime();
         break;
 
       case SortTypes.SORT_PRICE:
         this._currentSort = SortTypes.SORT_PRICE;
-        const pointsPrice = this._pointsModel.getPointsAll().slice();
-        pointsPrice.sort((a, b) => a.price > b.price ? 1 : -1);
-        this._tripDaysComponent.getElement().innerHTML = ``;
-
-        this._renderSortPoints(pointsPrice);
-
-        if (dayElement.textContent) {
-          dayElement.textContent = ``;
-        }
+        this._getSortPrice();
         break;
     }
   }
