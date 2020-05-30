@@ -124,12 +124,12 @@ export default class TripController {
 
       case SortTypes.SORT_TIME:
         this._currentSort = SortTypes.SORT_TIME;
-        this._getSortTime();
+        this._getSortTime(dayElement);
         break;
 
       case SortTypes.SORT_PRICE:
         this._currentSort = SortTypes.SORT_PRICE;
-        this._getSortPrice();
+        this._getSortPrice(dayElement);
         break;
     }
   }
