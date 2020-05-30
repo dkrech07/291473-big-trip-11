@@ -14,7 +14,7 @@ import NoPointsComponent from './components/no-points.js';
 import {renderTripInfo} from './utils/trip-info.js';
 import {getTripCost} from './utils/common.js';
 
-const AUTORIZATION = `Basic dsfsfe3343`;
+const AUTORIZATION = `Basic dsfsfe334343434`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const api = new API(END_POINT, AUTORIZATION);

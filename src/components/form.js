@@ -438,7 +438,6 @@ export default class Form extends AbstractSmartComponent {
 
     if (this._mode === PointControllerMode.ADDING) {
       this._currentPoint = EmptyPoint;
-      console.log(this._currentPoint);
     } else {
       this._currentPoint = this._defaultPoint;
     }
