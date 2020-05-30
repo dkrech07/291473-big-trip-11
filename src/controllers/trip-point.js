@@ -62,7 +62,7 @@ export default class PointController {
     const getOffers = (saveOffers) => {
       const pointOffers = getOfferOfType().offers;
 
-      if (mode === `adding` || !saveOffers) {
+      if (mode === Mode.ADDING || !saveOffers) {
         for (const offer of pointOffers) {
           offer.isChecked = false;
         }
@@ -248,20 +248,13 @@ export default class PointController {
 
   renameSaveButton(status = true) {
     const saveButtonElement = this._formComponent.getElement().querySelector(`.event__save-btn`);
-    if (status) {
-      saveButtonElement.textContent = `Saving...`;
-    } else {
-      saveButtonElement.textContent = `Save`;
-    }
+
+    saveButtonElement.textContent = status ? `Saving…` : `Save`;
   }
 
   renameDeleteButton(status = true) {
     const deleteButtonElement = this._formComponent.getElement().querySelector(`.event__reset-btn`);
-    if (status) {
-      deleteButtonElement.textContent = `Deleting...`;
-    } else {
-      deleteButtonElement.textContent = `Delete`;
-    }
+    deleteButtonElement.textContent = status ? `Deleting…` : `Delete`;
   }
 
   destroy() {
