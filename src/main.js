@@ -2,7 +2,6 @@ import API from './api/index.js';
 import Store from "./api/store.js";
 import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
-import {getPrice} from './utils/common.js';
 import {RenderPosition, render, remove} from './utils/render.js';
 import TripController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
@@ -12,10 +11,10 @@ import FilterController from './controllers/filter.js';
 import StatisticsComponent from './components/statistics.js';
 import PreloaderComponent from './components/preloader.js';
 import NoPointsComponent from './components/no-points.js';
-import TripCostComponent from './components/trip-cost.js';
-import {tripInfoContainer, renderTripInfo} from './utils/trip-info.js';
+import {renderTripInfo} from './utils/trip-info.js';
+import {getTripCost} from './utils/common.js';
 
-const AUTORIZATION = `Basic dsfsfe334`;
+const AUTORIZATION = `Basic dsfsfe3343`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const api = new API(END_POINT, AUTORIZATION);
@@ -36,20 +35,6 @@ const renderTripMenuOptions = () => {
 };
 
 renderTripMenuOptions();
-
-export const renderTripCost = (model) => {
-  const tripCost = getPrice(model);
-  const tripCostComponent = new TripCostComponent(tripCost);
-
-  const tripInfoCostElement = document.querySelector(`.trip-info__cost`);
-
-  if (tripInfoCostElement) {
-    tripInfoCostElement.remove();
-  }
-
-  render(tripInfoContainer.getElement(), tripCostComponent);
-  render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
-};
 
 const filterController = new FilterController(mainElement, pointsModel);
 filterController.render();
@@ -109,7 +94,7 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
   }
 
   const pointsOfDeparture = values[0].slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
-  renderTripCost(pointsModel.getPoints(pointsOfDeparture));
+  getTripCost(pointsModel.getPoints(pointsOfDeparture));
   tripController.render();
 
   DestinationsModel.setDestinations(values[1]);

@@ -5,8 +5,7 @@ import TripsContainerComponent from '../components/trips-container.js';
 import {render, remove} from '../utils/render.js';
 import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
-import {INPUT_YEAR_MONTH_DAY_FORMAT} from '../utils/common.js';
-import {renderTripCost} from '../main.js';
+import {INPUT_YEAR_MONTH_DAY_FORMAT, getTripCost} from '../utils/common.js';
 import {renderTripInfo} from '../utils/trip-info.js';
 import moment from "moment";
 
@@ -240,7 +239,7 @@ export default class TripController {
   }
 
   _updateTripInformation() {
-    renderTripCost(this._pointsModel.getPoints());
+    getTripCost(this._pointsModel.getPoints());
     renderTripInfo(this._pointsModel.getPoints());
   }
 

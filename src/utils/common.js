@@ -1,3 +1,7 @@
+import TripCostComponent from '../components/trip-cost.js';
+import {tripInfoContainer} from './trip-info.js';
+import {RenderPosition, render} from './render.js';
+
 import moment from "moment";
 const DATE_LENGTH = 2;
 const INPUT_DAY_FORMAT = `DD`;
@@ -15,6 +19,9 @@ const TRIP_TYPES = [
 const STOP_TYPES = [
   `Check-in`, `Sightseeing`, `Restaurant`
 ];
+
+const headerElement = document.querySelector(`.page-header`);
+const tripMenuElement = headerElement.querySelector(`.trip-main`);
 
 const correctFormat = (number) => {
   const date = number.toString();
@@ -110,6 +117,20 @@ const getPlaceholderMarkup = (tripType, typesList) => {
   return `${changeFirstLetter(tripType)} in`;
 };
 
+const getTripCost = (model) => {
+  const tripCost = getPrice(model);
+  const tripCostComponent = new TripCostComponent(tripCost);
+
+  const tripInfoCostElement = document.querySelector(`.trip-info__cost`);
+
+  if (tripInfoCostElement) {
+    tripInfoCostElement.remove();
+  }
+
+  render(tripInfoContainer.getElement(), tripCostComponent);
+  render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
+};
+
 export {
   correctDateFormat,
   correctDateISOFormat,
@@ -126,4 +147,5 @@ export {
   getPlaceholderMarkup,
   TRIP_TYPES,
   STOP_TYPES,
+  getTripCost,
 };

@@ -91,7 +91,7 @@ const chartContent = (ctx, pointTypes, pointParameters, chartName, formatter) =>
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`,
         minBarLength: 50,
-        barThickness: 44
+        barThickness: 40
       }]
     },
     options: {
