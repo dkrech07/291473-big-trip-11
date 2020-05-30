@@ -106,6 +106,9 @@ export default class PointController {
       }
 
       if (evt.keyCode === ESC_KEYCODE && this._mode === Mode.ADDING) {
+        this._formComponent._currentPoint.destinationInfo.name = ``;
+        this._formComponent._currentPoint.destinationInfo.description = ``;
+        this._formComponent._currentPoint.destinationInfo.pictures = [];
         this._newPointButton.removeAttribute(`disabled`);
 
         this._formComponent.reset();
