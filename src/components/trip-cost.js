@@ -9,7 +9,7 @@ const createTripCostTemplate = (cost) => {
   );
 };
 
-export default class tripCost extends AbstractComponent {
+export default class TripCost extends AbstractComponent {
   constructor(cost) {
     super();
 

@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {changeFirstLetter} from '../utils/common.js';
-import {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
+import {Mode as PointControllerMode, emptyPoint} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
@@ -437,7 +437,7 @@ export default class Form extends AbstractSmartComponent {
     this._currentPoint.favorite = currentPoint.favorite;
 
     if (this._mode === PointControllerMode.ADDING) {
-      this._currentPoint = EmptyPoint;
+      this._currentPoint = emptyPoint;
     } else {
       this._currentPoint = this._defaultPoint;
     }

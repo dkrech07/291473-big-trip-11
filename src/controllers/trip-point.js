@@ -16,7 +16,7 @@ export const Mode = {
   ADDING: `adding`,
 };
 
-export const EmptyPoint = {
+export const emptyPoint = {
   id: String(new Date() + Math.random()),
   type: TRIP_TYPES[DEFAULT_TYPE_COUNT],
   destinationInfo: {
@@ -171,7 +171,7 @@ export default class PointController {
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      this._onDataChange(this, EmptyPoint, newData);
+      this._onDataChange(this, emptyPoint, newData);
 
       this.renameSaveButton();
       this.disableFormElements();

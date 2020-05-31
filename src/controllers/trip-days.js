@@ -3,7 +3,7 @@ import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
 import {render, remove} from '../utils/render.js';
-import PointController, {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
+import PointController, {Mode as PointControllerMode, emptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT, getTripCost} from '../utils/common.js';
@@ -80,7 +80,7 @@ export default class TripController {
 
     const container = this._tripDaysComponent.getElement();
     this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange, button);
-    this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
+    this._creatingPoint.render(emptyPoint, PointControllerMode.ADDING);
   }
 
   _getSortedTrips(sortType) {
@@ -212,7 +212,7 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    if (oldData === EmptyPoint) {
+    if (oldData === emptyPoint) {
       this._createPoint(pointController, newData);
 
     } else if (newData === null) {
