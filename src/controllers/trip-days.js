@@ -10,6 +10,8 @@ import {INPUT_YEAR_MONTH_DAY_FORMAT, getTripCost} from '../utils/common.js';
 import {renderTripInfo} from '../utils/trip-info.js';
 import moment from "moment";
 
+const DAY_TITLE = `DAY`;
+
 const getDays = (points) => {
   const daysList = [];
   const days = new Set(points.map((point) => new Date(moment(point.departure).format(INPUT_YEAR_MONTH_DAY_FORMAT)).getTime()));
@@ -83,6 +85,8 @@ export default class TripController {
 
   _getSortedTrips(sortType) {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
+    const tripSortContainerElement = document.querySelector(`.trip-events__trip-sort`);
+    const dayElement = tripSortContainerElement.querySelector(`.trip-sort__item--day`);
 
     switch (sortType) {
       case SortTypes.SORT_EVENT:
@@ -93,6 +97,9 @@ export default class TripController {
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderPoints(pointsEvent);
+        if (!dayElement.textContent) {
+          dayElement.textContent = DAY_TITLE;
+        }
         break;
 
       case SortTypes.SORT_TIME:
@@ -101,6 +108,9 @@ export default class TripController {
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderSortPoints(pointsTime);
+        if (dayElement.textContent) {
+          dayElement.textContent = ``;
+        }
         break;
 
       case SortTypes.SORT_PRICE:
@@ -109,6 +119,10 @@ export default class TripController {
         this._tripDaysComponent.getElement().innerHTML = ``;
 
         this._renderSortPoints(pointsPrice);
+
+        if (dayElement.textContent) {
+          dayElement.textContent = ``;
+        }
         break;
     }
   }

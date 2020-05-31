@@ -556,7 +556,7 @@ export default class Form extends AbstractSmartComponent {
 
       item.addEventListener(`change`, (evt) => {
 
-        let labelElement = document.querySelector(`[for="${evt.target.id}"]`);
+        const labelElement = document.querySelector(`[for="${evt.target.id}"]`);
         const labelTitle = labelElement.querySelector(`.event__offer-title`).textContent;
         const labelPrice = labelElement.querySelector(`.event__offer-price`).textContent;
 
