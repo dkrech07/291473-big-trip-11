@@ -1,9 +1,9 @@
-import API from './api/index.js';
+import Api from './api/api.js';
 import Store from "./api/store.js";
 import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
 import {RenderPosition, render, remove} from './utils/render.js';
-import TripController from './controllers/trip-days.js';
+import TripDaysController from './controllers/trip-days.js';
 import PointsModel from './models/points.js';
 import DestinationsModel from './models/destinations.js';
 import OffersModel from './models/offers.js';
@@ -17,7 +17,7 @@ import {getTripCost} from './utils/common.js';
 const AUTORIZATION = `Basic dsfsfedfdkfjdf333`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
-const api = new API(END_POINT, AUTORIZATION);
+const api = new Api(END_POINT, AUTORIZATION);
 const store = new Store(window.localStorage);
 const apiWithProvider = new Provider(api, store);
 
@@ -39,16 +39,16 @@ renderTripMenuOptions();
 const filterController = new FilterController(pointsModel);
 filterController.render();
 
-const tripController = new TripController(tripEventsElement, pointsModel, apiWithProvider);
+const tripDaysController = new TripDaysController(tripEventsElement, pointsModel, apiWithProvider);
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
   filterController.setDefaultView();
-  tripController.createPoint(newPointButtonElement);
+  tripDaysController.createPoint(newPointButtonElement);
 
   menuComponent.setActiveItem(MenuItem.TABLE);
   statisticsComponent.hide();
-  tripController.show();
+  tripDaysController.show();
 };
 
 newPointButtonElement.addEventListener(`click`, newPointClickHandler);
@@ -62,12 +62,12 @@ menuComponent.setOnChange((menuItem) => {
     case MenuItem.TABLE:
       menuComponent.setActiveItem(MenuItem.TABLE);
       statisticsComponent.hide();
-      tripController.show();
+      tripDaysController.show();
       break;
     case MenuItem.STATISTICS:
       menuComponent.setActiveItem(MenuItem.STATISTICS);
       filterController.setDefaultView();
-      tripController.hide();
+      tripDaysController.hide();
       statisticsComponent.show();
       document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
       break;
@@ -82,7 +82,7 @@ render(tripEventsElement, preloaderComponent);
 Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), apiWithProvider.getOffers()]).then((values) => {
   remove(preloaderComponent);
   renderTripInfo(values[0]);
-  tripController.renderSortMenu();
+  tripDaysController.renderSortMenu();
 
   pointsModel.setPoints(values[0]);
   for (const point of values[0]) {
@@ -95,7 +95,7 @@ Promise.all([apiWithProvider.getPoints(), apiWithProvider.getDestinations(), api
 
   const pointsOfDeparture = values[0].slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
   getTripCost(pointsModel.getPoints(pointsOfDeparture));
-  tripController.render();
+  tripDaysController.render();
 
   DestinationsModel.setDestinations(values[1]);
 

@@ -1,5 +1,5 @@
 import FormComponent from '../components/form.js';
-import EventComponent from '../components/trip-point.js';
+import TripPointComponent from '../components/trip-point.js';
 import FormContainerComponent from '../components/form-container.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import PointModel from '../models/point.js';
@@ -16,7 +16,7 @@ export const Mode = {
   ADDING: `adding`,
 };
 
-export const EmptyPoint = {
+export const emptyPoint = {
   id: String(new Date() + Math.random()),
   type: TRIP_TYPES[DEFAULT_TYPE_COUNT],
   destinationInfo: {
@@ -31,7 +31,7 @@ export const EmptyPoint = {
   arrival: new Date(),
 };
 
-export default class PointController {
+export default class TripPointController {
   constructor(container, onDataChange, onViewChange, button) {
     this._container = container;
     this._onDataChange = onDataChange;
@@ -84,7 +84,7 @@ export default class PointController {
     const oldPointComponent = this._pointComponent;
     const oldFormComponent = this._formComponent;
 
-    this._pointComponent = new EventComponent(this._point);
+    this._pointComponent = new TripPointComponent(this._point);
     this._formComponent = new FormComponent(this._point, this._mode);
     this._formContainerComponent = new FormContainerComponent();
 
@@ -171,7 +171,7 @@ export default class PointController {
 
       const data = this._formComponent.getData(this._point);
       const newData = PointModel.clone(data);
-      this._onDataChange(this, EmptyPoint, newData);
+      this._onDataChange(this, emptyPoint, newData);
 
       this.renameSaveButton();
       this.disableFormElements();

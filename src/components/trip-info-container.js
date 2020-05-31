@@ -7,7 +7,7 @@ const createTripInfoContainerTemplate = () => {
   );
 };
 
-export default class tripInfoContainer extends AbstractComponent {
+export default class TripInfoContainer extends AbstractComponent {
 
   getTemplate() {
     return createTripInfoContainerTemplate();

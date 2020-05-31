@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {changeFirstLetter} from '../utils/common.js';
-import {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
+import {Mode as TripPointControllerMode, emptyPoint} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
@@ -148,7 +148,7 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const getFavorite = () => {
-    if (mode !== PointControllerMode.ADDING) {
+    if (mode !== TripPointControllerMode.ADDING) {
       return (
         `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${getCheckFavorite(favorite)}>
         <label class="event__favorite-btn" for="event-favorite-1">
@@ -163,7 +163,7 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const getDeleteOrCandel = () => {
-    if (mode !== PointControllerMode.ADDING) {
+    if (mode !== TripPointControllerMode.ADDING) {
       return (
         `<button class="event__reset-btn" type="reset">Delete</button>`
       );
@@ -174,7 +174,7 @@ const createFormTemplate = (currentPoint, mode) => {
   };
 
   const getRollUpMarkUp = () => {
-    if (mode !== PointControllerMode.ADDING) {
+    if (mode !== TripPointControllerMode.ADDING) {
       return (
         `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -436,8 +436,8 @@ export default class Form extends AbstractSmartComponent {
     const currentPoint = this._currentPoint;
     this._currentPoint.favorite = currentPoint.favorite;
 
-    if (this._mode === PointControllerMode.ADDING) {
-      this._currentPoint = EmptyPoint;
+    if (this._mode === TripPointControllerMode.ADDING) {
+      this._currentPoint = emptyPoint;
     } else {
       this._currentPoint = this._defaultPoint;
     }
