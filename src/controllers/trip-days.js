@@ -23,7 +23,7 @@ const getDays = (points) => {
   return daysList;
 };
 
-export default class TripController {
+export default class TripDaysController {
   constructor(container, pointsModel, api) {
     this._container = container;
     this._pointsModel = pointsModel;
