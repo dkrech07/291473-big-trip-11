@@ -47,7 +47,7 @@ export default class TripDaysController {
   }
 
   render() {
-    this._points = this._pointsModel.getPointsAll();
+    this._points = this._pointsModel.getPointsAll().slice().sort((a, b) => a.departure > b.departure ? 1 : -1);
 
     render(this._container, this._tripDaysComponent);
 
@@ -235,7 +235,7 @@ export default class TripDaysController {
 
   _updatePoints() {
     this._removePoints();
-    this._renderPoints(this._pointsModel.getPoints());
+    this._renderPoints(this._pointsModel.getPoints().sort((a, b) => a.departure > b.departure ? 1 : -1));
   }
 
   _updateTripInformation() {
