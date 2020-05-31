@@ -3,7 +3,7 @@ import TripDaysComponent from '../components/trip-days.js';
 import SortComponent, {SortTypes} from '../components/sort.js';
 import TripsContainerComponent from '../components/trips-container.js';
 import {render, remove} from '../utils/render.js';
-import PointController, {Mode as PointControllerMode, emptyPoint} from '../controllers/trip-point.js';
+import TripPointController, {Mode as TripPointControllerMode, emptyPoint} from '../controllers/trip-point.js';
 import NoPointsComponent from '../components/no-points.js';
 import PreloaderComponent from '../components/preloader.js';
 import {INPUT_YEAR_MONTH_DAY_FORMAT, getTripCost} from '../utils/common.js';
@@ -79,8 +79,8 @@ export default class TripDaysController {
     button.setAttribute(`disabled`, `true`);
 
     const container = this._tripDaysComponent.getElement();
-    this._creatingPoint = new PointController(container, this._onDataChange, this._onViewChange, button);
-    this._creatingPoint.render(emptyPoint, PointControllerMode.ADDING);
+    this._creatingPoint = new TripPointController(container, this._onDataChange, this._onViewChange, button);
+    this._creatingPoint.render(emptyPoint, TripPointControllerMode.ADDING);
   }
 
   _getSortedTrips(sortType) {
@@ -138,9 +138,9 @@ export default class TripDaysController {
 
         if (pointDate === day.getTime()) {
           const tripEventsListElement = this._tripDayComponent.getElement().querySelector(`.trip-events__list`);
-          const pointController = new PointController(tripEventsListElement, this._onDataChange, this._onViewChange);
-          pointController.render(point, PointControllerMode.DEFAULT);
-          this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
+          const tripPointController = new TripPointController(tripEventsListElement, this._onDataChange, this._onViewChange);
+          tripPointController.render(point, TripPointControllerMode.DEFAULT);
+          this._showedPointsControllers = this._showedPointsControllers.concat(tripPointController);
         }
       }
     }
@@ -153,73 +153,73 @@ export default class TripDaysController {
     const container = this._tripDayComponent.getElement().querySelector(`.trip-events__list`);
 
     for (const point of sortPointsList) {
-      const pointController = new PointController(container, this._onDataChange, this._onViewChange);
-      pointController.render(point, PointControllerMode.DEFAULT);
-      this._showedPointsControllers = this._showedPointsControllers.concat(pointController);
+      const tripPointController = new TripPointController(container, this._onDataChange, this._onViewChange);
+      tripPointController.render(point, TripPointControllerMode.DEFAULT);
+      this._showedPointsControllers = this._showedPointsControllers.concat(tripPointController);
     }
   }
 
-  _createPoint(pointController, newData) {
+  _createPoint(tripPointController, newData) {
     this._api.createPoint(newData)
       .then((pointsModel) => {
         this._showNoPoints();
-        pointController.disableFormElements(false);
-        pointController.renameSaveButton(false);
-        pointController.replaceEditToNewPoint();
+        tripPointController.disableFormElements(false);
+        tripPointController.renameSaveButton(false);
+        tripPointController.replaceEditToNewPoint();
 
         this._pointsModel.addPoint(pointsModel);
         this._updatePoints();
         this._updateTripInformation();
       }).catch(() => {
-        pointController.shake();
+        tripPointController.shake();
       });
   }
 
-  _deletePoint(pointController, oldData) {
+  _deletePoint(tripPointController, oldData) {
     this._api.deletePoint(oldData.id)
     .then(() => {
       this._showNoPoints();
-      pointController.disableFormElements(false);
-      pointController.renameDeleteButton(false);
-      pointController.destroy(oldData.id);
+      tripPointController.disableFormElements(false);
+      tripPointController.renameDeleteButton(false);
+      tripPointController.destroy(oldData.id);
 
       this._pointsModel.removePoint(oldData.id);
       this._updatePoints();
       this._updateTripInformation();
     }).catch(() => {
-      pointController.renameDeleteButton(false);
-      pointController.shake();
+      tripPointController.renameDeleteButton(false);
+      tripPointController.shake();
     });
   }
 
-  _updatePoint(pointController, oldData, newData) {
+  _updatePoint(tripPointController, oldData, newData) {
     this._api.updatePoint(oldData.id, newData)
     .then((pointsModel) => {
       const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
 
       if (isSuccess) {
-        pointController.disableFormElements(false);
-        pointController.renameSaveButton(false);
-        pointController.replaceEditToPoint();
+        tripPointController.disableFormElements(false);
+        tripPointController.renameSaveButton(false);
+        tripPointController.replaceEditToPoint();
 
         this._updatePoints();
         this._updateTripInformation();
       }
     }).catch(() => {
-      pointController.renameDeleteButton(false);
-      pointController.shake();
+      tripPointController.renameDeleteButton(false);
+      tripPointController.shake();
     });
   }
 
-  _onDataChange(pointController, oldData, newData) {
+  _onDataChange(tripPointController, oldData, newData) {
     if (oldData === emptyPoint) {
-      this._createPoint(pointController, newData);
+      this._createPoint(tripPointController, newData);
 
     } else if (newData === null) {
-      this._deletePoint(pointController, oldData);
+      this._deletePoint(tripPointController, oldData);
 
     } else {
-      this._updatePoint(pointController, oldData, newData);
+      this._updatePoint(tripPointController, oldData, newData);
     }
   }
 
@@ -229,7 +229,7 @@ export default class TripDaysController {
 
   _removePoints() {
     this._tripDaysComponent.getElement().innerHTML = ``;
-    this._showedPointsControllers.forEach((pointController) => pointController.destroy());
+    this._showedPointsControllers.forEach((tripPointController) => tripPointController.destroy());
     this._showedPointsControllers = [];
   }
 

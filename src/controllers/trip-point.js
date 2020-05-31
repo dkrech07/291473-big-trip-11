@@ -31,7 +31,7 @@ export const emptyPoint = {
   arrival: new Date(),
 };
 
-export default class PointController {
+export default class TripPointController {
   constructor(container, onDataChange, onViewChange, button) {
     this._container = container;
     this._onDataChange = onDataChange;
