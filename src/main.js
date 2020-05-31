@@ -1,4 +1,4 @@
-import API from './api/index.js';
+import Api from './api/api.js';
 import Store from "./api/store.js";
 import Provider from './api/provider.js';
 import MenuComponent, {MenuItem} from './components/menu.js';
@@ -17,7 +17,7 @@ import {getTripCost} from './utils/common.js';
 const AUTORIZATION = `Basic dsfsfedfdkfjdf333`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
-const api = new API(END_POINT, AUTORIZATION);
+const api = new Api(END_POINT, AUTORIZATION);
 const store = new Store(window.localStorage);
 const apiWithProvider = new Provider(api, store);
 
