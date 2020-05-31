@@ -1,5 +1,8 @@
 import Point from '../models/point.js';
 
+const SUCCESS_STATUS = 200;
+const REDIRECTION_STATUS = 300;
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -8,7 +11,7 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= SUCCESS_STATUS && response.status < REDIRECTION_STATUS) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
