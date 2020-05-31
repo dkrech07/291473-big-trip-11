@@ -20,9 +20,9 @@ export default class Menu extends AbstractComponent {
   }
 
   setActiveItem(menuItem) {
-    const items = this.getElement().querySelectorAll(`.trip-tabs__btn`);
+    const tripTabsElements = this.getElement().querySelectorAll(`.trip-tabs__btn`);
 
-    items.forEach((item) => {
+    tripTabsElements.forEach((item) => {
       return item.textContent === menuItem ? item.classList.add(`trip-tabs__btn--active`) : item.classList.remove(`trip-tabs__btn--active`);
     });
   }

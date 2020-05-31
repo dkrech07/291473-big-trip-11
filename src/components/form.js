@@ -1,10 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {changeFirstLetter} from '../utils/common.js';
-import {Mode as PointControllerMode} from '../controllers/trip-point.js';
+import {Mode as PointControllerMode, EmptyPoint} from '../controllers/trip-point.js';
 import DestinationsModel from '../models/destinations.js';
 import OffersModel from '../models/offers.js';
 import PointModel from "../models/point.js";
-import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES} from '../utils/common.js';
+import {getPlaceholderMarkup, TRIP_TYPES, STOP_TYPES, parseData} from '../utils/common.js';
 
 import flatpickr from 'flatpickr';
 import {encode} from 'he';
@@ -18,7 +18,6 @@ const createFormTemplate = (currentPoint, mode) => {
   const destination = encode(destinationInfo.name);
   const price = encode(notSanitizedPrice.toString());
 
-  // Выводит в форму список предложений
   const createTripTypesMarkup = (tripTypes) => {
     return tripTypes.map((pointTitle) => {
       const pointType = pointTitle.toLowerCase();
@@ -31,7 +30,6 @@ const createFormTemplate = (currentPoint, mode) => {
     }).join(`\n`);
   };
 
-  // Выводит в форму список точек маршурта
   const createDestinationsMarkup = () => {
     const destinations = DestinationsModel.getDestinations();
     if (destinations && destinations.length > 0) {
@@ -45,7 +43,6 @@ const createFormTemplate = (currentPoint, mode) => {
     return ``;
   };
 
-  // Передает в оффер параметр checked
   const getCheckOffer = (offer) => {
     if (!offer.isChecked) {
       return ``;
@@ -54,7 +51,6 @@ const createFormTemplate = (currentPoint, mode) => {
     return `checked`;
   };
 
-  // Выводит в форму дополнительное предложение;
   const createOffersMarkup = () => {
     return offers.map((offer) => {
       const offerTitleLowerCase = offer.title.toLowerCase();
@@ -151,7 +147,6 @@ const createFormTemplate = (currentPoint, mode) => {
     return ``;
   };
 
-  // Проверяет режим добавления точки маршрута: либо выводит звездочку либо нет;
   const getFavorite = () => {
     if (mode !== PointControllerMode.ADDING) {
       return (
@@ -256,9 +251,8 @@ const createFormTemplate = (currentPoint, mode) => {
   );
 };
 
-// Поддерживаю сохранение данных формы;
 const parseFormData = (formData, form, point, offersForSaving) => {
-  const type = form.querySelector(`.event__label`).textContent.trim().split(` `);
+  const typeElement = form.querySelector(`.event__label`).textContent.trim().split(` `);
 
   const price = parseInt(formData.get(`event-price`), 10);
   const favorite = formData.get(`event-favorite`);
@@ -285,7 +279,7 @@ const parseFormData = (formData, form, point, offersForSaving) => {
     'date_from': getNewDate(departure),
     'date_to': getNewDate(arrival),
     'base_price': price,
-    'type': type[0].toLowerCase(),
+    'type': typeElement[0].toLowerCase(),
     'offers': offersForSaving,
     'destination': point.destinationInfo,
   });
@@ -311,6 +305,7 @@ export default class Form extends AbstractSmartComponent {
     this._startTimeFlatpickr = null;
     this._endTimeFlatpickr = null;
     this._offersForSaving = currentPoint.offers.filter((offer) => offer.isChecked);
+    this._defaultPoint = parseData(currentPoint);
     this._subscribeOnEvents();
     this._applyFlatpickr();
   }
@@ -440,6 +435,12 @@ export default class Form extends AbstractSmartComponent {
   reset() {
     const currentPoint = this._currentPoint;
     this._currentPoint.favorite = currentPoint.favorite;
+
+    if (this._mode === PointControllerMode.ADDING) {
+      this._currentPoint = EmptyPoint;
+    } else {
+      this._currentPoint = this._defaultPoint;
+    }
     this.rerender();
   }
 
@@ -451,10 +452,10 @@ export default class Form extends AbstractSmartComponent {
       this._endTimeFlatpickr = null;
     }
 
-    const startTimeInput = this.getElement().querySelector(`input[name="event-start-time"]`);
-    const endTimeInput = this.getElement().querySelector(`input[name="event-end-time"]`);
+    const startTimeInputElement = this.getElement().querySelector(`input[name="event-start-time"]`);
+    const endTimeInputElement = this.getElement().querySelector(`input[name="event-end-time"]`);
 
-    this._startTimeFlatpickr = flatpickr(startTimeInput, {
+    this._startTimeFlatpickr = flatpickr(startTimeInputElement, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.departure,
@@ -464,7 +465,7 @@ export default class Form extends AbstractSmartComponent {
       },
     });
 
-    this._endTimeFlatpickr = flatpickr(endTimeInput, {
+    this._endTimeFlatpickr = flatpickr(endTimeInputElement, {
       enableTime: true,
       dateFormat: INPUT_DATE_FORMAT,
       defaultDate: this._currentPoint.arrival,
@@ -478,17 +479,14 @@ export default class Form extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    // Хендлер клика по звездочке;
     if (element.querySelector(`#event-favorite-1`)) {
       element.querySelector(`#event-favorite-1`)
       .addEventListener(`click`, (evt) => {
         this._currentPoint.favorite = evt.target.checked;
-
         this.rerender();
       });
     }
 
-    // Хендлер клика по типам точек маршрута;
     element.querySelectorAll(`.event__type-input`).forEach((item) => {
       item.addEventListener(`change`, (evt) => {
         this._currentPoint.type = changeFirstLetter(evt.target.value);
@@ -504,15 +502,13 @@ export default class Form extends AbstractSmartComponent {
       });
     });
 
-    // Хендлер клика по пунктам назначения (очистка значения в поле по фокусу);
     element.querySelector(`.event__input--destination`).addEventListener(`focus`, () => {
-      const destinationInput = element.querySelector(`.event__input--destination`);
-      destinationInput.value = null;
+      const destinationInputElement = element.querySelector(`.event__input--destination`);
+      destinationInputElement.value = null;
     });
 
-    // Хендлер клика по пунктам назначения (замена значения в поле и перезапись значения в объекте выбранной точки маршрута);
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      const destinationInput = element.querySelector(`.event__input--destination`);
+      const destinationInputElement = element.querySelector(`.event__input--destination`);
 
       const destinationsNames = DestinationsModel.getDestinations().map((destinationItem) => {
         return destinationItem.name;
@@ -532,7 +528,7 @@ export default class Form extends AbstractSmartComponent {
       const index = destinationsNames.findIndex((destination) => destination === evt.target.value);
 
       if (index === -1) {
-        destinationInput.setCustomValidity(`Выберите пункт назначения из списка`);
+        destinationInputElement.setCustomValidity(`Выберите пункт назначения из списка`);
         return;
       }
 
@@ -542,31 +538,27 @@ export default class Form extends AbstractSmartComponent {
       this.rerender();
     });
 
-    // Хендлер для клика по времени начала путешествия;
     element.querySelector(`input[name="event-start-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.departure = evt.target.value;
     });
 
-    // Хендлер для клика по времени окончания путешествия;
     element.querySelector(`input[name="event-end-time"]`).addEventListener(`change`, (evt) => {
       this._currentPoint.arrival = evt.target.value;
     });
 
-    // Хендлер для клика по кнопке rollUp в форме;
     if (this.getElement().querySelector(`.event__rollup-btn`)) {
       element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
         this.rerender();
       });
     }
 
-    // Хендлер для клика по предложению;
     this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((item) => {
 
       item.addEventListener(`change`, (evt) => {
 
-        let label = document.querySelector(`[for="${evt.target.id}"]`);
-        const labelTitle = label.querySelector(`.event__offer-title`).textContent;
-        const labelPrice = label.querySelector(`.event__offer-price`).textContent;
+        const labelElement = document.querySelector(`[for="${evt.target.id}"]`);
+        const labelTitle = labelElement.querySelector(`.event__offer-title`).textContent;
+        const labelPrice = labelElement.querySelector(`.event__offer-price`).textContent;
 
         const checkedOffer = {title: labelTitle, price: parseInt(labelPrice, 10), isChecked: true};
         const currentOffers = this._offersForSaving.find(

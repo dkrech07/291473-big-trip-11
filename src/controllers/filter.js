@@ -13,7 +13,7 @@ export const FilterType = {
 };
 
 export default class FilterController {
-  constructor(container, pointsModel) {
+  constructor(pointsModel) {
     this._container = tripFilterElement;
     this._pointsModel = pointsModel;
     this._activeFilterType = FilterType.EVERYTHING;

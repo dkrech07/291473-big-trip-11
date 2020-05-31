@@ -1,3 +1,7 @@
+import TripCostComponent from '../components/trip-cost.js';
+import {tripInfoContainer} from './trip-info.js';
+import {RenderPosition, render} from './render.js';
+
 import moment from "moment";
 const DATE_LENGTH = 2;
 const INPUT_DAY_FORMAT = `DD`;
@@ -16,7 +20,9 @@ const STOP_TYPES = [
   `Check-in`, `Sightseeing`, `Restaurant`
 ];
 
-// Корректировка формата времени: добавляет вначале ноль, если число однозначное;
+const headerElement = document.querySelector(`.page-header`);
+const tripMenuElement = headerElement.querySelector(`.trip-main`);
+
 const correctFormat = (number) => {
   const date = number.toString();
 
@@ -28,7 +34,6 @@ const correctFormat = (number) => {
   return date;
 };
 
-// Корректировка формата даты: год, день, часы, минуты;
 const correctDayFormat = (date) => {
   return moment(date).format(INPUT_DAY_FORMAT);
 };
@@ -57,12 +62,10 @@ const correctDateAndTimeFormat = (date) => {
   return moment(date).format(INPUT_DATE_AND_TIME_FORMAT);
 };
 
-
 const calculateTripDuration = (departure, arrival) => {
   return moment.duration(moment(arrival).diff(moment(departure)));
 };
 
-// Расчет длительности путешествия;
 const calculateTripTime = (departure, arrival) => {
 
   const duration = calculateTripDuration(departure, arrival);
@@ -80,7 +83,6 @@ const calculateTripTime = (departure, arrival) => {
   }
 };
 
-// Получение цены путешествия (цена путешествия + цена предложений);
 const getPrice = (points) => {
 
   let pointsPrices = 0;
@@ -104,8 +106,8 @@ const changeFirstLetter = (word) => {
 };
 
 const getPlaceholderMarkup = (tripType, typesList) => {
-  const pointTypesTo = typesList.filter((item) => {
-    return item === changeFirstLetter(tripType);
+  const pointTypesTo = typesList.filter((placeholder) => {
+    return placeholder === changeFirstLetter(tripType);
   });
 
   if (pointTypesTo.length !== 0) {
@@ -114,6 +116,22 @@ const getPlaceholderMarkup = (tripType, typesList) => {
 
   return `${changeFirstLetter(tripType)} in`;
 };
+
+const getTripCost = (model) => {
+  const tripCost = getPrice(model);
+  const tripCostComponent = new TripCostComponent(tripCost);
+
+  const tripInfoCostElement = document.querySelector(`.trip-info__cost`);
+
+  if (tripInfoCostElement) {
+    tripInfoCostElement.remove();
+  }
+
+  render(tripInfoContainer.getElement(), tripCostComponent);
+  render(tripMenuElement, tripInfoContainer, RenderPosition.AFTERBEGIN);
+};
+
+const parseData = (data) => JSON.parse(JSON.stringify(data));
 
 export {
   correctDateFormat,
@@ -131,4 +149,6 @@ export {
   getPlaceholderMarkup,
   TRIP_TYPES,
   STOP_TYPES,
+  getTripCost,
+  parseData,
 };
