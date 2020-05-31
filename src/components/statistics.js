@@ -191,7 +191,7 @@ const createStatisticsTemplate = () => {
   );
 };
 
-export default class StatisticsComponent extends AbstractSmartComponent {
+export default class Statistics extends AbstractSmartComponent {
   constructor(points) {
     super();
 
