@@ -47,14 +47,12 @@ export default class TripController {
   render() {
     this._points = this._pointsModel.getPointsAll();
 
-    // Отрисовка "контейнера" для вывода всех дней путешествия;
     render(this._container, this._tripDaysComponent);
 
     this._noPointsComponent = new NoPointsComponent();
 
     this._api.getPoints()
       .then((points) => {
-        // Удаление прелоадера;
         remove(this._preloaderComponent);
 
         if (points.length > 0) {
@@ -65,18 +63,15 @@ export default class TripController {
 
           this._renderPoints(this._points);
         } else {
-          // Сообщение о необходимости добавить точку маршрута, если точек нет;
           render(this._container, this._noPointsComponent);
         }
       });
 
-    // Обрботка клика по кнопкам меню сортировки
     this._sortComponent.setSortTypeChangeHandler(() => {
       this._getSortedTrips(this._sortComponent.getSortType());
     });
   }
 
-  // Отрисовка новой формы редактирования (точки маршрута);
   createPoint(button) {
     this._getSortedTrips(this._sortComponent.getSortType());
     button.setAttribute(`disabled`, `true`);
@@ -86,7 +81,6 @@ export default class TripController {
     this._creatingPoint.render(EmptyPoint, PointControllerMode.ADDING);
   }
 
-  // Сортировка точек маршрута в зависимости от выбранного параметра;
   _getSortedTrips(sortType) {
     document.querySelector(`.trip-main__event-add-btn`).removeAttribute(`disabled`);
 
@@ -119,10 +113,8 @@ export default class TripController {
     }
   }
 
-  // Отрисовка точек маршрута в днях путешествия;
   _renderPoints(points) {
     const days = getDays(points);
-    // console.log(days);
     for (const day of days) {
       this._tripDayComponent = new TripDayComponent(day);
       render(this._tripDaysComponent.getElement(), this._tripDayComponent);
@@ -140,7 +132,6 @@ export default class TripController {
     }
   }
 
-  // Отрисовка отсортированных точек маршрута;
   _renderSortPoints(sortPointsList) {
     this._tripDayComponent = new TripsContainerComponent();
     render(this._tripDaysComponent.getElement(), this._tripDayComponent);
@@ -154,7 +145,6 @@ export default class TripController {
     }
   }
 
-  // Условия отрисовки (обновления) данных для точек маршрута;
   _createPoint(pointController, newData) {
     this._api.createPoint(newData)
       .then((pointsModel) => {
@@ -262,7 +252,6 @@ export default class TripController {
       });
   }
 
-  // Отрисовка меню сортировки;
   renderSortMenu() {
     render(this._container, this._sortComponent);
   }

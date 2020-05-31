@@ -14,7 +14,7 @@ import NoPointsComponent from './components/no-points.js';
 import {renderTripInfo} from './utils/trip-info.js';
 import {getTripCost} from './utils/common.js';
 
-const AUTORIZATION = `Basic dsfsfe5555`;
+const AUTORIZATION = `Basic dsfsfedfdkfjdf333`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const api = new API(END_POINT, AUTORIZATION);
@@ -43,7 +43,7 @@ const tripController = new TripController(tripEventsElement, pointsModel, apiWit
 
 const newPointClickHandler = (evt) => {
   evt.preventDefault();
-  // filterController.setDefaultView();
+  filterController.setDefaultView();
   tripController.createPoint(newPointButtonElement);
 
   menuComponent.setActiveItem(MenuItem.TABLE);
